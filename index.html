@@ -369,11 +369,13 @@
     align-items: center;    /* single-line labels float at the midpoint of the reserved space */
   }
   .grid-loan .field input[type="number"],
+  .grid-loan .field input[type="text"],
   .grid-loan .field select,
   .grid-projection .field input[type="number"],
+  .grid-projection .field input[type="text"],
   .grid-projection .field select { padding: 9px 12px; font-size: 14px; }
-  .grid-loan .field input[type="number"].has-prefix,
-  .grid-projection .field input[type="number"].has-prefix { padding-left: 24px; }
+  .grid-loan .field input.has-prefix,
+  .grid-projection .field input.has-prefix { padding-left: 24px; }
 
   .input-wrap {
     position: relative;
@@ -402,7 +404,7 @@
     background: #fff;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .field input[type="number"].has-prefix { padding-left: 26px; }
+  .field input.has-prefix { padding-left: 26px; }
   .field input[type="number"].has-suffix { padding-right: 34px; }
   .field input:focus, .field select:focus {
     outline: none;
@@ -1131,7 +1133,7 @@
           <label>Current Market Value</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="marketValue" class="has-prefix" value="1000000" min="0" step="10000" />
+            <input type="text" inputmode="numeric" id="marketValue" class="has-prefix" value="1000000" min="0" step="10000" />
           </div>
           <a href="https://www.redfin.com" target="_blank" rel="noopener noreferrer" class="helper-link">Not sure? Check Redfin &rarr;</a>
         </div>
@@ -1143,7 +1145,7 @@
           <label>Original Purchase Price</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="purchasePrice" class="has-prefix" value="400000" min="0" step="10000" />
+            <input type="text" inputmode="numeric" id="purchasePrice" class="has-prefix" value="400000" min="0" step="10000" />
           </div>
           <div class="field-helper">What you originally paid.</div>
         </div>
@@ -1169,7 +1171,7 @@
           <label>Outstanding Mortgage Balance</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="mortgage" class="has-prefix" min="0" step="5000" />
+            <input type="text" inputmode="numeric" id="mortgage" class="has-prefix" min="0" step="5000" />
           </div>
           <div class="field-helper">Auto from loan model. Edit if you have a statement value.</div>
         </div>
@@ -1178,7 +1180,7 @@
           <label>Annual Net Operating Income</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="noi" class="has-prefix" min="0" step="500" />
+            <input type="text" inputmode="numeric" id="noi" class="has-prefix" min="0" step="500" />
           </div>
           <div class="field-helper">Auto-estimated at 6.0% cap rate on purchase price. Edit to override.</div>
         </div>
@@ -1187,7 +1189,7 @@
           <label>Annual Mortgage Debt Service</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="debtService" class="has-prefix" min="0" step="500" />
+            <input type="text" inputmode="numeric" id="debtService" class="has-prefix" min="0" step="500" />
           </div>
           <div class="field-helper">Auto from loan model (P+I only). Edit to override.</div>
         </div>
@@ -1199,7 +1201,7 @@
           <label>Accumulated Depreciation</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="accumDep" class="has-prefix" min="0" step="1000" />
+            <input type="text" inputmode="numeric" id="accumDep" class="has-prefix" min="0" step="1000" />
           </div>
           <div class="field-helper">Auto-calculated from price &amp; year. Edit to override.</div>
         </div>
@@ -1299,7 +1301,7 @@
             </div>
             <div class="field">
               <label>Annual Mortgage Principal Paydown <span class="hint">auto from loan model; editable</span></label>
-              <div class="input-wrap"><span class="prefix">$</span><input type="number" id="principalPaydown" class="has-prefix" min="0" step="500" /></div>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="principalPaydown" class="has-prefix" min="0" step="500" /></div>
             </div>
             <div class="field">
               <label>Annual Capex Reserve <span class="hint">% of NOI (optional)</span></label>
@@ -1307,11 +1309,11 @@
             </div>
             <div class="field">
               <label>Annual Depreciation Deduction <span class="hint">auto from price &amp; year; editable</span></label>
-              <div class="input-wrap"><span class="prefix">$</span><input type="number" id="annualDep" class="has-prefix" min="0" step="500" /></div>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="annualDep" class="has-prefix" min="0" step="500" /></div>
             </div>
             <div class="field">
               <label>Annual Mortgage Interest <span class="hint">auto from loan model; editable</span></label>
-              <div class="input-wrap"><span class="prefix">$</span><input type="number" id="annualInterest" class="has-prefix" min="0" step="500" /></div>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="annualInterest" class="has-prefix" min="0" step="500" /></div>
             </div>
             <div class="field">
               <label>Apply Income Tax to Rental Cashflow?</label>
@@ -1620,7 +1622,17 @@ document.getElementById("advBtn").addEventListener("click", () => {
    HELPERS
    ============================================================ */
 const $ = id => document.getElementById(id);
-const numv = id => parseFloat($(id).value) || 0;
+// Strip $, commas, and whitespace so comma-formatted money fields parse correctly.
+const parseMoney = v => parseFloat(String(v).replace(/[^0-9.\-]/g, "")) || 0;
+// Integer with comma separators, or "" for blank input (preserves placeholder behavior).
+const fmtIntStr = n => (n === null || n === undefined || n === "") ? "" : Math.round(Number(n)).toLocaleString();
+const numv = id => {
+  const el = $(id);
+  if (!el) return 0;
+  // Money fields are type="text" with comma separators — strip non-numerics before parsing.
+  if (el.type === "text") return parseMoney(el.value);
+  return parseFloat(el.value) || 0;
+};
 const fmt$ = n => "$" + Math.round(n).toLocaleString();
 const fmt$cents = n => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const fmtPct = n => n.toFixed(1) + "%";
@@ -2195,8 +2207,10 @@ async function fetchTreasuryYield() {
    past any % suffix. */
 function attachCustomSpinners() {
   document.querySelectorAll('.input-wrap').forEach(wrap => {
-    const input = wrap.querySelector('input[type="number"]');
+    // Spinners attach to both native number inputs and money-as-text inputs.
+    const input = wrap.querySelector('input[type="number"], input[type="text"].has-prefix');
     if (!input || wrap.querySelector('.spin-group')) return;
+    const isMoney = input.type === 'text' && input.classList.contains('has-prefix');
 
     const group = document.createElement('div');
     group.className = 'spin-group';
@@ -2206,13 +2220,21 @@ function attachCustomSpinners() {
     `;
     wrap.appendChild(group);
 
+    const stepMoney = (dir) => {
+      const step = parseFloat(input.getAttribute('step')) || 1;
+      const min  = parseFloat(input.getAttribute('min'))  || 0;
+      const cur  = parseMoney(input.value);
+      const next = Math.max(min, cur + dir * step);
+      input.value = fmtIntStr(next);
+    };
+
     group.querySelector('.up').addEventListener('click', () => {
-      input.stepUp();
+      if (isMoney) stepMoney(+1); else input.stepUp();
       input.dispatchEvent(new Event('input',  { bubbles: true }));
       input.dispatchEvent(new Event('change', { bubbles: true }));
     });
     group.querySelector('.down').addEventListener('click', () => {
-      input.stepDown();
+      if (isMoney) stepMoney(-1); else input.stepDown();
       input.dispatchEvent(new Event('input',  { bubbles: true }));
       input.dispatchEvent(new Event('change', { bubbles: true }));
     });
@@ -2224,6 +2246,15 @@ window.addEventListener("DOMContentLoaded", () => {
   // sync state rate to default state
   const r = STATE_RATES[document.getElementById("state").value];
   if (r !== undefined) document.getElementById("stateRate").value = r;
+
+  // Format initial money values with commas (e.g. 400000 → 400,000) and
+  // reformat on blur so user-typed values pick up commas after they tab away.
+  document.querySelectorAll('input.has-prefix').forEach(el => {
+    if (el.value !== "") el.value = fmtIntStr(parseMoney(el.value));
+    el.addEventListener('blur', () => {
+      el.value = el.value.trim() === "" ? "" : fmtIntStr(parseMoney(el.value));
+    });
+  });
 
   // wire up custom spinner buttons on every number input
   attachCustomSpinners();
@@ -2267,7 +2298,14 @@ const manualOverrides   = new Set();
 function setIfNotOverridden(id, value) {
   if (manualOverrides.has(id)) return;
   const el = document.getElementById(id);
-  if (el) el.value = Math.round(value);
+  if (!el) return;
+  // Round auto-calculated dollar amounts to the nearest $100 — these are
+  // estimates from rule-of-thumb formulas, so spurious precision implies
+  // a level of accuracy the auto-fill doesn't really have.
+  const rounded = Math.round(value / 100) * 100;
+  // Money fields (type="text") get comma-separated formatting; everything else
+  // gets a plain number.
+  el.value = el.type === "text" ? fmtIntStr(rounded) : rounded;
 }
 
 /* Re-derive depreciation + loan-related fields from purchase price, year
@@ -2276,7 +2314,8 @@ function setIfNotOverridden(id, value) {
    ─ Depreciation: 80% building × straight-line / 27.5 yr (residential rental)
    ─ Loan model:   75% LTV × 30-yr fixed amortization at the user's rate */
 function recalcDerivedFields() {
-  const purchasePrice = parseFloat(document.getElementById("purchasePrice").value) || 0;
+  // purchasePrice is a comma-formatted text input — parseMoney strips the commas.
+  const purchasePrice = parseMoney(document.getElementById("purchasePrice").value);
   const yearPurchased = parseInt(document.getElementById("yearPurchased").value, 10) || new Date().getFullYear();
   const mortgageRate  = (parseFloat(document.getElementById("mortgageRate").value) || 0) / 100;
   const currentYear   = new Date().getFullYear();
