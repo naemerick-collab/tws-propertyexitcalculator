@@ -1178,9 +1178,9 @@
           <label>Annual Net Operating Income</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
-            <input type="number" id="noi" class="has-prefix" value="40000" min="0" step="500" />
+            <input type="number" id="noi" class="has-prefix" min="0" step="500" />
           </div>
-          <div class="field-helper">Annual rent minus operating expenses.</div>
+          <div class="field-helper">Auto-estimated at 6.0% cap rate on purchase price. Edit to override.</div>
         </div>
 
         <div class="field">
@@ -2256,7 +2256,12 @@ window.addEventListener("DOMContentLoaded", () => {
 /* The six fields recalcDerivedFields() can write to. Any field also in
    manualOverrides has been edited by the user — auto-recalc skips it so
    the user's typed value sticks. */
-const DERIVED_FIELD_IDS = ["accumDep","annualDep","mortgage","debtService","annualInterest","principalPaydown"];
+const DERIVED_FIELD_IDS = ["accumDep","annualDep","mortgage","debtService","annualInterest","principalPaydown","noi"];
+
+/* Cap rate used to auto-estimate NOI from Original Purchase Price.
+   Represents a middle-of-the-road going-in cap rate for residential rental
+   real estate at acquisition. User can override the NOI field directly. */
+const DEFAULT_GOING_IN_CAP_RATE = 0.06;
 const manualOverrides   = new Set();
 
 function setIfNotOverridden(id, value) {
@@ -2286,6 +2291,9 @@ function recalcDerivedFields() {
 
   setIfNotOverridden("accumDep",  accumDep);
   setIfNotOverridden("annualDep", annualDep);
+
+  /* ── NOI: estimated as purchase price × going-in cap rate ── */
+  setIfNotOverridden("noi", purchasePrice * DEFAULT_GOING_IN_CAP_RATE);
 
   /* ── Loan: balance, debt service, interest, principal paydown ── */
   const ltv          = 0.75;
