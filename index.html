@@ -25,6 +25,7 @@
     --text:        #1A1A2E;
     --text-muted:  #5A6478;
     --good:        #166534;
+    --good-pale:   #E6F4EA;
     --bad:         #9F1239;
     --shadow:      0 6px 24px rgba(8, 23, 46, 0.06);
     /* Legacy aliases so existing rules keep working */
@@ -292,12 +293,17 @@
   }
 
   /* ---------- Inputs ---------- */
-  /* Row 1 — Current Market Value (the trigger field) sits top-left.
-     Field constrained to a comfortable width so it doesn't span the page. */
+  /* Row 1 — Current Market Value (the trigger field) + State of Property
+     sit at top-left as two side-by-side fields, each constrained so the row
+     doesn't span the page. Wraps to a stack on narrow screens. */
   .grid-mv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
     margin-bottom: 24px;
   }
   .grid-mv .field {
+    flex: 1 1 240px;
     max-width: 320px;
   }
   .grid-mv .field label { font-size: 14px; }
@@ -315,13 +321,20 @@
   @media (max-width: 720px)  { .grid-loan { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px)  { .grid-loan { grid-template-columns: 1fr; } }
 
-  /* Row 3 — Tax & projection (5 visible normally, 6th appears with Custom horizon) */
+  /* Row 3 — Tax & projection (3 visible normally; Custom horizon adds a 4th).
+     The .field-spacer inserts an empty column between Federal LT Cap Gains
+     and the Reinvestment/Hold Period dropdown for visual breathing room.
+     Spacer collapses on narrower breakpoints so the fields pack tightly. */
   .grid-projection {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 14px;
   }
-  @media (max-width: 1100px) { .grid-projection { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .grid-projection .field-spacer { display: block; }
+  @media (max-width: 1100px) {
+    .grid-projection { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-projection .field-spacer { display: none; }
+  }
   @media (max-width: 720px)  { .grid-projection { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px)  { .grid-projection { grid-template-columns: 1fr; } }
 
@@ -410,6 +423,16 @@
     outline: none;
     border-color: var(--gold);
     box-shadow: 0 0 0 3px rgba(191, 155, 48, 0.15);
+  }
+  /* Pale-green highlight on formula-driven fields whose value will recompute
+     when the currently-focused parent input changes. Driven by JS focus/blur
+     listeners (see FORMULA_DEPENDENCIES). Skipped for fields the user has
+     manually overridden — those won't actually auto-update. */
+  .field input.formula-affected,
+  .field select.formula-affected {
+    background: var(--good-pale);
+    border-color: rgba(22, 101, 52, 0.30);
+    transition: background 0.18s ease, border-color 0.18s ease;
   }
   .field select {
     appearance: none;
@@ -722,6 +745,7 @@
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    text-decoration: none;
     cursor: pointer;
     font-family: 'DM Sans', inherit;
     transition: all 0.2s;
@@ -1111,7 +1135,7 @@
       Investor Tool · Free · No Sign-Up
     </div>
     <h1>Property <em>Exit Strategy</em> Calculator</h1>
-    <p>Compare your options — keep, sell, defer the tax, or exit real estate entirely.</p>
+    <p>Compare your options — hold, sell, 1031, defer capital gains, or alternatives portfolio.</p>
   </div>
 </header>
 
@@ -1127,7 +1151,7 @@
     </div>
     <div class="panel-body">
 
-      <!-- ROW 1 — Current Market Value alone (the trigger field) -->
+      <!-- ROW 1 — Current Market Value (trigger field) + State of Property -->
       <div class="grid-mv">
         <div class="field">
           <label>Current Market Value</label>
@@ -1136,6 +1160,13 @@
             <input type="text" inputmode="numeric" id="marketValue" class="has-prefix" value="1000000" min="0" step="10000" />
           </div>
           <a href="https://www.redfin.com" target="_blank" rel="noopener noreferrer" class="helper-link">Not sure? Check Redfin &rarr;</a>
+        </div>
+
+        <div class="field">
+          <label>State of Property</label>
+          <select id="state">
+            <!-- Populated by JS -->
+          </select>
         </div>
       </div>
 
@@ -1177,15 +1208,6 @@
         </div>
 
         <div class="field">
-          <label>Annual Net Operating Income</label>
-          <div class="input-wrap">
-            <span class="prefix">$</span>
-            <input type="text" inputmode="numeric" id="noi" class="has-prefix" min="0" step="500" />
-          </div>
-          <div class="field-helper">Auto-estimated at 6.0% cap rate on purchase price. Edit to override.</div>
-        </div>
-
-        <div class="field">
           <label>Annual Mortgage Debt Service</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
@@ -1193,9 +1215,21 @@
           </div>
           <div class="field-helper">Auto from loan model (P+I only). Edit to override.</div>
         </div>
+
+        <div class="field">
+          <label>Annual Net Operating Income</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="text" inputmode="numeric" id="noi" class="has-prefix" min="0" step="500" />
+          </div>
+          <div class="field-helper">Auto-estimated at 6.0% cap rate on purchase price. Edit to override.</div>
+        </div>
       </div>
 
-      <!-- ROW 3 — Tax & projection setup (5 visible, Custom Years hidden) -->
+      <!-- ROW 3 — Tax & projection setup. Order: Accumulated Depreciation,
+           Federal LT Cap Gains, [spacer], Reinvestment/Hold Period (+ Custom
+           Years which appears only when "Custom" is selected). The spacer
+           gives visual breathing room between tax inputs and the horizon. -->
       <div class="grid-projection">
         <div class="field">
           <label>Accumulated Depreciation</label>
@@ -1207,14 +1241,19 @@
         </div>
 
         <div class="field">
-          <label>State of Property</label>
-          <select id="state">
-            <!-- Populated by JS -->
+          <label>Federal LT Cap Gains</label>
+          <select id="fedCG">
+            <option value="0">0%</option>
+            <option value="15">15%</option>
+            <option value="20" selected>20%</option>
           </select>
+          <div class="field-helper">Most high earners → 20%.</div>
         </div>
 
+        <div class="field-spacer" aria-hidden="true"></div>
+
         <div class="field">
-          <label>Projection Horizon</label>
+          <label>Reinvestment/Hold Period</label>
           <select id="horizon">
             <option value="5">5 years</option>
             <option value="7">7 years</option>
@@ -1227,16 +1266,6 @@
         <div class="field" id="customHorizonField" style="display:none;">
           <label>Custom Years</label>
           <input type="number" id="horizonCustom" value="10" min="1" max="40" step="1" />
-        </div>
-
-        <div class="field">
-          <label>Federal LT Cap Gains</label>
-          <select id="fedCG">
-            <option value="0">0%</option>
-            <option value="15">15%</option>
-            <option value="20" selected>20%</option>
-          </select>
-          <div class="field-helper">Most high earners → 20%.</div>
         </div>
       </div>
 
@@ -1448,7 +1477,7 @@
       <div class="panel-header">
         <div>
           <h2>Your Property Options Comparison</h2>
-          <p id="resultsSubhead">Based on a <span id="holdLabel">10-year</span> projection horizon.</p>
+          <p id="resultsSubhead">Based on a <span id="holdLabel">10-year</span> reinvestment/hold period.</p>
         </div>
       </div>
       <div class="panel-body">
@@ -1480,14 +1509,14 @@
             <h4>Scenario 2 — Sell &amp; Pay Tax</h4>
             <p>Net cash to investor = (Sale price − Selling costs − Mortgage payoff − Total tax). Cash reinvested at the cash yield. Wealth at exit = After-tax cash compounded at the cash yield over the horizon.</p>
 
-            <h4>Scenario 3 — 1031 Exchange to DST</h4>
+            <h4>Scenario 3 — Sell &amp; Invest Passively</h4>
+            <p>Same after-tax cash as Scenario 2, but invested at the higher target passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
+
+            <h4>Scenario 4 — 1031 Exchange to DST</h4>
             <p>Tax fully deferred (assuming compliant exchange). Equity reinvested = (Sale price − Selling costs − Mortgage payoff) × (1 − DST load). Annual cashflow = Equity × DST cash-on-cash. Wealth at exit = Equity grown at DST appreciation. <em>Tax deferred is not tax eliminated — basis carries over.</em> When "After-tax wealth at exit" is enabled, exit tax is calculated on the gain over the carried-over basis from the original property. "Step-up in basis" zeroes that tax (a key estate-planning advantage of swap-til-you-drop).</p>
 
-            <h4>Scenario 4 — Sell &amp; Leveraged Bonus Depreciation</h4>
+            <h4>Scenario 5 — Sell &amp; Leveraged Bonus Depreciation</h4>
             <p>Modeled as a 2× (configurable) deduction multiplier: $1 invested in the LBD fund generates $2 of Year-1 passive loss. Required LBD investment = Total gain ÷ Multiplier. The passive loss fully offsets the taxable gain at both federal and state level → $0 tax due in Year 1. Freed cash = Gross equity − LBD investment, which is then invested in the passive alternatives portfolio at the rate set in the Alternatives section. All deferred tax becomes due at the LBD fund's eventual disposition (when depreciation recapture applies). The LBD fund itself generates cash distributions and appreciation per the rates in the LBD section. <em>Note on state conformity:</em> states vary in how they treat federal bonus depreciation; this model assumes full conformity for simplicity. Consult a tax professional for state-specific treatment.</p>
-
-            <h4>Scenario 5 — Sell &amp; Invest Passively</h4>
-            <p>Same after-tax cash as Scenario 2, but invested at the higher target passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
 
             <h4>What this calculator does <em>not</em> model</h4>
             <p>• Income tax on DST/Fund distributions (some offset by depreciation pass-through; varies)<br>
@@ -1955,6 +1984,7 @@ function compute() {
         sub: "Status quo — keep collecting rent.",
         taxNow: 0,
         taxDeferred: 0,
+        sellingCosts: 0,  // no sale in year 1
         annualCF: s1AnnualCF_Y1,
         cumCF: s1CumCF,
         terminal: s1TerminalWealth,
@@ -1964,9 +1994,10 @@ function compute() {
       {
         key: "sell",
         title: "Sell &amp; Pay Tax",
-        sub: "Cash out, pay full tax, hold conservatively.",
+        sub: "Hold cash.",
         taxNow: totalTax,
         taxDeferred: 0,
+        sellingCosts: sellingCosts,
         annualCF: s2AnnualCF_Y1,
         cumCF: s2CumCF,
         terminal: s2TerminalWealth,
@@ -1974,11 +2005,25 @@ function compute() {
         returnAssumption: s2ReturnAssumption,
       },
       {
+        key: "passive",
+        title: "Sell &amp; Invest Passively",
+        sub: "Sell & Pay Tax, Alternatives Portfolio",
+        taxNow: totalTax,
+        taxDeferred: 0,
+        sellingCosts: sellingCosts,
+        annualCF: s5AnnualCF_Y1,
+        cumCF: s5CumCF,
+        terminal: s5TerminalWealth,
+        netInvested: s5NetCash,
+        returnAssumption: s5ReturnAssumption,
+      },
+      {
         key: "dst",
         title: "1031 Exchange to DST",
         sub: "Defer 100% of tax, become passive.",
         taxNow: 0,
         taxDeferred: totalTax,
+        sellingCosts: sellingCosts,
         annualCF: s3AnnualCF_Y1,
         cumCF: s3CumCF,
         terminal: s3TerminalWealth,
@@ -1991,24 +2036,13 @@ function compute() {
         sub: "Defer tax with depreciation.",
         taxNow: s4TaxPaid,
         taxDeferred: fedTaxDeferred,
+        sellingCosts: sellingCosts,
         annualCF: s4AnnualCF_Y1,
         cumCF: s4CumCF,
         terminal: s4TerminalWealth,
         netInvested: s4Investment,
         returnAssumption: s4ReturnAssumption,
         extras: { lbdInvestment: s4LBDInvestment, freedCash, y1Deduction: s4Y1Deduction }
-      },
-      {
-        key: "passive",
-        title: "Sell &amp; Invest Passively",
-        sub: "Exit real estate, invest in diversified portfolio.",
-        taxNow: totalTax,
-        taxDeferred: 0,
-        annualCF: s5AnnualCF_Y1,
-        cumCF: s5CumCF,
-        terminal: s5TerminalWealth,
-        netInvested: s5NetCash,
-        returnAssumption: s5ReturnAssumption,
       }
     ]
   };
@@ -2074,7 +2108,7 @@ function render() {
         </div>
 
         <div class="metric metric-wealth">
-          <div class="label">Projected Wealth at Year ${inputs.N}</div>
+          <div class="label">Projected Value at Year ${inputs.N}</div>
           <div class="value">${fmt$(s.terminal)}</div>
         </div>
       </div>
@@ -2105,6 +2139,7 @@ function render() {
   let html = `<thead><tr><th>Metric</th>${cols}</tr></thead><tbody>`;
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Sale-Year Tax Impact</td></tr>`;
+  html += rowFmt("Real Estate / Sales Commissions", scenarios.map(s => s.sellingCosts > 0 ? fmt$(s.sellingCosts) : "—"));
   html += rowFmt("Federal + State Tax Due (Year 1)", scenarios.map(s => fmt$(s.taxNow)));
   html += rowFmt("Tax Deferred", scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
   html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested)));
@@ -2119,7 +2154,7 @@ function render() {
   html += rowFmt(inputs.N + "-Year Cumulative Cashflow", scenarios.map(s => fmt$(s.cumCF)));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Wealth Outcome</td></tr>`;
-  html += rowFmt("Projected Wealth at Year " + inputs.N, scenarios.map(s => fmt$(s.terminal)));
+  html += rowFmt("Projected Value at Year " + inputs.N, scenarios.map(s => fmt$(s.terminal)));
 
   html += `</tbody>`;
   t.innerHTML = html;
@@ -2220,6 +2255,13 @@ function attachCustomSpinners() {
     `;
     wrap.appendChild(group);
 
+    // Prevent the spin buttons from stealing focus so the parent input keeps
+    // its focused state (and any formula-affected highlight on its children
+    // stays visible) while the user steps the value.
+    group.querySelectorAll('button').forEach(btn =>
+      btn.addEventListener('mousedown', e => e.preventDefault())
+    );
+
     const stepMoney = (dir) => {
       const step = parseFloat(input.getAttribute('step')) || 1;
       const min  = parseFloat(input.getAttribute('min'))  || 0;
@@ -2270,6 +2312,23 @@ window.addEventListener("DOMContentLoaded", () => {
     if (el) el.addEventListener("input", recalcDerivedFields);
   });
 
+  /* Pale-green-highlight affected child fields while the parent has focus.
+     Skips children the user has manually overridden — those won't recompute. */
+  Object.entries(FORMULA_DEPENDENCIES).forEach(([parentId, childIds]) => {
+    const parent = document.getElementById(parentId);
+    if (!parent) return;
+    const paint = (on) => childIds.forEach(cid => {
+      const child = document.getElementById(cid);
+      if (!child) return;
+      // If the user has typed their own value into the child, it won't
+      // auto-update — don't suggest otherwise by highlighting it.
+      if (on && manualOverrides.has(cid)) return;
+      child.classList.toggle("formula-affected", on);
+    });
+    parent.addEventListener("focus", () => paint(true));
+    parent.addEventListener("blur",  () => paint(false));
+  });
+
   // Track which formula-driven fields the user has manually overridden.
   // Once a field is in this set, recalcDerivedFields() leaves it alone —
   // the user's typed value sticks across subsequent recalcs. Programmatic
@@ -2288,6 +2347,16 @@ window.addEventListener("DOMContentLoaded", () => {
    manualOverrides has been edited by the user — auto-recalc skips it so
    the user's typed value sticks. */
 const DERIVED_FIELD_IDS = ["accumDep","annualDep","mortgage","debtService","annualInterest","principalPaydown","noi"];
+
+/* Maps each "parent" input to the derived fields its value drives. Used to
+   paint affected children pale-green while the parent has focus, so the user
+   can see at a glance which fields will recompute. Keep in sync with
+   recalcDerivedFields() below. */
+const FORMULA_DEPENDENCIES = {
+  purchasePrice: ["accumDep","annualDep","noi","mortgage","debtService","annualInterest","principalPaydown"],
+  yearPurchased: ["accumDep","mortgage","annualInterest","principalPaydown"],
+  mortgageRate:  ["mortgage","debtService","annualInterest","principalPaydown"]
+};
 
 /* Cap rate used to auto-estimate NOI from Original Purchase Price.
    Represents a middle-of-the-road going-in cap rate for residential rental
