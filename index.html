@@ -765,6 +765,26 @@
     box-shadow: 0 12px 28px rgba(8, 23, 46, 0.08);
     transform: translateY(-2px);
   }
+  /* Card with the greatest projected wealth — gold-accent highlight.
+     No banner/flag/ribbon — just a thicker gold border, a gold gradient
+     bar across the top, and a slightly warmer background. */
+  .scenario-card.best {
+    border-color: var(--gold);
+    border-width: 2px;
+    padding: 21px 17px 21px;  /* compensate the extra 1px of border */
+    background: linear-gradient(180deg, rgba(191,155,48,0.06) 0%, var(--white) 60%);
+    box-shadow: 0 8px 22px rgba(191, 155, 48, 0.14);
+  }
+  .scenario-card.best::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  }
+  .scenario-card.best .metric-wealth .value {
+    color: var(--gold);
+  }
   .scenario-card .scenario-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 20px;
@@ -2006,10 +2026,17 @@ function render() {
   // Tax Deferred renders in every card — "—" indicates not applicable for that path.
   const cards = document.getElementById("scenarios");
   cards.innerHTML = "";
+  // Identify the scenario with the greatest projected wealth (terminal value).
+  // That card gets a gold-accent highlight — no banner/flag, just the visual cue.
+  const bestKey = scenarios.reduce(
+    (best, s) => (s.terminal > best.terminal ? s : best),
+    scenarios[0]
+  ).key;
   scenarios.forEach((s) => {
     const monthly = s.annualCF / 12;
+    const isBest = s.key === bestKey;
     const html = `
-      <div class="scenario-card">
+      <div class="scenario-card${isBest ? ' best' : ''}">
         <h3 class="scenario-title">${s.title}</h3>
         <div class="scenario-sub">${s.sub}</div>
 
