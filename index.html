@@ -771,7 +771,18 @@
   }
   @media (max-width: 1180px) { .scenarios { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 820px)  { .scenarios { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 480px)  { .scenarios { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) {
+    .scenarios { grid-template-columns: 1fr; }
+    /* When cards collapse to a single-column stack, the white-on-cream
+       contrast is too subtle for quick card-to-card delineation. Switch
+       non-"best" cards to the light gold palette so each card reads as a
+       distinct tile separated by the cream grid gap. The .best card keeps
+       its own gold-gradient background so it still stands out. */
+    .scenario-card:not(.best) {
+      background: var(--gold-pale);
+      border-color: rgba(191, 155, 48, 0.30);
+    }
+  }
   /* Cards: all 5 are structurally identical (same row composition),
      and min-heights on each block force every metric row to align
      horizontally across the five cards regardless of title wrap. */
@@ -2176,10 +2187,41 @@ function rowFmt(label, cells) {
    ============================================================ */
 document.getElementById("calcBtn").addEventListener("click", render);
 document.getElementById("resetBtn").addEventListener("click", () => {
-  document.querySelectorAll("input[type='number']").forEach(el => {
-    if (el.defaultValue !== undefined) el.value = el.defaultValue;
+  // 1. Reset every input (number AND text — the money fields are now text
+  //    so they get missed by an input[type='number'] selector).
+  document.querySelectorAll("input").forEach(el => {
+    if (el.type === "button" || el.type === "submit") return;
+    el.value = el.defaultValue;
   });
+
+  // 2. Reset every <select> to its default-selected option. (The original
+  //    reset never touched selects, so State, Horizon, Fed LT Cap Gains,
+  //    and the advanced toggles all stuck wherever the user left them.)
+  document.querySelectorAll("select").forEach(sel => {
+    for (const opt of sel.options) opt.selected = opt.defaultSelected;
+  });
+
+  // 3. Re-format the money fields with commas — defaultValue stores the raw
+  //    "400000", but the visible value should be "400,000".
+  document.querySelectorAll("input.has-prefix").forEach(el => {
+    if (el.value !== "") el.value = fmtIntStr(parseMoney(el.value));
+  });
+
+  // 4. Clear "user has manually overridden this" flags so auto-fill resumes
+  //    for every derived field.
   manualOverrides.clear();
+
+  // 5. Drop any pale-green parent-driven highlights left over from a focused
+  //    parent input.
+  document.querySelectorAll(".formula-affected")
+    .forEach(el => el.classList.remove("formula-affected"));
+
+  // 6. Cascade UI state that's driven by change handlers (custom-horizon
+  //    visibility + state-rate sync).
+  document.getElementById("horizon").dispatchEvent(new Event("change"));
+  document.getElementById("state").dispatchEvent(new Event("change"));
+
+  // 7. Hide the results panel.
   document.getElementById("results").classList.remove("visible");
 });
 
