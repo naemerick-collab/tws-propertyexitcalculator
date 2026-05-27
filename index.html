@@ -52,8 +52,12 @@
   h1 em, h2 em, h3 em { color: var(--gold); font-style: italic; font-weight: 400; }
 
   /* ---------- TWS Nav (matches refresh — 120px desktop, 80px mobile) ---------- */
+  /* position:fixed (not sticky) is critical — the website's nav floats above
+     the hero rather than taking 120px of document flow. The .hero element's
+     220px padding-top assumes the nav is overlaying, so a sticky nav would
+     add 120px of extra space between nav and pill on desktop. */
   nav.tws-nav {
-    position: sticky; top: 0; left: 0; right: 0; z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: rgba(8,23,46,0.97);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -2236,7 +2240,7 @@ function render() {
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Sale-Year Tax Impact</td></tr>`;
   html += rowFmt("Real Estate / Sales Commissions", scenarios.map(s => s.sellingCosts > 0 ? fmt$(s.sellingCosts) : "—"));
-  html += rowFmt("Federal + State Tax Due (Year 1)", scenarios.map(s => fmt$(s.taxNow)));
+  html += rowFmt("Capital Gains Tax + Depreciation Recapture Due", scenarios.map(s => fmt$(s.taxNow)));
   html += rowFmt("Tax Deferred", scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
   html += rowFmt("Replacement Debt (1031 carryover)", scenarios.map(s => s.replacementDebt > 0 ? fmt$(s.replacementDebt) : "—"));
   // "Net Cash / Equity Deployed" now reflects TOTAL capital reinvested for 1031 compliance:
@@ -2246,9 +2250,9 @@ function render() {
   html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested + (s.replacementDebt || 0))));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Cashflow & Yield</td></tr>`;
-  html += rowFmt("Year 1 Monthly Cashflow", scenarios.map(s => fmt$(s.annualCF / 12)));
-  html += rowFmt("Year 1 Annual Cashflow", scenarios.map(s => fmt$(s.annualCF)));
-  html += rowFmt("Year 1 Yield on Equity Deployed",
+  html += rowFmt("Avg Monthly Cashflow", scenarios.map(s => fmt$(s.annualCF / 12)));
+  html += rowFmt("Annual Cashflow", scenarios.map(s => fmt$(s.annualCF)));
+  html += rowFmt("Annual Yield on Equity Deployed",
     scenarios.map(s => s.netInvested > 0 ? ((s.annualCF / s.netInvested) * 100).toFixed(2) + "%" : "—"));
   html += rowFmt("Cash Yield + Asset Appreciation Assumption",
     scenarios.map(s => (s.returnAssumption * 100).toFixed(2) + "%"));
