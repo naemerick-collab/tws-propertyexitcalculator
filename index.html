@@ -902,6 +902,17 @@
   .metric .value.good { color: var(--good); }
   .metric .value.bad { color: var(--bad); }
   .metric .value.neutral { color: var(--navy); }
+  /* Small qualitative-benefits line at the bottom of each scenario card.
+     min-height reserves consistent space so the wealth row above it aligns
+     horizontally across cards regardless of how many lines this wraps to. */
+  .scenario-card .scenario-benefits {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-top: 14px;
+    min-height: 56px;
+    letter-spacing: 0.01em;
+  }
   .metric .return-line {
     font-size: 11px;
     color: var(--text-muted);
@@ -2053,6 +2064,7 @@ function compute() {
         netInvested: currentEquity,
         replacementDebt: 0,
         returnAssumption: s1ReturnAssumption,
+        benefits: "Status quo, active management",
       },
       {
         key: "sell",
@@ -2067,6 +2079,7 @@ function compute() {
         netInvested: s2NetCash,
         replacementDebt: 0,
         returnAssumption: s2ReturnAssumption,
+        benefits: "Flexibility, no tax overhang",
       },
       {
         key: "passive",
@@ -2081,6 +2094,7 @@ function compute() {
         netInvested: s5NetCash,
         replacementDebt: 0,
         returnAssumption: s5ReturnAssumption,
+        benefits: "No tax overhang, higher potential cash flow",
       },
       {
         key: "dst",
@@ -2095,6 +2109,7 @@ function compute() {
         netInvested: s3Equity,             // equity slice — used as denominator for cash-on-cash yield
         replacementDebt: s3ReplacementDebt,// debt carried over at the replacement DST per 1031 mortgage-boot rule
         returnAssumption: s3ReturnAssumption,
+        benefits: "Tax deferral, diversification, estate planning",
       },
       {
         key: "lbd",
@@ -2109,6 +2124,7 @@ function compute() {
         netInvested: s4Investment,
         replacementDebt: 0,
         returnAssumption: s4ReturnAssumption,
+        benefits: "Tax deferral, alternatives portfolio, divisibility for partners, % cash out",
         extras: { lbdInvestment: s4LBDInvestment, freedCash, y1Deduction: s4Y1Deduction }
       }
     ]
@@ -2189,6 +2205,8 @@ function render() {
           <div class="label">Projected Value at Year ${inputs.N}</div>
           <div class="value">${fmt$(s.terminal)}</div>
         </div>
+
+        <div class="scenario-benefits">${s.benefits}</div>
       </div>
     `;
     cards.insertAdjacentHTML("beforeend", html);
