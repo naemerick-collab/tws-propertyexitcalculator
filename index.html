@@ -908,6 +908,27 @@
   .metric .value.good { color: var(--good); }
   .metric .value.bad { color: var(--bad); }
   .metric .value.neutral { color: var(--navy); }
+  /* Subtle gold-dotted underline for inline glossary links (matches website pattern). */
+  .glossary-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(191,155,48,0.35);
+    padding-bottom: 1px;
+    transition: border-color 0.2s;
+  }
+  .glossary-link:hover { border-bottom-color: rgba(191,155,48,0.8); }
+
+  /* Scenario-specific footnote — caveats that can't go in benefits.
+     Currently only LBD has content (state-conformity warning). Sits between
+     the wealth row and the benefits line so it visually attaches to the
+     numbers it qualifies, not to the qualitative benefits below. */
+  .scenario-card .scenario-footnote {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.45;
+    margin-top: 10px;
+  }
   /* Small qualitative-benefits line at the bottom of each scenario card.
      min-height reserves consistent space so the wealth row above it aligns
      horizontally across cards regardless of how many lines this wraps to. */
@@ -1033,6 +1054,65 @@
     letter-spacing: 0.12em;
   }
   .disclosures p { margin-bottom: 8px; }
+
+  /* Accredited-investor callout — prominent, sits at top of disclosures
+     so the eligibility constraint is visible before the long-form text. */
+  .accredited-callout {
+    margin: 0 0 18px;
+    padding: 12px 16px;
+    background: var(--gold-pale);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .accredited-callout strong {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* Results metadata — generation timestamp + auditability note.
+     Sits under the results panel header so the user sees the freshness of
+     the numbers and a pointer to the methodology accordion. */
+  .results-meta {
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    font-style: italic;
+  }
+
+  /* Suitability variant of scenario-footnote — slightly stronger so the
+     accredited-only constraint reads as a hard requirement, not a caveat. */
+  .scenario-card .scenario-footnote.suitability {
+    color: var(--navy);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  /* Small clarifier under Tax Deferred dollar amount — reminds the reader
+     that deferred is not eliminated. Matches .return-line styling. */
+  .metric .defer-clarifier {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    font-weight: 400;
+    font-style: italic;
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  /* Inline parenthetical in comparison-table row labels for caveats
+     (e.g., "Tax Deferred ( ... )"). Keeps label readable without
+     expanding the column width. */
+  .comp .row-caveat {
+    font-size: 11px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-left: 6px;
+  }
 
   /* ---------- CTA band (inline, before footer) ---------- */
   .cta-band {
@@ -1199,7 +1279,7 @@
   </div>
   <div class="hero-inner">
     <h1>Property <em>Exit Strategy</em> Calculator</h1>
-    <p>Compare your options — hold, sell, 1031, defer capital gains, or alternatives portfolio.</p>
+    <p>Compare options side-by-side with tax and growth potential for each.</p>
   </div>
 </header>
 
@@ -1210,7 +1290,7 @@
     <div class="panel-header">
       <div>
         <h2>Your Property &amp; Sale Information</h2>
-        <p>Plug in what you know. Defaults handle the rest.</p>
+        <p>Plug in what you know. We'll handle the rest.</p>
       </div>
     </div>
     <div class="panel-body">
@@ -1270,7 +1350,7 @@
         </div>
 
         <div class="field">
-          <label>Annual Mortgage Debt Service</label>
+          <label>Annual Mortgage Payment (Principal + Interest)</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="debtService" class="has-prefix" min="0" step="500" />
@@ -1279,7 +1359,7 @@
         </div>
 
         <div class="field">
-          <label>Annual Net Operating Income</label>
+          <label>Annual Net Rental Income</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="noi" class="has-prefix" min="0" step="500" />
@@ -1303,7 +1383,7 @@
         </div>
 
         <div class="field">
-          <label>Federal LT Cap Gains</label>
+          <label>Federal Long-Term Capital Gains</label>
           <select id="fedCG">
             <option value="0">0%</option>
             <option value="15">15%</option>
@@ -1355,8 +1435,9 @@
               <div class="input-wrap"><input type="number" id="recaptureRate" class="has-suffix" value="25" min="0" max="40" step="0.1" /><span class="suffix">%</span></div>
             </div>
             <div class="field">
-              <label>NIIT Rate <span class="hint">Net Investment Income</span></label>
+              <label>Net Investment Income Tax (<a href="https://tws-preview.vercel.app/tws-glossary.html" target="_blank" rel="noopener" class="glossary-link">NIIT</a>) Rate</label>
               <div class="input-wrap"><input type="number" id="niitRate" class="has-suffix" value="3.8" min="0" max="10" step="0.1" /><span class="suffix">%</span></div>
+              <div class="field-helper">Applies to high earners (MAGI &gt; $200K single / $250K married). Modeled here as a flat 3.8% on the full gain; actual NIIT may be lower depending on total MAGI.</div>
             </div>
             <div class="field">
               <label>State Cap Gains Rate <span class="hint">auto from state</span></label>
@@ -1443,8 +1524,8 @@
           <details class="group-help">
             <summary>More information</summary>
             <div class="group-help-body">
-              <p><strong>"After-tax wealth at exit"</strong> — estimates a hypothetical sale at the end of the horizon and subtracts cap-gains + recapture tax from each scenario's projected equity.</p>
-              <p><strong>"Step-up in basis"</strong> — sets that exit tax to zero for the Hold, DST, LBD, and Passive paths (the Sell &amp; Pay Tax path already realized its tax up-front, so step-up only affects post-sale portfolio gains).</p>
+              <p><strong>"After-tax wealth at exit":</strong> estimates a hypothetical sale at the end of the horizon and subtracts cap-gains + recapture tax from each scenario's modeled equity.</p>
+              <p><strong>"Step-up in basis":</strong> sets that exit tax to zero for the Hold, DST, LBD, and Passive paths (the Sell &amp; Pay Tax path already realized its tax up-front, so step-up only affects post-sale portfolio gains).</p>
             </div>
           </details>
           </div>
@@ -1490,9 +1571,9 @@
           <details class="group-help">
             <summary>More information</summary>
             <div class="group-help-body">
-              <p><strong>How this scenario works</strong> — Sell the rental and invest just enough into the leveraged BD fund to fully offset the gain. At a 2× multiplier, $100K invested generates $200K of passive loss. The passive loss eliminates the entire taxable gain → <strong>$0 tax due in Year 1</strong>.</p>
-              <p><strong>Where the freed cash goes</strong> — The remaining "freed cash" is invested in the passive alternatives portfolio at the rate set in the Alternatives section. The LBD fund grows on its own track at the cash and appreciation rates above.</p>
-              <p><strong>Deferred-tax exposure</strong> — All deferred tax becomes due upon the LBD fund's eventual disposition (when depreciation recapture applies); step-up in basis at death may eliminate this exposure entirely.</p>
+              <p><strong>How this scenario works:</strong> Sell the rental and invest just enough into the leveraged BD fund to fully offset the gain. At a 2× multiplier, $100K invested generates $200K of passive loss. The passive loss eliminates the entire taxable gain → <strong>$0 tax due in Year 1</strong>.</p>
+              <p><strong>Where the freed cash goes:</strong> The remaining "freed cash" is invested in the passive alternatives portfolio at the rate set in the Alternatives section. The LBD fund grows on its own track at the cash and appreciation rates above.</p>
+              <p><strong>Deferred-tax exposure:</strong> All deferred tax becomes due upon the LBD fund's eventual disposition (when depreciation recapture applies); step-up in basis at death may eliminate this exposure entirely.</p>
             </div>
           </details>
           </div>
@@ -1514,7 +1595,7 @@
           <details class="group-help">
             <summary>More information</summary>
             <div class="group-help-body">
-              <p><strong>How cash yield works here</strong> — Cash yield is paid out each year; the remainder (<strong>Total Return − Cash Yield</strong>) compounds as portfolio growth. Default of 8% total = 7% cash + 1% growth.</p>
+              <p><strong>How cash yield works here:</strong> Cash yield is paid out each year; the remainder (<strong>Total Return − Cash Yield</strong>) compounds as portfolio growth. Default of 8% total = 7% cash + 1% growth.</p>
             </div>
           </details>
           </div>
@@ -1540,6 +1621,7 @@
         <div>
           <h2>Your Property Options Comparison</h2>
           <p id="resultsSubhead">Based on a <span id="holdLabel">10-year</span> reinvestment/hold period.</p>
+          <p class="results-meta" id="resultsMeta"></p>
         </div>
       </div>
       <div class="panel-body">
@@ -1565,20 +1647,20 @@
                <strong>Capital gain</strong> = (Total gain − Recapture portion) × (Federal LTCG rate + NIIT if applicable + State rate).<br>
                Total tax = Recapture tax + Capital gain tax + State tax on full gain.</p>
 
-            <h4>Scenario 1 — Hold (Status Quo)</h4>
+            <h4>Hold (Status Quo)</h4>
             <p>No sale at Year 0, no tax event. Annual cashflow = (NOI grown at the NOI growth rate × (1 − capex reserve %)) − Debt service. When "Apply income tax to rental cashflow" is enabled, ordinary tax is applied to <code>(net NOI − annual depreciation − mortgage interest)</code>. Wealth at exit = Property value (grown at appreciation rate) − Remaining mortgage (reduced by annual paydown). If "After-tax wealth at exit" is enabled, a hypothetical sale at horizon end is taxed (recapture + cap gains + NIIT + state); "Step-up in basis" zeroes that exit tax.</p>
 
-            <h4>Scenario 2 — Sell &amp; Pay Tax</h4>
+            <h4>Sell &amp; Pay Tax</h4>
             <p>Net cash to investor = (Sale price − Selling costs − Mortgage payoff − Total tax). Cash reinvested at the cash yield. Wealth at exit = After-tax cash compounded at the cash yield over the horizon.</p>
 
-            <h4>Scenario 3 — Sell &amp; Invest Passively</h4>
-            <p>Same after-tax cash as Scenario 2, but invested at the higher target passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
+            <h4>Sell &amp; Invest Passively</h4>
+            <p>Same after-tax cash as the Sell &amp; Pay Tax path, but invested at the higher target passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
 
-            <h4>Scenario 4 — 1031 Exchange to DST</h4>
+            <h4>1031 Exchange to DST</h4>
             <p>Tax fully deferred (assuming compliant exchange). Equity reinvested = (Sale price − Selling costs − Mortgage payoff) × (1 − DST load). Annual cashflow = Equity × DST cash-on-cash. Wealth at exit = Equity grown at DST appreciation. <em>Tax deferred is not tax eliminated — basis carries over.</em> When "After-tax wealth at exit" is enabled, exit tax is calculated on the gain over the carried-over basis from the original property. "Step-up in basis" zeroes that tax (a key estate-planning advantage of swap-til-you-drop).</p>
 
-            <h4>Scenario 5 — Sell &amp; Leveraged Bonus Depreciation</h4>
-            <p>Modeled as a 2× (configurable) deduction multiplier: $1 invested in the LBD fund generates $2 of Year-1 passive loss. Required LBD investment = Total gain ÷ Multiplier. The passive loss fully offsets the taxable gain at both federal and state level → $0 tax due in Year 1. Freed cash = Gross equity − LBD investment, which is then invested in the passive alternatives portfolio at the rate set in the Alternatives section. All deferred tax becomes due at the LBD fund's eventual disposition (when depreciation recapture applies). The LBD fund itself generates cash distributions and appreciation per the rates in the LBD section. <em>Note on state conformity:</em> states vary in how they treat federal bonus depreciation; this model assumes full conformity for simplicity. Consult a tax professional for state-specific treatment.</p>
+            <h4>Sell &amp; Leveraged Bonus Depreciation</h4>
+            <p>Modeled as a 2.0× (configurable) deduction multiplier: $1 invested in the LBD fund generates $2.00 of Year-1 passive loss. The exact multiplier depends on the specific fund's LTV and land allocation; typical range is 2.0–2.7× at current 100% bonus depreciation rates. Required LBD investment = Total gain ÷ Multiplier. The passive loss fully offsets the taxable gain at the federal level. Freed cash = Gross equity − LBD investment, which is then invested in the passive alternatives portfolio at the rate set in the Alternatives section. All deferred tax becomes due at the LBD fund's eventual disposition (when depreciation recapture applies). The LBD fund itself generates cash distributions and appreciation per the rates in the LBD section. <em>Note on state conformity:</em> states vary in how they treat federal bonus depreciation; this model assumes full conformity for simplicity, but actual state tax liability may differ in non-conforming states (CA, NY, NJ, MD, and others). <em>Note on passive activity rules:</em> the full passive-loss offset shown assumes the disposed-property gain qualifies as passive income. Real Estate Professionals (IRC §469(c)(7)) or investors with material participation should consult a tax advisor; the offset treatment may differ.</p>
 
             <h4>What this calculator does <em>not</em> model</h4>
             <p>• Income tax on DST/Fund distributions (some offset by depreciation pass-through; varies)<br>
@@ -1586,12 +1668,16 @@
                • Vacancy assumptions beyond capex reserve %<br>
                • Sponsor fees beyond DST upfront load<br>
                • State-by-state quirks (e.g., WA cap-gains threshold, AR 50% LTCG exclusion)<br>
-               • Bonus depreciation legislative changes (default reflects 2026 schedule of 60%)<br>
+               • Future bonus depreciation legislative changes (default reflects current 100% bonus depreciation)<br>
                • State conformity to federal bonus depreciation (assumed: none)</p>
           </div>
         </details>
 
         <div class="disclosures">
+          <div class="accredited-callout">
+            <strong>Accredited investors only.</strong> DST (Delaware Statutory Trust) and Leveraged Bonus Depreciation fund investments shown in this comparison are private placement securities offered under SEC Regulation D (typically Rule 506(c)) and are available only to <em>accredited investors</em> as defined in <a href="https://www.law.cornell.edu/cfr/text/17/230.501" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:2px;">SEC Rule 501 of Regulation D</a>. If you do not meet the accredited-investor thresholds (generally $1M net worth excluding primary residence, or $200K/$300K individual/joint income for two prior years), the DST and LBD scenarios shown here are not available to you.
+          </div>
+
           <h4>Important Disclosures</h4>
           <p>This calculator is provided by Tangible Wealth Solutions for educational and informational purposes only. It is not an offer to buy or sell securities and does not constitute investment, tax, or legal advice. Outputs are hypothetical estimates based on inputs you provide and simplified assumptions; actual results will differ. All investing involves risk, including loss of principal. Past performance is not indicative of future results. Speak to a qualified financial, tax, and legal professional before making any investment decision.</p>
 
@@ -1606,7 +1692,7 @@
 
         <div class="cta-band">
           <h3>Ready to model <em>your actual numbers?</em></h3>
-          <p>Your situation has details no calculator can capture. Our team can walk through your property, timing, and goals — and pressure‑test the trade‑offs alongside you.</p>
+          <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
           <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
         </div>
 
@@ -2060,7 +2146,7 @@ function compute() {
       {
         key: "hold",
         title: "Hold Current Property",
-        sub: "Status quo — keep collecting rent.",
+        sub: "Status quo. Keep collecting rent.",
         taxNow: 0,
         taxDeferred: 0,
         sellingCosts: 0,  // no sale in year 1
@@ -2071,6 +2157,7 @@ function compute() {
         replacementDebt: 0,
         returnAssumption: s1ReturnAssumption,
         benefits: "Status quo, active management",
+        footnote: "",
       },
       {
         key: "sell",
@@ -2086,6 +2173,7 @@ function compute() {
         replacementDebt: 0,
         returnAssumption: s2ReturnAssumption,
         benefits: "Flexibility, no tax overhang",
+        footnote: "",
       },
       {
         key: "passive",
@@ -2101,10 +2189,11 @@ function compute() {
         replacementDebt: 0,
         returnAssumption: s5ReturnAssumption,
         benefits: "No tax overhang, higher potential cash flow",
+        footnote: "",
       },
       {
         key: "dst",
-        title: "1031 Exchange to DST",
+        title: `1031 Exchange to <a href="https://tws-preview.vercel.app/tws-glossary.html" target="_blank" rel="noopener" class="glossary-link">DST</a>`,
         sub: "Defer 100% of tax, become passive.",
         taxNow: 0,
         taxDeferred: totalTax,
@@ -2116,11 +2205,14 @@ function compute() {
         replacementDebt: s3ReplacementDebt,// debt carried over at the replacement DST per 1031 mortgage-boot rule
         returnAssumption: s3ReturnAssumption,
         benefits: "Tax deferral, diversification, estate planning",
+        suitability: "Available to accredited investors only (SEC Rule 501).",
+        riskNote: "DSTs are illiquid private placement securities. Principal loss, distribution suspension, and adverse tax rulings are possible.",
+        footnote: "",
       },
       {
         key: "lbd",
-        title: "Leveraged Bonus Depreciation",
-        sub: "Defer tax with depreciation.",
+        title: `<a href="https://tws-preview.vercel.app/tws-glossary.html" target="_blank" rel="noopener" class="glossary-link">Leveraged Bonus Depreciation</a>`,
+        sub: "Offset gain with accelerated depreciation, then reinvest the freed cash.",
         taxNow: s4TaxPaid,
         taxDeferred: fedTaxDeferred,
         sellingCosts: sellingCosts,
@@ -2131,6 +2223,9 @@ function compute() {
         replacementDebt: 0,
         returnAssumption: s4ReturnAssumption,
         benefits: "Tax deferral, alternatives portfolio, divisibility for partners, % cash out",
+        suitability: "Available to accredited investors only (SEC Rule 501).",
+        riskNote: "Leveraged funds magnify both gains and losses. Passive-loss treatment depends on the investor's tax profile (IRC §469).",
+        footnote: "Federal only. State tax may still apply where bonus depreciation is non-conforming.",
         extras: { lbdInvestment: s4LBDInvestment, freedCash, y1Deduction: s4Y1Deduction }
       }
     ]
@@ -2155,6 +2250,15 @@ function render() {
   const { scenarios, inputs } = data;
 
   document.getElementById("holdLabel").textContent = inputs.N + "-year";
+
+  // Generation timestamp + auditability pointer. Federal/state tax rules
+  // baseline is hard-coded; update RULES_AS_OF when statutory rates or
+  // bonus-depreciation schedule change.
+  const RULES_AS_OF = "May 2026";
+  const generatedOn = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  document.getElementById("resultsMeta").innerHTML =
+    `Generated ${generatedOn}. Tax rates and rules current as of ${RULES_AS_OF}. ` +
+    `Full methodology and formulas auditable in the “How we calculated these numbers” section below.`;
 
   // ---------- Cards ----------
   // Cards are structurally identical so rows align horizontally across all five.
@@ -2194,6 +2298,7 @@ function render() {
         <div class="metric metric-defer">
           <div class="label">Tax Deferred</div>
           <div class="value neutral small">${s.taxDeferred > 0 ? fmt$(s.taxDeferred) : "—"}</div>
+          ${s.taxDeferred > 0 ? `<div class="defer-clarifier">Becomes due at disposition unless step-up applies.</div>` : ""}
         </div>
 
         <div class="metric metric-cf">
@@ -2208,10 +2313,13 @@ function render() {
         </div>
 
         <div class="metric metric-wealth">
-          <div class="label">Projected Value at Year ${inputs.N}</div>
+          <div class="label">Hypothetical Value at Year ${inputs.N}</div>
           <div class="value">${fmt$(s.terminal)}</div>
         </div>
 
+        ${s.suitability ? `<div class="scenario-footnote suitability">${s.suitability}</div>` : ""}
+        ${s.riskNote ? `<div class="scenario-footnote">${s.riskNote}</div>` : ""}
+        ${s.footnote ? `<div class="scenario-footnote">${s.footnote}</div>` : ""}
         <div class="scenario-benefits">${s.benefits}</div>
       </div>
     `;
@@ -2246,7 +2354,7 @@ function render() {
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Sale-Year Tax Impact</td></tr>`;
   html += rowFmt("Real Estate / Sales Commissions", scenarios.map(s => s.sellingCosts > 0 ? fmt$(s.sellingCosts) : "—"));
   html += rowFmt("Capital Gains Tax + Depreciation Recapture Due", scenarios.map(s => fmt$(s.taxNow)));
-  html += rowFmt("Tax Deferred", scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
+  html += rowFmt(`Tax Deferred <span class="row-caveat">(becomes due at disposition unless step-up applies)</span>`, scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
   html += rowFmt("Replacement Debt (1031 carryover)", scenarios.map(s => s.replacementDebt > 0 ? fmt$(s.replacementDebt) : "—"));
   // "Net Cash / Equity Deployed" now reflects TOTAL capital reinvested for 1031 compliance:
   // investor's equity slice + replacement debt carried over at the DST. For non-DST scenarios,
@@ -2264,7 +2372,7 @@ function render() {
   html += rowFmt(inputs.N + "-Year Cumulative Cashflow", scenarios.map(s => fmt$(s.cumCF)));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Wealth Outcome</td></tr>`;
-  html += rowFmt("Projected Value at Year " + inputs.N, scenarios.map(s => fmt$(s.terminal)));
+  html += rowFmt("Hypothetical Value at Year " + inputs.N, scenarios.map(s => fmt$(s.terminal)));
 
   html += `</tbody>`;
   t.innerHTML = html;
