@@ -846,15 +846,15 @@
   .scenario-card.best-cf .metric-cf .value {
     color: #6B6E76;
   }
-  /* Thin gold underline sitting just below each card title. Width is fixed
-     (doesn't extend to card edges) and vertical position is consistent
-     across cards because .scenario-title has min-height 48px (two-line
-     reserve), so the divider always sits at the same y in every card. */
+  /* Hairline gold rule sitting just below each card title. Spans the full
+     content width of the card (respects the card's horizontal padding).
+     Vertical position is consistent across cards because .scenario-title
+     reserves min-height: 48px (two-line buffer), so the divider always sits
+     at the same y in every card regardless of title wrap. */
   .scenario-card .title-divider {
-    width: 36px;
-    height: 2px;
+    width: 100%;
+    height: 1px;
     background: var(--gold);
-    border-radius: 1px;
     margin: 0 0 10px;
   }
   .scenario-card .scenario-title {
@@ -1443,7 +1443,7 @@
             </div>
             <div class="field">
               <label>DST Asset Appreciation</label>
-              <div class="input-wrap"><input type="number" id="dstAppreciation" class="has-suffix" value="0" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
+              <div class="input-wrap"><input type="number" id="dstAppreciation" class="has-suffix" value="2.5" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
               <label>DST Upfront Load <span class="hint">netted from equity</span></label>
@@ -1487,17 +1487,17 @@
           <div class="grid-3">
             <div class="field">
               <label>Target Passive Portfolio Total Return</label>
-              <div class="input-wrap"><input type="number" id="passiveReturn" class="has-suffix" value="12" min="0" max="25" step="0.1" /><span class="suffix">%/yr</span></div>
+              <div class="input-wrap"><input type="number" id="passiveReturn" class="has-suffix" value="8" min="0" max="25" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
               <label>Targeted Cash Yield <span class="hint">dividends/interest</span></label>
-              <div class="input-wrap"><input type="number" id="passiveYield" class="has-suffix" value="10" min="0" max="20" step="0.1" /><span class="suffix">%/yr</span></div>
+              <div class="input-wrap"><input type="number" id="passiveYield" class="has-suffix" value="7" min="0" max="20" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
           </div>
           <details class="group-help">
             <summary>More information</summary>
             <div class="group-help-body">
-              <p><strong>How cash yield works here</strong> — Cash yield is paid out each year; the remainder (<strong>Total Return − Cash Yield</strong>) compounds as portfolio growth. Default of 12% total = 10% cash + 2% growth.</p>
+              <p><strong>How cash yield works here</strong> — Cash yield is paid out each year; the remainder (<strong>Total Return − Cash Yield</strong>) compounds as portfolio growth. Default of 8% total = 7% cash + 1% growth.</p>
             </div>
           </details>
           </div>
