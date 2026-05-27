@@ -2014,11 +2014,14 @@ function compute() {
 
   const s5TerminalWealth = s5Balance - s5TerminalTax + s5CumCF;
 
-  // ---------- Weighted return assumptions (cashflow + appreciation) / capital ----------
-  // Hold: leveraged total return on equity = (Y1 cashflow + asset appreciation) / equity
-  const s1ReturnAssumption = currentEquity > 0
-    ? (currentNetCashflow + marketValue * apprRate) / currentEquity
-    : 0;
+  // ---------- "Cash Yield + Asset Appreciation Assumption" row values ----------
+  // This row reports the sum of return-assumption inputs for each scenario. It deliberately
+  // excludes derived cashflow (e.g. NOI minus debt service for Hold) — that lives in the
+  // Cashflow & Yield section. Each scenario shows its raw assumption inputs only.
+  //
+  // Hold: just the asset appreciation input (no yield-style input exists for Hold; its
+  // cashflow is derived from NOI/debt service and is reported separately).
+  const s1ReturnAssumption = apprRate;
   // Sell & Pay Tax: cash yield only, no appreciation
   const s2ReturnAssumption = cashYield;
   // DST: cash yield + appreciation
