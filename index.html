@@ -918,16 +918,39 @@
   }
   .glossary-link:hover { border-bottom-color: rgba(191,155,48,0.8); }
 
-  /* Scenario-specific footnote — caveats that can't go in benefits.
-     Currently only LBD has content (state-conformity warning). Sits between
-     the wealth row and the benefits line so it visually attaches to the
-     numbers it qualifies, not to the qualitative benefits below. */
-  .scenario-card .scenario-footnote {
-    font-size: 10.5px;
+  /* Tiny gold asterisk appended to scenario titles when the scenario has any
+     associated disclosure text (suitability / riskNote / footnote). The full
+     disclosure copy renders below the cards grid in .scenarios-footnotes so
+     cards remain visually consistent in height. */
+  .scenario-card .card-asterisk {
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.65em;
+    margin-left: 3px;
+    vertical-align: super;
+    font-style: normal;
+  }
+
+  /* Consolidated disclosures block that lives directly under the scenarios
+     grid. Picks up disclosures previously inlined inside the DST and LBD
+     cards. Compact, italic, muted so it reads as fine-print. */
+  .scenarios-footnotes {
+    margin: 22px 4px 0;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-left: 2px solid rgba(191, 155, 48, 0.35);
+    border-radius: 3px;
+    font-size: 11px;
     color: var(--text-muted);
+    line-height: 1.65;
     font-style: italic;
-    line-height: 1.45;
-    margin-top: 10px;
+  }
+  .scenarios-footnotes p { margin: 0; }
+  .scenarios-footnotes sup {
+    color: var(--gold);
+    font-weight: 600;
+    font-style: normal;
+    margin-right: 4px;
   }
   /* Small qualitative-benefits line at the bottom of each scenario card.
      min-height reserves consistent space so the wealth row above it aligns
@@ -1081,15 +1104,6 @@
     color: var(--text-muted);
     line-height: 1.55;
     font-style: italic;
-  }
-
-  /* Suitability variant of scenario-footnote — slightly stronger so the
-     accredited-only constraint reads as a hard requirement, not a caveat. */
-  .scenario-card .scenario-footnote.suitability {
-    color: var(--navy);
-    font-style: normal;
-    font-weight: 500;
-    letter-spacing: 0.02em;
   }
 
   /* Small clarifier under Tax Deferred dollar amount — reminds the reader
@@ -1626,6 +1640,7 @@
       </div>
       <div class="panel-body">
         <div class="scenarios" id="scenarios"></div>
+        <div class="scenarios-footnotes" id="scenariosFootnotes" hidden></div>
       </div>
     </div>
 
@@ -2284,9 +2299,15 @@ function render() {
     const monthly = s.annualCF / 12;
     const isBest = s.key === bestKey;
     const isBestCF = s.key === silverKey;
+    // Cards stay visually uniform: any disclosure text on the scenario
+    // (suitability / riskNote / footnote) shows as a tiny gold asterisk
+    // appended to the title; the full text consolidates into the
+    // .scenarios-footnotes block below the grid.
+    const hasDisclosure = !!(s.suitability || s.riskNote || s.footnote);
+    const asteriskMark  = hasDisclosure ? '<sup class="card-asterisk">*</sup>' : '';
     const html = `
       <div class="scenario-card${isBest ? ' best' : ''}${isBestCF ? ' best-cf' : ''}">
-        <h3 class="scenario-title">${s.title}</h3>
+        <h3 class="scenario-title">${s.title}${asteriskMark}</h3>
         <div class="title-divider" aria-hidden="true"></div>
         <div class="scenario-sub">${s.sub}</div>
 
@@ -2317,14 +2338,24 @@ function render() {
           <div class="value">${fmt$(s.terminal)}</div>
         </div>
 
-        ${s.suitability ? `<div class="scenario-footnote suitability">${s.suitability}</div>` : ""}
-        ${s.riskNote ? `<div class="scenario-footnote">${s.riskNote}</div>` : ""}
-        ${s.footnote ? `<div class="scenario-footnote">${s.footnote}</div>` : ""}
         <div class="scenario-benefits">${s.benefits}</div>
       </div>
     `;
     cards.insertAdjacentHTML("beforeend", html);
   });
+
+  // ---------- Consolidated scenario disclosures (the "*" footnote block) ----------
+  // Any scenario with suitability/riskNote/footnote content feeds this block.
+  // Currently DST and LBD both qualify; other scenarios render nothing here.
+  const fnEl = document.getElementById("scenariosFootnotes");
+  const hasAnyDisclosure = scenarios.some(s => s.suitability || s.riskNote || s.footnote);
+  if (hasAnyDisclosure) {
+    fnEl.hidden = false;
+    fnEl.innerHTML = `<p><sup>*</sup>DST and Leveraged Bonus Depreciation are private placement securities available only to accredited investors (SEC Rule 501). DSTs are illiquid; principal loss, distribution suspension, and adverse tax rulings are possible. Leveraged BD funds magnify both gains and losses, and passive-loss treatment depends on the investor's tax profile (IRC §469). State tax may still apply to LBD where bonus depreciation is non-conforming.</p>`;
+  } else {
+    fnEl.hidden = true;
+    fnEl.innerHTML = "";
+  }
 
   // ---------- ROE callout banner ----------
   const roeHTML = `
