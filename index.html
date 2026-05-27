@@ -78,9 +78,10 @@
   .tws-nav .nav-links { display: flex; gap: clamp(0px, 0.3vw, 4px); list-style: none; align-items: center; }
   .tws-nav .nav-links a {
     display: block;
-    font-size: clamp(11px, 1vw, 13px); font-weight: 400; letter-spacing: 0.04em;
+    text-align: center;
+    font-size: clamp(9.5px, 1vw, 13px); font-weight: 400; letter-spacing: 0.04em;
     color: rgba(255,255,255,0.65); text-decoration: none;
-    padding: 8px clamp(6px, 1vw, 14px); border-radius: 6px; transition: all 0.2s;
+    padding: 8px clamp(5px, 1vw, 14px); border-radius: 6px; transition: all 0.2s;
     white-space: nowrap;
   }
   .tws-nav .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
@@ -191,29 +192,28 @@
   @keyframes hero-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
   .hero h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 5.2vw, 60px);
+    font-size: clamp(44px, 5vw, 72px);
     font-weight: 300;
     color: var(--white);
-    line-height: 1.08;
-    margin: 0 0 22px;
-    letter-spacing: -0.005em;
+    line-height: 1.1;
+    margin: 0 0 20px;
   }
   .hero h1 em,
   .hero h1 .accent {
     font-style: italic;
     color: var(--gold-light);
-    font-weight: 400;
+    /* no font-weight override — inherits 300 from h1 to match website's lighter italic accent */
   }
   .hero-sub-eyebrow {
     font-size: 13px; font-weight: 400; letter-spacing: 0.10em; text-transform: uppercase;
     color: rgba(255,255,255,0.45); margin-bottom: 16px;
   }
   .hero p {
-    font-size: clamp(15px, 1.6vw, 17px);
-    color: rgba(255,255,255,0.65);
-    max-width: 640px;
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    max-width: 580px;
     margin: 0 auto 14px;
-    line-height: 1.7;
+    line-height: 1.75;
   }
   .hero-trust-chip {
     display: inline-flex; align-items: center; gap: 14px;
@@ -543,6 +543,8 @@
     line-height: 1.3;
     font-style: italic;
   }
+  .roe-banner .roe-value-block { text-align: center; }
+  .roe-banner .roe-value-block .roe-label { margin-bottom: 4px; }
   .roe-banner .roe-value {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(40px, 5vw, 56px);
@@ -2223,7 +2225,10 @@ function render() {
         <div class="roe-label">Your Current Return on Equity</div>
         <div class="roe-headline">How hard your equity is working in the property today.</div>
       </div>
-      <div class="roe-value">${(inputs.currentROE * 100).toFixed(2)}%</div>
+      <div class="roe-value-block">
+        <div class="roe-label">ROE</div>
+        <div class="roe-value">${(inputs.currentROE * 100).toFixed(2)}%</div>
+      </div>
       <div class="roe-formula">
         <strong>${fmt$(inputs.currentNetCashflow)}</strong> annual cashflow<br>
         ÷ <strong>${fmt$(inputs.currentEquity)}</strong> current equity<br>
