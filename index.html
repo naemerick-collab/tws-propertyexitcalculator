@@ -2048,6 +2048,7 @@ function compute() {
         cumCF: s1CumCF,
         terminal: s1TerminalWealth,
         netInvested: currentEquity,
+        replacementDebt: 0,
         returnAssumption: s1ReturnAssumption,
       },
       {
@@ -2061,6 +2062,7 @@ function compute() {
         cumCF: s2CumCF,
         terminal: s2TerminalWealth,
         netInvested: s2NetCash,
+        replacementDebt: 0,
         returnAssumption: s2ReturnAssumption,
       },
       {
@@ -2074,6 +2076,7 @@ function compute() {
         cumCF: s5CumCF,
         terminal: s5TerminalWealth,
         netInvested: s5NetCash,
+        replacementDebt: 0,
         returnAssumption: s5ReturnAssumption,
       },
       {
@@ -2086,7 +2089,8 @@ function compute() {
         annualCF: s3AnnualCF_Y1,
         cumCF: s3CumCF,
         terminal: s3TerminalWealth,
-        netInvested: s3Equity,
+        netInvested: s3Equity,             // equity slice — used as denominator for cash-on-cash yield
+        replacementDebt: s3ReplacementDebt,// debt carried over at the replacement DST per 1031 mortgage-boot rule
         returnAssumption: s3ReturnAssumption,
       },
       {
@@ -2100,6 +2104,7 @@ function compute() {
         cumCF: s4CumCF,
         terminal: s4TerminalWealth,
         netInvested: s4Investment,
+        replacementDebt: 0,
         returnAssumption: s4ReturnAssumption,
         extras: { lbdInvestment: s4LBDInvestment, freedCash, y1Deduction: s4Y1Deduction }
       }
@@ -2169,7 +2174,7 @@ function render() {
         <div class="metric metric-cf">
           <div class="label">Avg Monthly Cashflow</div>
           <div class="value small">${fmt$(monthly)}/mo</div>
-          <div class="return-line">${(s.returnAssumption * 100).toFixed(2)}% cash yield + asset appreciation${s.key === "lbd" ? " (weighted)" : ""}</div>
+          <div class="return-line">${s.netInvested > 0 ? `${((s.annualCF / s.netInvested) * 100).toFixed(2)}% cash yield${s.key === "lbd" ? " (weighted)" : ""}` : "—"}</div>
         </div>
 
         <div class="metric metric-cum">
@@ -2212,7 +2217,12 @@ function render() {
   html += rowFmt("Real Estate / Sales Commissions", scenarios.map(s => s.sellingCosts > 0 ? fmt$(s.sellingCosts) : "—"));
   html += rowFmt("Federal + State Tax Due (Year 1)", scenarios.map(s => fmt$(s.taxNow)));
   html += rowFmt("Tax Deferred", scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
-  html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested)));
+  html += rowFmt("Replacement Debt (1031 carryover)", scenarios.map(s => s.replacementDebt > 0 ? fmt$(s.replacementDebt) : "—"));
+  // "Net Cash / Equity Deployed" now reflects TOTAL capital reinvested for 1031 compliance:
+  // investor's equity slice + replacement debt carried over at the DST. For non-DST scenarios,
+  // replacementDebt is 0 so this is just the equity. Cash-on-cash yield rows below still divide
+  // by s.netInvested (equity only), so the % remains a true yield on the investor's equity.
+  html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested + (s.replacementDebt || 0))));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Cashflow & Yield</td></tr>`;
   html += rowFmt("Year 1 Monthly Cashflow", scenarios.map(s => fmt$(s.annualCF / 12)));
