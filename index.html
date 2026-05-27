@@ -150,7 +150,7 @@
     position: relative; overflow: hidden;
     background: var(--navy);
     color: #fff;
-    padding: 96px 24px 110px;
+    padding: 220px 24px 110px;   /* top padding makes room for the absolutely-positioned hero-badge pill */
     text-align: center;
   }
   .hero::before {
@@ -175,10 +175,10 @@
   }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(191,155,48,0.10); border: 1px solid rgba(191,155,48,0.30);
-    padding: 7px 14px; border-radius: 100px;
-    font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--gold-light); margin-bottom: 28px;
+    background: rgba(191,155,48,0.10); border: 1px solid rgba(191,155,48,0.25);
+    padding: 6px 14px; border-radius: 100px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--gold-light); white-space: nowrap;
   }
   .hero-badge-dot {
     width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
@@ -234,8 +234,11 @@
     margin-bottom: 16px;
   }
 
+  @media (max-width: 900px) {
+    .hero { padding: 160px 20px 60px; }
+    .hero-badge { top: 110px !important; }
+  }
   @media (max-width: 700px) {
-    .hero { padding: 64px 20px 80px; }
     .hero-trust-chip { flex-direction: column; gap: 8px; }
   }
 
@@ -778,7 +781,7 @@
        non-"best" cards to the light gold palette so each card reads as a
        distinct tile separated by the cream grid gap. The .best card keeps
        its own gold-gradient background so it still stands out. */
-    .scenario-card:not(.best) {
+    .scenario-card:not(.best):not(.best-cf) {
       background: var(--gold-pale);
       border-color: rgba(191, 155, 48, 0.30);
     }
@@ -821,6 +824,38 @@
   }
   .scenario-card.best .metric-wealth .value {
     color: var(--gold);
+  }
+  /* Card with the greatest avg monthly cashflow — silver-accent highlight.
+     Mirrors the .best (gold) treatment but in a neutral steel tone so the
+     two highlights coexist without competing. Only applied when the
+     highest-cashflow card is different from the .best card (see render()). */
+  .scenario-card.best-cf {
+    border-color: #A0A4AB;
+    border-width: 2px;
+    padding: 21px 17px 21px;  /* compensate the extra 1px of border */
+    background: linear-gradient(180deg, rgba(160,164,171,0.08) 0%, var(--white) 60%);
+    box-shadow: 0 8px 22px rgba(120, 124, 132, 0.12);
+  }
+  .scenario-card.best-cf::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8B8E96, #C8CBD1);
+  }
+  .scenario-card.best-cf .metric-cf .value {
+    color: #6B6E76;
+  }
+  /* Thin gold underline sitting just below each card title. Width is fixed
+     (doesn't extend to card edges) and vertical position is consistent
+     across cards because .scenario-title has min-height 48px (two-line
+     reserve), so the divider always sits at the same y in every card. */
+  .scenario-card .title-divider {
+    width: 36px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+    margin: 0 0 10px;
   }
   .scenario-card .scenario-title {
     font-family: 'Cormorant Garamond', serif;
@@ -1140,11 +1175,12 @@
 
 <!-- ===================== HERO ===================== -->
 <header class="hero">
+  <!-- Floating pill — matches tws-redesign / tws-resources page-hero-tag placement -->
+  <div class="hero-badge" style="position:absolute;top:160px;left:50%;transform:translateX(-50%);z-index:3;white-space:nowrap;">
+    <span class="hero-badge-dot"></span>
+    Investor Tool · Free · No Sign-Up
+  </div>
   <div class="hero-inner">
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      Investor Tool · Free · No Sign-Up
-    </div>
     <h1>Property <em>Exit Strategy</em> Calculator</h1>
     <p>Compare your options — hold, sell, 1031, defer capital gains, or alternatives portfolio.</p>
   </div>
@@ -1197,7 +1233,6 @@
           <div class="input-wrap">
             <input type="number" id="yearPurchased" value="2016" min="1970" max="2099" step="1" />
           </div>
-          <div class="field-helper">Used to auto-estimate depreciation &amp; loan position.</div>
         </div>
 
         <div class="field">
@@ -1206,7 +1241,6 @@
             <input type="number" id="mortgageRate" class="has-suffix" value="4.5" min="0" max="15" step="0.05" />
             <span class="suffix">%</span>
           </div>
-          <div class="field-helper">Drives loan balance, payment, interest, paydown.</div>
         </div>
 
         <div class="field">
@@ -1215,7 +1249,7 @@
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="mortgage" class="has-prefix" min="0" step="5000" />
           </div>
-          <div class="field-helper">Auto from loan model. Edit if you have a statement value.</div>
+          <div class="field-helper">Edit if you have a statement value.</div>
         </div>
 
         <div class="field">
@@ -1224,7 +1258,7 @@
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="debtService" class="has-prefix" min="0" step="500" />
           </div>
-          <div class="field-helper">Auto from loan model (P+I only). Edit to override.</div>
+          <div class="field-helper">Principal &amp; interest only. Edit to override.</div>
         </div>
 
         <div class="field">
@@ -1233,7 +1267,7 @@
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="noi" class="has-prefix" min="0" step="500" />
           </div>
-          <div class="field-helper">Auto-estimated at 6.0% cap rate on purchase price. Edit to override.</div>
+          <div class="field-helper">Rent minus expenses. Estimate based on 6.0% cap rate on purchase price. Edit to override.</div>
         </div>
       </div>
 
@@ -1248,7 +1282,7 @@
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="accumDep" class="has-prefix" min="0" step="1000" />
           </div>
-          <div class="field-helper">Auto-calculated from price &amp; year. Edit to override.</div>
+          <div class="field-helper">Edit to override.</div>
         </div>
 
         <div class="field">
@@ -1320,7 +1354,7 @@
             </div>
             <div class="field">
               <label>Cash / Money-Market Yield <span class="hint">3-mo T-bill proxy</span></label>
-              <div class="input-wrap"><input type="number" id="cashYield" class="has-suffix" value="4.5" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
+              <div class="input-wrap"><input type="number" id="cashYield" class="has-suffix" value="3.75" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
               <div id="cashYieldBadge" class="rate-badge" style="display:none;"></div>
             </div>
           </div>
@@ -1834,20 +1868,34 @@ function compute() {
 
   // ============================================================
   // SCENARIO 3 — 1031 to DST
+  // ------------------------------------------------------------
+  // Cash-on-cash distribution is paid on the EQUITY invested.
+  // Asset appreciation applies to the full REPLACEMENT VALUE
+  // (equity + replacement debt), so leverage participates in
+  // upside. Terminal equity = appreciated asset − replacement debt.
+  // Replacement debt is modeled as equal to the current mortgage
+  // (equivalent leverage carried over to the new property).
   // ============================================================
-  const s3Equity = grossEquity * (1 - dstLoad);
-  let s3CumCF = 0;
-  const s3AnnualCF_Y1 = s3Equity * dstYield;
-  for (let y = 1; y <= N; y++) {
-    s3CumCF += s3Equity * dstYield * Math.pow(1 + dstAppr, y - 1);
-  }
-  const s3TerminalEquity = s3Equity * Math.pow(1 + dstAppr, N);
+  const s3Equity           = grossEquity * (1 - dstLoad);
+  const s3ReplacementDebt  = mortgage;                       // carry equivalent leverage to the replacement DST
+  const s3ReplacementValue = s3Equity + s3ReplacementDebt;   // total asset exposure on the replacement property
 
-  // Optional terminal tax: 1031 carries over original basis, so gain at exit = terminalEquity - adjustedBasis
+  const s3AnnualCF_Y1 = s3Equity * dstYield;                 // cash-on-cash, paid on equity
+  // DST cash distributions are FLAT — paid out each year to the investor,
+  // not reinvested into the DST. Asset appreciation only accrues to terminal
+  // equity (via s3TerminalAssetValue below); it does NOT grow the cash
+  // distribution stream.
+  const s3CumCF = s3AnnualCF_Y1 * N;
+
+  const s3TerminalAssetValue = s3ReplacementValue * Math.pow(1 + dstAppr, N);
+  const s3TerminalEquity     = s3TerminalAssetValue - s3ReplacementDebt;
+
+  // Optional terminal tax: 1031 carries over original adjusted basis.
+  // Gain at sale is computed on the FULL ASSET VALUE (not just equity),
+  // since basis is tied to the property, not the equity slice.
   let s3TerminalTax = 0;
   if (afterTaxTerminal && !stepUp) {
-    // Treat the carried-over basis as the same adjusted basis as the original property
-    const dstGain = Math.max(0, s3TerminalEquity - adjustedBasis);
+    const dstGain = Math.max(0, s3TerminalAssetValue - adjustedBasis);
     const dstRecap = Math.min(accumDep, dstGain);
     const dstCG = Math.max(0, dstGain - dstRecap);
     s3TerminalTax = dstRecap * recaptureRate
@@ -1900,11 +1948,11 @@ function compute() {
   const freedCash = Math.max(0, grossEquity - s4LBDInvestment - taxOwedUnoffset);
 
   // LBD fund growth — cash distribution + appreciation tracks
-  let lbdCumCF = 0;
   const lbdY1CF = s4LBDInvestment * bdYield;
-  for (let y = 1; y <= N; y++) {
-    lbdCumCF += s4LBDInvestment * bdYield * Math.pow(1 + bdAppr, y - 1);
-  }
+  // LBD fund cash distributions are FLAT — paid out each year to the investor,
+  // not reinvested into the fund. Asset appreciation accrues only to terminal
+  // equity via lbdTerminalEquity. Mirrors DST treatment.
+  const lbdCumCF = lbdY1CF * N;
   const lbdTerminalEquity = s4LBDInvestment * Math.pow(1 + bdAppr, N);
 
   // Freed cash invested in passive alternatives at the passive return assumption
@@ -2089,12 +2137,23 @@ function render() {
     (best, s) => (s.terminal > best.terminal ? s : best),
     scenarios[0]
   ).key;
+  // Identify the scenario with the highest avg monthly cashflow. If it's a
+  // different card than the highest-value one, it gets a silver-accent
+  // highlight to surface "best income" separately from "best wealth growth".
+  // When both metrics point to the same card, gold wins and no silver is shown.
+  const bestCFKey = scenarios.reduce(
+    (best, s) => (s.annualCF > best.annualCF ? s : best),
+    scenarios[0]
+  ).key;
+  const silverKey = bestCFKey !== bestKey ? bestCFKey : null;
   scenarios.forEach((s) => {
     const monthly = s.annualCF / 12;
     const isBest = s.key === bestKey;
+    const isBestCF = s.key === silverKey;
     const html = `
-      <div class="scenario-card${isBest ? ' best' : ''}">
+      <div class="scenario-card${isBest ? ' best' : ''}${isBestCF ? ' best-cf' : ''}">
         <h3 class="scenario-title">${s.title}</h3>
+        <div class="title-divider" aria-hidden="true"></div>
         <div class="scenario-sub">${s.sub}</div>
 
         <div class="metric metric-tax">
@@ -2110,7 +2169,7 @@ function render() {
         <div class="metric metric-cf">
           <div class="label">Avg Monthly Cashflow</div>
           <div class="value small">${fmt$(monthly)}/mo</div>
-          <div class="return-line">${(s.returnAssumption * 100).toFixed(2)}% target total return${s.key === "lbd" ? " (weighted)" : ""}</div>
+          <div class="return-line">${(s.returnAssumption * 100).toFixed(2)}% cash yield + asset appreciation${s.key === "lbd" ? " (weighted)" : ""}</div>
         </div>
 
         <div class="metric metric-cum">
@@ -2160,7 +2219,7 @@ function render() {
   html += rowFmt("Year 1 Annual Cashflow", scenarios.map(s => fmt$(s.annualCF)));
   html += rowFmt("Year 1 Yield on Equity Deployed",
     scenarios.map(s => s.netInvested > 0 ? ((s.annualCF / s.netInvested) * 100).toFixed(2) + "%" : "—"));
-  html += rowFmt("Target Total Return",
+  html += rowFmt("Cash Yield + Asset Appreciation Assumption",
     scenarios.map(s => (s.returnAssumption * 100).toFixed(2) + "%"));
   html += rowFmt(inputs.N + "-Year Cumulative Cashflow", scenarios.map(s => fmt$(s.cumCF)));
 
@@ -2381,8 +2440,11 @@ window.addEventListener("DOMContentLoaded", () => {
     if (el) el.addEventListener("input", () => manualOverrides.add(id));
   });
 
-  // fetch live Treasury yield in the background
-  fetchTreasuryYield();
+  // Treasury auto-fetch DISABLED — the 3-mo T-bill rate doesn't reflect the
+  // money-market / HYSA rate end-investors actually earn. Static 3.75% default
+  // is used instead. Re-enable by uncommenting the line below when a better
+  // CORS-enabled data source is identified.
+  // fetchTreasuryYield();
 });
 
 /* The six fields recalcDerivedFields() can write to. Any field also in
