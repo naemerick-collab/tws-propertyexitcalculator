@@ -1041,6 +1041,65 @@
     font-weight: 300;
   }
   details.methodology[open] > summary::after { content: "−"; }
+
+  /* Section-level expander used for sub-sections inside a panel (e.g. the
+     20-year growth chart). Styled to feel like a heading the user can open. */
+  details.section-expander {
+    margin-top: 28px;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    background: var(--white);
+    overflow: hidden;
+  }
+  details.section-expander > summary {
+    padding: 18px 22px;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    color: var(--navy);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.25;
+  }
+  details.section-expander > summary em { color: var(--gold); font-style: italic; }
+  details.section-expander > summary::-webkit-details-marker { display: none; }
+  details.section-expander > summary::after {
+    content: "+";
+    font-size: 26px;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    margin-left: 16px;
+    flex-shrink: 0;
+  }
+  details.section-expander[open] > summary::after { content: "−"; }
+  details.section-expander > .section-body { padding: 4px 22px 22px; }
+
+  /* Panel-level expander: makes a full <div class="panel"> collapsible by
+     replacing the wrapper with <details class="panel panel-collapsible">.
+     The summary inherits .panel-header styling so the look is unchanged. */
+  details.panel.panel-collapsible > summary.panel-header {
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+  }
+  details.panel.panel-collapsible > summary.panel-header::-webkit-details-marker { display: none; }
+  details.panel.panel-collapsible > summary.panel-header::after {
+    content: "+";
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1;
+  }
+  details.panel.panel-collapsible[open] > summary.panel-header::after { content: "−"; }
   .method-body { padding: 0 22px 20px; font-size: 13px; color: var(--text); line-height: 1.7; }
   .method-body h4 {
     font-family: 'DM Sans', inherit;
@@ -1289,8 +1348,8 @@
     margin-top: 24px;
   }
   .gated-content {
-    filter: blur(7px);
-    -webkit-filter: blur(7px);
+    filter: blur(3px);
+    -webkit-filter: blur(3px);
     pointer-events: none;
     user-select: none;
     transition: filter 0.3s ease;
@@ -1358,6 +1417,16 @@
     user-select: auto;
     filter: none;
     -webkit-filter: none;
+    /* Unlocked cards don't need GPU-layer promotion. Reset so the base
+       .scenario-card:hover transform (translateY(-2px)) can win — the
+       gated rule's transform: translateZ(0) had higher specificity and
+       was overriding hover. */
+    isolation: auto;
+    will-change: auto;
+    transform: none;
+  }
+  .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated:hover {
+    transform: translateY(-2px);
   }
   /* Soft white scrim layered over each gated card to push the region further
      into the background. Sits above the blurred children but below the CTA. */
@@ -1877,24 +1946,27 @@
           </div>
         </div>
 
-        <!-- V2 ADDITION: 20-year growth comparison line chart -->
-        <div class="growth-chart-wrap">
-          <h3>20-Year Projected Growth: <em>Pay Tax vs. 1031 Exchange</em></h3>
-          <p class="chart-sub">
-            Hypothetical illustration based on your inputs. Compares <strong>after-tax sale proceeds invested at your cash yield</strong> against a <strong>1031 exchange into a DST</strong> over a 20-year horizon. The gold band visualizes the <strong>tax-deferral upside</strong> — the gap between the 1031's after-tax exit value (dashed, if cashed out at year&nbsp;t) and its full step-up / continued-exchange value (solid).
-          </p>
-          <div class="growth-chart-canvas-wrap">
-            <canvas id="growthChart20yr"></canvas>
+        <!-- V2 ADDITION: 20-year growth comparison line chart, wrapped in
+             a collapsible so it doesn't dominate the screen by default. -->
+        <details class="section-expander growth-chart-wrap" id="growthChartDetails">
+          <summary>20-Year Projected Growth: <em>Pay Tax vs. 1031 Exchange</em></summary>
+          <div class="section-body">
+            <p class="chart-sub">
+              Hypothetical illustration based on your inputs. Compares <strong>after-tax sale proceeds invested at your cash yield</strong> against a <strong>1031 exchange into a DST</strong> over a 20-year horizon. The gold band visualizes the <strong>tax-deferral upside</strong> — the gap between the 1031's after-tax exit value (dashed, if cashed out at year&nbsp;t) and its full step-up / continued-exchange value (solid).
+            </p>
+            <div class="growth-chart-canvas-wrap">
+              <canvas id="growthChart20yr"></canvas>
+            </div>
+            <p class="growth-chart-legend-note">
+              <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. The full upside (solid gold line) is realized only if the investor (a) continues exchanging or (b) holds until death so heirs receive a stepped-up basis. Otherwise the realized outcome falls between the dashed and solid lines depending on exit timing and tax law at that time. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
+            </p>
           </div>
-          <p class="growth-chart-legend-note">
-            <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. The full upside (solid gold line) is realized only if the investor (a) continues exchanging or (b) holds until death so heirs receive a stepped-up basis. Otherwise the realized outcome falls between the dashed and solid lines depending on exit timing and tax law at that time. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
-          </p>
-        </div>
+        </details>
       </div>
     </div>
 
-    <div class="panel">
-      <div class="panel-header"><div><h2>Detailed Comparison</h2><p>All five paths, side by side.</p></div></div>
+    <details class="panel panel-collapsible" id="detailedComparisonDetails">
+      <summary class="panel-header"><div><h2>Detailed Comparison</h2><p>All five paths, side by side.</p></div></summary>
       <div class="panel-body">
         <div class="gated-wrap" id="gatedCompWrap">
           <div class="gated-content">
@@ -1980,7 +2052,7 @@
         </div>
 
       </div>
-    </div>
+    </details>
 
   </section>
 </main>
@@ -3150,6 +3222,18 @@ window.addEventListener("DOMContentLoaded", () => {
   // is used instead. Re-enable by uncommenting the line below when a better
   // CORS-enabled data source is identified.
   // fetchTreasuryYield();
+
+  // The 20-year growth chart lives inside a collapsed <details> by default.
+  // Chart.js sized the canvas while it was display:none (so 0×0). When the
+  // user opens the section, resize() makes it pick up real dimensions.
+  const growthDetails = document.getElementById("growthChartDetails");
+  if (growthDetails) {
+    growthDetails.addEventListener("toggle", () => {
+      if (growthDetails.open && _growthChart20yrInstance) {
+        _growthChart20yrInstance.resize();
+      }
+    });
+  }
 });
 
 /* The six fields recalcDerivedFields() can write to. Any field also in
