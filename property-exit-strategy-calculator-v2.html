@@ -1331,7 +1331,16 @@
   .scenarios-gated-wrap .scenario-card.scenario-gated {
     pointer-events: none;
     user-select: none;
-    /* Keep border crisp by NOT applying filter to the card itself */
+    /* Desaturate the entire card (border + background + composited children)
+       so color stops competing with the visible cards and the CTA. */
+    filter: grayscale(1) opacity(0.55);
+    -webkit-filter: grayscale(1) opacity(0.55);
+    /* Promote to own compositing layer so sibling hover repaints (e.g.
+       neighboring card's translateY) don't briefly drop the filter and
+       cause a flash of the original colored borders. */
+    isolation: isolate;
+    will-change: filter;
+    transform: translateZ(0);
   }
   .scenarios-gated-wrap .scenario-card.scenario-gated > * {
     filter: blur(3px);
@@ -1347,6 +1356,21 @@
   .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated {
     pointer-events: auto;
     user-select: auto;
+    filter: none;
+    -webkit-filter: none;
+  }
+  /* Soft white scrim layered over each gated card to push the region further
+     into the background. Sits above the blurred children but below the CTA. */
+  .scenarios-gated-wrap .scenario-card.scenario-gated::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0.18), rgba(255,255,255,0.35));
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated::after {
+    display: none;
   }
   .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated > * {
     filter: none;
