@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Property Exit Strategy Calculator | Tangible Wealth Solutions</title>
+<title>Property Exit Strategy Calculator V2 | Tangible Wealth Solutions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   /* ---------- Brand palette (matches TWS refresh / tws-preview.vercel.app) ---------- */
   :root {
@@ -908,15 +909,14 @@
   .metric .value.good { color: var(--good); }
   .metric .value.bad { color: var(--bad); }
   .metric .value.neutral { color: var(--navy); }
-  /* Subtle gold-dotted underline for inline glossary links (matches website pattern). */
+  /* Inline glossary links — inherit color, no underline. Turn gold on hover. */
   .glossary-link {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid rgba(191,155,48,0.35);
-    padding-bottom: 1px;
-    transition: border-color 0.2s;
+    border-bottom: none;
+    transition: color 0.2s;
   }
-  .glossary-link:hover { border-bottom-color: rgba(191,155,48,0.8); }
+  .glossary-link:hover { color: var(--gold); }
 
   /* Tiny gold asterisk appended to scenario titles when the scenario has any
      associated disclosure text (suitability / riskNote / footnote). The full
@@ -1251,6 +1251,180 @@
     border: 1px solid rgba(191,155,48,0.25);
   }
 
+  /* ---------- V2: 20-Year Growth Chart panel ---------- */
+  .growth-chart-wrap {
+    margin-top: 32px;
+    padding: 28px 24px 20px;
+    background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .growth-chart-wrap h3 {
+    font-size: clamp(22px, 2.4vw, 28px);
+    margin-bottom: 6px;
+  }
+  .growth-chart-wrap .chart-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+  .growth-chart-canvas-wrap {
+    position: relative;
+    height: clamp(320px, 42vw, 460px);
+    width: 100%;
+  }
+  .growth-chart-legend-note {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 14px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ---------- V2: Email-gate — block style (Detailed Comparison table) ---------- */
+  .gated-wrap {
+    position: relative;
+    margin-top: 24px;
+  }
+  .gated-content {
+    filter: blur(7px);
+    -webkit-filter: blur(7px);
+    pointer-events: none;
+    user-select: none;
+    transition: filter 0.3s ease;
+  }
+  .gated-wrap.unlocked .gated-content {
+    filter: none;
+    -webkit-filter: none;
+    pointer-events: auto;
+    user-select: auto;
+  }
+  .gate-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    background: linear-gradient(180deg, rgba(8,23,46,0.04) 0%, rgba(8,23,46,0.12) 100%);
+    border-radius: 12px;
+    z-index: 5;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .gated-wrap.unlocked .gate-overlay { display: none; }
+
+  /* ---------- V2: Email-gate — inline per-card blur (scenario cards row) ---------- */
+  /* Wrapper for the unified scenarios grid + inline overlay. Position
+     relative so the overlay can be absolutely placed over the gated cards. */
+  .scenarios-gated-wrap {
+    position: relative;
+  }
+  /* Individual gated cards: blur the *contents* (children) so the card's
+     own border/shape stays crisp. Lower blur radius (~4.5px) makes text
+     unreadable but still recognizable as numbers/labels — enough tease
+     without giving away figures. */
+  .scenarios-gated-wrap .scenario-card.scenario-gated {
+    pointer-events: none;
+    user-select: none;
+    /* Keep border crisp by NOT applying filter to the card itself */
+  }
+  .scenarios-gated-wrap .scenario-card.scenario-gated > * {
+    filter: blur(3px);
+    -webkit-filter: blur(3px);
+    transition: filter 0.3s ease;
+  }
+  /* Title-divider is a 1px gold line — keep it crisp too so each card reads
+     clearly as a card. */
+  .scenarios-gated-wrap .scenario-card.scenario-gated > .title-divider {
+    filter: none;
+    -webkit-filter: none;
+  }
+  .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated {
+    pointer-events: auto;
+    user-select: auto;
+  }
+  .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated > * {
+    filter: none;
+    -webkit-filter: none;
+  }
+  /* CTA dialog — absolutely positioned. Its top/left/width are set in JS
+     based on the bounding box of the gated cards so it stays centered over
+     just the blurred region at every breakpoint. */
+  .gate-overlay-inline {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    pointer-events: none; /* container is just a positioner */
+  }
+  .scenarios-gated-wrap.unlocked .gate-overlay-inline { display: none; }
+  .gate-overlay-inline .gate-card {
+    pointer-events: auto;
+  }
+  .gate-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 36px;
+    max-width: 520px;
+    box-shadow: 0 18px 48px rgba(8, 23, 46, 0.18);
+  }
+  .gate-card .pill {
+    margin-bottom: 14px;
+  }
+  .gate-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .gate-card h3 em { color: var(--gold); font-style: italic; }
+  .gate-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+  .gate-card .btn-gate {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+  }
+  .gate-card .btn-gate:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(191,155,48,0.3);
+  }
+  .gate-card .btn-gate.secondary {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--border);
+    margin-left: 10px;
+  }
+  .gate-card .btn-gate.secondary:hover {
+    background: var(--cream);
+    box-shadow: none;
+  }
+
   /* Print */
   @media print {
     .tws-nav, .tws-footer { display: none; }
@@ -1258,6 +1432,8 @@
     .panel { box-shadow: none; border: 1px solid #aaa; }
     .panel::before { display: none; }
     .btn { display: none; }
+    .scenario-card.scenario-gated > * { filter: none !important; }
+    .gate-overlay, .gate-overlay-inline { display: none !important; }
   }
 </style>
 </head>
@@ -1657,17 +1833,57 @@
         </div>
       </div>
       <div class="panel-body">
-        <div class="scenarios" id="scenarios"></div>
-        <div class="scenarios-footnotes" id="scenariosFootnotes" hidden></div>
+        <!-- V2: All 5 scenario cards in a single grid. The right-side gated
+             cards (passive, dst, lbd) get an inline blur via the
+             .scenario-card-gated class; a CTA dialog floats centered over
+             that blurred region (position calculated in JS). -->
+        <div class="scenarios-gated-wrap" id="scenariosGatedWrap">
+          <div class="scenarios" id="scenarios"></div>
+          <div class="scenarios-footnotes" id="scenariosFootnotes" hidden></div>
+          <div class="gate-overlay-inline" id="gateOverlayInline">
+            <div class="gate-card">
+              <span class="pill">Client Access</span>
+              <h3>TWS Clients have <em>full access</em> to evaluate available options</h3>
+              <p>Unlock the 1031 / DST exchange, Leveraged Bonus Depreciation, and passive-portfolio comparisons by scheduling a complimentary consultation.</p>
+              <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn-gate">Schedule Consultation</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- V2 ADDITION: 20-year growth comparison line chart -->
+        <div class="growth-chart-wrap">
+          <h3>20-Year Projected Growth: <em>Pay Tax vs. 1031 Exchange</em></h3>
+          <p class="chart-sub">
+            Hypothetical illustration based on your inputs. Compares <strong>after-tax sale proceeds invested at your cash yield</strong> against a <strong>1031 exchange into a DST</strong> over a 20-year horizon. The gold band visualizes the <strong>tax-deferral upside</strong> — the gap between the 1031's after-tax exit value (dashed, if cashed out at year&nbsp;t) and its full step-up / continued-exchange value (solid).
+          </p>
+          <div class="growth-chart-canvas-wrap">
+            <canvas id="growthChart20yr"></canvas>
+          </div>
+          <p class="growth-chart-legend-note">
+            <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. The full upside (solid gold line) is realized only if the investor (a) continues exchanging or (b) holds until death so heirs receive a stepped-up basis. Otherwise the realized outcome falls between the dashed and solid lines depending on exit timing and tax law at that time. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
+          </p>
+        </div>
       </div>
     </div>
 
     <div class="panel">
       <div class="panel-header"><div><h2>Detailed Comparison</h2><p>All five paths, side by side.</p></div></div>
       <div class="panel-body">
-        <div id="roeBanner"></div>
-        <div class="comp-table-wrap">
-          <table class="comp" id="compTable"></table>
+        <div class="gated-wrap" id="gatedCompWrap">
+          <div class="gated-content">
+            <div id="roeBanner"></div>
+            <div class="comp-table-wrap">
+              <table class="comp" id="compTable"></table>
+            </div>
+          </div>
+          <div class="gate-overlay">
+            <div class="gate-card">
+              <span class="pill">Client Access</span>
+              <h3>Full side-by-side analysis for <em>TWS Clients</em></h3>
+              <p>The detailed comparison reveals year-by-year cashflow, deferred tax exposure, and wealth outcomes across every available exit strategy.</p>
+              <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn-gate">Schedule Consultation</a>
+            </div>
+          </div>
         </div>
 
         <details class="methodology">
@@ -2181,7 +2397,9 @@ function compute() {
   return {
     inputs: { N, totalGain, totalTax, grossEquity, recapturePortion, capGainPortion,
               fedRecaptureTax, fedCGTax, niitTax, stateTax,
-              currentEquity, currentNetCashflow, currentROE, currentCapRate },
+              currentEquity, currentNetCashflow, currentROE, currentCapRate,
+              // V2 chart needs these to compute year-by-year after-tax DST exit value
+              adjustedBasis, accumDep, recaptureRate, fedCG, niitRate, applyNIIT, stateRate },
     scenarios: [
       {
         key: "hold",
@@ -2301,8 +2519,10 @@ function render() {
     `Full methodology and formulas auditable in the “How we calculated these numbers” section below.`;
 
   // ---------- Cards ----------
-  // Cards are structurally identical so rows align horizontally across all five.
-  // Tax Deferred renders in every card — "—" indicates not applicable for that path.
+  // V2: All 5 cards render in a SINGLE grid (#scenarios). Gated cards get an
+  // additional .scenario-gated class so they blur in place; the CTA dialog
+  // is positioned over their bounding box (positionGateOverlay below).
+  const PUBLIC_KEYS = new Set(["hold", "sell"]);
   const cards = document.getElementById("scenarios");
   cards.innerHTML = "";
   // Identify the scenario with the greatest projected wealth (terminal value).
@@ -2330,8 +2550,10 @@ function render() {
     // .scenarios-footnotes block below the grid.
     const hasDisclosure = !!(s.suitability || s.riskNote || s.footnote);
     const asteriskMark  = hasDisclosure ? '<sup class="card-asterisk">*</sup>' : '';
+    const isGated = !PUBLIC_KEYS.has(s.key);
+    const gatedClass = isGated ? ' scenario-gated' : '';
     const html = `
-      <div class="scenario-card${isBest ? ' best' : ''}${isBestCF ? ' best-cf' : ''}">
+      <div class="scenario-card${isBest ? ' best' : ''}${isBestCF ? ' best-cf' : ''}${gatedClass}" data-scenario-key="${s.key}">
         <h3 class="scenario-title">${s.title}${asteriskMark}</h3>
         <div class="title-divider" aria-hidden="true"></div>
         <div class="scenario-sub">${s.sub}</div>
@@ -2368,6 +2590,12 @@ function render() {
     `;
     cards.insertAdjacentHTML("beforeend", html);
   });
+
+  // ---------- V2: 20-Year Growth Comparison Chart ----------
+  // Compares Sell & Pay Tax (after-tax proceeds earning cash yield, flat per
+  // existing model) against 1031 Exchange to DST (equity appreciates at DST
+  // appreciation rate; cash distributions are flat per memory & model).
+  renderGrowthChart20yr(data);
 
   // ---------- Consolidated scenario disclosures (the "*" footnote block) ----------
   // Any scenario with suitability/riskNote/footnote content feeds this block.
@@ -2435,14 +2663,260 @@ function render() {
 
   // Show results
   document.getElementById("results").classList.add("visible");
+  // Position the CTA overlay AFTER results are visible so getBoundingClientRect
+  // returns real values. Use rAF to ensure layout has settled.
+  requestAnimationFrame(() => {
+    positionGateOverlay();
+    // Run again on the next frame for safety (font/image loading reflow).
+    requestAnimationFrame(positionGateOverlay);
+  });
   // Scroll into view
   setTimeout(() => {
     document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+    positionGateOverlay();
   }, 80);
 }
 
 function rowFmt(label, cells) {
   return `<tr><td>${label}</td>${cells.map(c => `<td>${c}</td>`).join("")}</tr>`;
+}
+
+/* ============================================================
+   V2: POSITION CTA DIALOG OVER THE GATED CARDS
+   ------------------------------------------------------------
+   Measures the bounding box of the blurred (.scenario-gated)
+   cards and positions the .gate-overlay-inline dialog to be
+   centered over that region. Works across breakpoints — if
+   the grid wraps at a smaller width, the bbox spans whatever
+   rows the gated cards occupy.
+   ============================================================ */
+function positionGateOverlay() {
+  const wrap    = document.getElementById("scenariosGatedWrap");
+  const overlay = document.getElementById("gateOverlayInline");
+  if (!wrap || !overlay) return;
+  if (wrap.classList.contains("unlocked")) return;
+
+  const gated = wrap.querySelectorAll(".scenario-card.scenario-gated");
+  if (!gated.length) return;
+
+  const wrapRect = wrap.getBoundingClientRect();
+  let left   = Infinity;
+  let right  = -Infinity;
+  let top    = Infinity;
+  let bottom = -Infinity;
+  gated.forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.left   < left)   left   = r.left;
+    if (r.right  > right)  right  = r.right;
+    if (r.top    < top)    top    = r.top;
+    if (r.bottom > bottom) bottom = r.bottom;
+  });
+
+  overlay.style.left   = (left   - wrapRect.left) + "px";
+  overlay.style.top    = (top    - wrapRect.top)  + "px";
+  overlay.style.width  = (right  - left)          + "px";
+  overlay.style.height = (bottom - top)           + "px";
+}
+// Keep overlay aligned on resize. Debounced via rAF.
+let _gateOverlayRaf = null;
+window.addEventListener("resize", () => {
+  if (_gateOverlayRaf) cancelAnimationFrame(_gateOverlayRaf);
+  _gateOverlayRaf = requestAnimationFrame(positionGateOverlay);
+});
+
+/* ============================================================
+   V2: 20-YEAR GROWTH COMPARISON CHART
+   ------------------------------------------------------------
+   Renders a Chart.js line chart comparing:
+     • Sell & Pay Tax — after-tax proceeds earning the cash yield
+       (flat, matching the model: principal stays static, yield paid out).
+     • 1031 Exchange to DST — equity appreciates at DST appreciation
+       rate; cash distributions are FLAT (paid to investor, not
+       reinvested) — see memory: dst-distributions-are-flat.
+   Horizon is fixed at 20 years (not the user's input N) per spec.
+   ============================================================ */
+let _growthChart20yrInstance = null;
+function renderGrowthChart20yr(data) {
+  const canvas = document.getElementById("growthChart20yr");
+  if (!canvas || typeof Chart === "undefined") return;
+
+  // Pull the same inputs compute() used so the chart stays consistent
+  // with the cards. We re-derive year-by-year curves here.
+  const numv = id => parseFloat((document.getElementById(id)?.value || "0").toString().replace(/[$,]/g, "")) || 0;
+  const grossEquity = data.inputs.grossEquity;
+  const totalTax   = data.inputs.totalTax;
+  const cashYield  = numv("cashYield") / 100;
+  const dstYield   = numv("dstYield") / 100;
+  const dstAppr    = numv("dstAppreciation") / 100;
+  const dstLoad    = numv("dstLoad") / 100;
+  const mortgage   = numv("mortgage");
+
+  // SELL & PAY TAX path — principal flat, yield paid out each year.
+  // Wealth(t) = netCash + netCash * cashYield * t
+  const s2NetCash  = grossEquity - totalTax;
+
+  // 1031 -> DST path — equity invested = grossEquity * (1 - dstLoad);
+  // replacement debt mirrors current mortgage so leverage carries over.
+  // Cash distributions are FLAT on equity; appreciation accrues to the
+  // full replacement-property value, then debt is subtracted.
+  const s3Equity           = grossEquity * (1 - dstLoad);
+  const s3ReplacementDebt  = mortgage;
+  const s3ReplacementValue = s3Equity + s3ReplacementDebt;
+  const s3AnnualCF         = s3Equity * dstYield;
+
+  // After-tax DST exit math — at year t, if the investor cashes out (no
+  // further exchange, no step-up at death), the deferred tax becomes due.
+  // Basis carries over from the original property, so the gain at exit is
+  // computed on the FULL replacement asset value vs. original adjusted basis.
+  const {
+    adjustedBasis = 0, accumDep = 0,
+    recaptureRate = 0, fedCG = 0, niitRate = 0,
+    applyNIIT = false, stateRate = 0,
+  } = data.inputs;
+
+  function dstExitTax(assetValueT) {
+    const gain  = Math.max(0, assetValueT - adjustedBasis);
+    const recap = Math.min(accumDep, gain);
+    const cg    = Math.max(0, gain - recap);
+    return recap * recaptureRate
+         + cg    * fedCG
+         + (applyNIIT ? gain * niitRate : 0)
+         + gain  * stateRate;
+  }
+
+  const HORIZON = 20;
+  const labels = [];
+  const payTaxSeries     = [];
+  const exchangeSeries   = [];   // pre-tax (step-up / swap-til-you-drop)
+  const exchangeAfterTax = [];   // after-tax if sold at year t
+  for (let t = 0; t <= HORIZON; t++) {
+    labels.push("Year " + t);
+    payTaxSeries.push(Math.round(s2NetCash + s2NetCash * cashYield * t));
+    const dstAssetT   = s3ReplacementValue * Math.pow(1 + dstAppr, t);
+    const dstEquityT  = dstAssetT - s3ReplacementDebt;
+    const dstCumCFT   = s3AnnualCF * t;
+    const pretax      = dstEquityT + dstCumCFT;
+    const exitTax     = dstExitTax(dstAssetT);
+    exchangeSeries.push(Math.round(pretax));
+    exchangeAfterTax.push(Math.round(pretax - exitTax));
+  }
+
+  // TWS brand colors
+  const navy = "#08172E";
+  const gold = "#BF9B30";
+  const goldLight = "#D4B55A";
+  const muted = "#5A6478";
+
+  const fmtCompact$ = v => {
+    if (Math.abs(v) >= 1_000_000) return "$" + (v / 1_000_000).toFixed(2) + "M";
+    if (Math.abs(v) >= 1_000)     return "$" + (v / 1_000).toFixed(0) + "K";
+    return "$" + Math.round(v).toLocaleString();
+  };
+  const fmtFull$ = v => "$" + Math.round(v).toLocaleString();
+
+  if (_growthChart20yrInstance) {
+    _growthChart20yrInstance.destroy();
+  }
+
+  // Dataset order = tooltip/legend order (top → bottom):
+  //   index 0: 1031 step-up / continued exchange (solid, top)
+  //   index 1: 1031 after-tax projected value    (dashed, middle) — fills UP
+  //            to dataset 0, creating the gold deferral-value band.
+  //   index 2: Sell & Pay Tax                    (muted, bottom)
+  _growthChart20yrInstance = new Chart(canvas.getContext("2d"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "1031 Exchange — with step-up / continued exchange",
+          data: exchangeSeries,
+          borderColor: gold,
+          backgroundColor: "rgba(191,155,48,0.18)",
+          borderWidth: 3,
+          tension: 0.15,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: false,
+        },
+        {
+          label: "1031 Exchange — projected after-tax value",
+          data: exchangeAfterTax,
+          borderColor: gold,
+          backgroundColor: "rgba(191,155,48,0.18)", // band fill color
+          borderWidth: 2,
+          borderDash: [6, 5],
+          tension: 0.15,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: "-1", // fill UP to dataset 0 (step-up line) → deferral band
+        },
+        {
+          label: "Sell & Pay Tax (proceeds + cash yield)",
+          data: payTaxSeries,
+          borderColor: muted,
+          backgroundColor: "rgba(90,100,120,0.08)",
+          borderWidth: 2.5,
+          tension: 0.15,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: {
+          position: "top",
+          align: "start",
+          labels: {
+            font: { family: "'DM Sans', sans-serif", size: 12, weight: "500" },
+            color: navy,
+            usePointStyle: true,
+            boxWidth: 8,
+            padding: 16,
+          },
+        },
+        tooltip: {
+          backgroundColor: navy,
+          titleColor: goldLight,
+          bodyColor: "#fff",
+          titleFont: { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
+          bodyFont:  { family: "'DM Sans', sans-serif", size: 12 },
+          padding: 12,
+          borderColor: "rgba(191,155,48,0.4)",
+          borderWidth: 1,
+          callbacks: {
+            label: ctx => ctx.dataset.label + ": " + fmtFull$(ctx.parsed.y),
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { family: "'DM Sans', sans-serif", size: 11 },
+            color: muted,
+            maxRotation: 0,
+            autoSkip: true,
+            autoSkipPadding: 12,
+          },
+        },
+        y: {
+          beginAtZero: false,
+          grid: { color: "rgba(8,23,46,0.06)" },
+          ticks: {
+            font: { family: "'DM Sans', sans-serif", size: 11 },
+            color: muted,
+            callback: v => fmtCompact$(v),
+          },
+        },
+      },
+    },
+  });
 }
 
 /* ============================================================
