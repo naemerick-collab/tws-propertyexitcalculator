@@ -1311,18 +1311,10 @@
   }
 
   /* ---------- V2: 20-Year Growth Chart panel ---------- */
-  .growth-chart-wrap {
-    margin-top: 32px;
-    padding: 28px 24px 20px;
-    background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-  }
-  .growth-chart-wrap h3 {
-    font-size: clamp(22px, 2.4vw, 28px);
-    margin-bottom: 6px;
-  }
-  .growth-chart-wrap .chart-sub {
+  /* (Wrapper chrome is now provided by .panel since the growth chart was
+     promoted to its own top-level panel-collapsible section. The wrapper
+     class is retained on the <details> only as a hook for selectors below.) */
+  .chart-sub {
     font-size: 13px;
     color: var(--text-muted);
     margin-bottom: 20px;
@@ -1347,9 +1339,12 @@
     position: relative;
     margin-top: 24px;
   }
+  /* Matches the scenarios-row treatment: blur + grayscale + opacity drop so
+     the figures behind the CTA read as background rather than competing for
+     attention. A soft white scrim is layered via .gated-wrap::after below. */
   .gated-content {
-    filter: blur(3px);
-    -webkit-filter: blur(3px);
+    filter: grayscale(1) opacity(0.55) blur(3px);
+    -webkit-filter: grayscale(1) opacity(0.55) blur(3px);
     pointer-events: none;
     user-select: none;
     transition: filter 0.3s ease;
@@ -1360,6 +1355,18 @@
     pointer-events: auto;
     user-select: auto;
   }
+  /* Soft white scrim — same gradient used on the 5-card scenarios row.
+     Sits above the blurred table but below the CTA (.gate-overlay z-index 5). */
+  .gated-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0.18), rgba(255,255,255,0.35));
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: 2;
+  }
+  .gated-wrap.unlocked::after { display: none; }
   .gate-overlay {
     position: absolute;
     inset: 0;
@@ -1946,24 +1953,25 @@
           </div>
         </div>
 
-        <!-- V2 ADDITION: 20-year growth comparison line chart, wrapped in
-             a collapsible so it doesn't dominate the screen by default. -->
-        <details class="section-expander growth-chart-wrap" id="growthChartDetails">
-          <summary>20-Year Projected Growth: <em>Pay Tax vs. 1031 Exchange</em></summary>
-          <div class="section-body">
-            <p class="chart-sub">
-              Hypothetical illustration based on your inputs. Compares <strong>after-tax sale proceeds invested at your cash yield</strong> against a <strong>1031 exchange into a DST</strong> over a 20-year horizon. The gold band visualizes the <strong>tax-deferral upside</strong> — the gap between the 1031's after-tax exit value (dashed, if cashed out at year&nbsp;t) and its full step-up / continued-exchange value (solid).
-            </p>
-            <div class="growth-chart-canvas-wrap">
-              <canvas id="growthChart20yr"></canvas>
-            </div>
-            <p class="growth-chart-legend-note">
-              <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. The full upside (solid gold line) is realized only if the investor (a) continues exchanging or (b) holds until death so heirs receive a stepped-up basis. Otherwise the realized outcome falls between the dashed and solid lines depending on exit timing and tax law at that time. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
-            </p>
-          </div>
-        </details>
       </div>
     </div>
+
+    <!-- V2: 20-year growth comparison line chart, promoted to its own
+         top-level collapsible panel (matches Detailed Comparison styling). -->
+    <details class="panel panel-collapsible" id="growthChartDetails">
+      <summary class="panel-header"><div><h2>20-Year Projected Growth: <em>Pay Tax vs. 1031 Exchange</em></h2></div></summary>
+      <div class="panel-body">
+        <p class="chart-sub">
+          Hypothetical illustration based on your inputs. Compares <strong>after-tax sale proceeds invested at your cash yield</strong> against a <strong>1031 exchange into a DST</strong> over a 20-year horizon. The gold band visualizes the <strong>tax-deferral upside</strong> — the gap between the 1031's after-tax exit value (dashed, if cashed out at year&nbsp;t) and its full step-up / continued-exchange value (solid).
+        </p>
+        <div class="growth-chart-canvas-wrap">
+          <canvas id="growthChart20yr"></canvas>
+        </div>
+        <p class="growth-chart-legend-note">
+          <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. The full upside (solid gold line) is realized only if the investor (a) continues exchanging or (b) holds until death so heirs receive a stepped-up basis. Otherwise the realized outcome falls between the dashed and solid lines depending on exit timing and tax law at that time. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
+        </p>
+      </div>
+    </details>
 
     <details class="panel panel-collapsible" id="detailedComparisonDetails">
       <summary class="panel-header"><div><h2>Detailed Comparison</h2><p>All five paths, side by side.</p></div></summary>
@@ -1984,7 +1992,14 @@
             </div>
           </div>
         </div>
+      </div>
+    </details>
 
+    <!-- Methodology + disclosures live OUTSIDE the Detailed Comparison
+         expander so they remain visible whether the comparison is open or
+         not. (Methodology is still its own inline expander.) -->
+    <div class="panel">
+      <div class="panel-body">
         <details class="methodology">
           <summary>How we calculated these numbers</summary>
           <div class="method-body">
@@ -2045,14 +2060,14 @@
           <p style="margin-top: 12px;">Securities offered through Emerson Equity LLC, Member FINRA/SIPC. Only available in states where Emerson Equity LLC is registered. Emerson Equity LLC is not affiliated with Tangible Wealth Solutions or any other entity identified in this communication.</p>
         </div>
 
-        <div class="cta-band">
-          <h3>Ready to model <em>your actual numbers?</em></h3>
-          <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
-          <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
-        </div>
-
       </div>
-    </details>
+    </div>
+
+    <div class="cta-band">
+      <h3>Ready to model <em>your actual numbers?</em></h3>
+      <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
+      <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
+    </div>
 
   </section>
 </main>
