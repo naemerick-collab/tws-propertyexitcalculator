@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   /* ---------- Brand palette (matches TWS refresh / tws-preview.vercel.app) ---------- */
   :root {
@@ -304,44 +303,37 @@
   /* Row 1 — Current Market Value (the trigger field) + State of Property
      sit at top-left as two side-by-side fields, each constrained so the row
      doesn't span the page. Wraps to a stack on narrow screens. */
+  /* Row 1 — Trigger fields (4 fields the user must provide): Market Value,
+     Purchase Price, Year Purchased, Mortgage Rate. Drives derived row below. */
   .grid-mv {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
-    margin-bottom: 24px;
+    margin-bottom: 14px;
   }
-  .grid-mv .field {
-    flex: 1 1 240px;
-    max-width: 320px;
-  }
-  .grid-mv .field label { font-size: 14px; }
+  @media (max-width: 720px) { .grid-mv { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 420px) { .grid-mv { grid-template-columns: 1fr; } }
 
-  /* Row 2 — Property & loan inputs (6 fields in one row on desktop) */
+  /* Row 2 — Derived from trigger fields (4 fields, auto-populate, editable):
+     Outstanding Mortgage, Annual Mtg Payment, Annual NOI, Accumulated Depreciation. */
   .grid-loan {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
-    margin-bottom: 22px;
-    padding-bottom: 22px;
-    border-bottom: 1px dashed var(--border-soft);
+    margin-bottom: 14px;
   }
-  @media (max-width: 1100px) { .grid-loan { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 720px)  { .grid-loan { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px)  { .grid-loan { grid-template-columns: 1fr; } }
 
-  /* Row 3 — Tax & projection (3 visible normally; Custom horizon adds a 4th).
-     The .field-spacer inserts an empty column between Federal LT Cap Gains
-     and the Reinvestment/Hold Period dropdown for visual breathing room.
-     Spacer collapses on narrower breakpoints so the fields pack tightly. */
+  /* Row 3 — Tax environment + horizon (3 fields normally; Custom horizon adds a 4th):
+     Federal LT Cap Gains, State of Property, Reinvestment/Hold Period. */
   .grid-projection {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
-  }
-  .grid-projection .field-spacer { display: block; }
-  @media (max-width: 1100px) {
-    .grid-projection { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .grid-projection .field-spacer { display: none; }
+    margin-top: 14px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--border-soft);
   }
   @media (max-width: 720px)  { .grid-projection { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px)  { .grid-projection { grid-template-columns: 1fr; } }
@@ -564,6 +556,109 @@
     color: var(--navy);
     font-weight: 600;
   }
+
+  /* ---------- Prior 1031 Exchange toggle + sub-card ---------- */
+  .prior-1031-row {
+    margin: 0;
+    padding: 8px 14px;
+    background: rgba(191,155,48,0.05);
+    border: 1px solid rgba(191,155,48,0.22);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .prior-1031-row.on { background: var(--gold-pale); border-color: var(--gold); }
+  .prior-1031-label { flex: 1; min-width: 0; }
+  .prior-1031-label p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.4;
+  }
+  .prior-1031-label .title {
+    font-weight: 400;
+    letter-spacing: 0.005em;
+  }
+  .prior-1031-label .sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-left: 8px;
+  }
+  @media (max-width: 720px) {
+    .prior-1031-label .sub { display: block; margin-left: 0; margin-top: 2px; }
+  }
+  .prior-1031-switch {
+    flex-shrink: 0;
+    position: relative;
+    width: 40px; height: 22px;
+    border-radius: 999px;
+    background: rgba(8,23,46,0.20);
+    cursor: pointer;
+    transition: background 0.18s;
+    border: none;
+    padding: 0;
+  }
+  .prior-1031-switch::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: left 0.18s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+  }
+  .prior-1031-switch.on { background: var(--gold); }
+  .prior-1031-switch.on::after { left: 20px; }
+  .prior-1031-switch:focus { outline: none; box-shadow: 0 0 0 3px rgba(191,155,48,0.25); }
+
+  .prior-1031-card {
+    display: none;
+    margin: 12px 0 0;
+    padding: 14px 16px;
+    background: #FAF6E8;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+  }
+  .prior-1031-card.on { display: block; }
+  .prior-1031-card .sub-head {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 10px;
+  }
+  .prior-1031-card .sub-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 720px) { .prior-1031-card .sub-grid { grid-template-columns: 1fr; } }
+  .prior-1031-card .field label {
+    font-size: 12px;
+    min-height: 0;
+  }
+  .prior-1031-card .field input { padding: 9px 12px; font-size: 14px; }
+  .prior-1031-card .field input.has-prefix { padding-left: 24px; }
+  .prior-1031-card .field-helper { margin-top: 8px; }
+
+  .prior-1031-readout {
+    display: none;
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    background: rgba(191,155,48,0.07);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .prior-1031-readout.on { display: block; }
+  .prior-1031-readout strong { color: var(--navy); font-weight: 600; }
+  .prior-1031-readout .line { display: block; }
 
   /* ---------- Advanced toggle ---------- */
   .adv-toggle-row {
@@ -1041,65 +1136,6 @@
     font-weight: 300;
   }
   details.methodology[open] > summary::after { content: "−"; }
-
-  /* Section-level expander used for sub-sections inside a panel (e.g. the
-     20-year growth chart). Styled to feel like a heading the user can open. */
-  details.section-expander {
-    margin-top: 28px;
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    background: var(--white);
-    overflow: hidden;
-  }
-  details.section-expander > summary {
-    padding: 18px 22px;
-    cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    color: var(--navy);
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: clamp(18px, 2vw, 22px);
-    line-height: 1.25;
-  }
-  details.section-expander > summary em { color: var(--gold); font-style: italic; }
-  details.section-expander > summary::-webkit-details-marker { display: none; }
-  details.section-expander > summary::after {
-    content: "+";
-    font-size: 26px;
-    color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    margin-left: 16px;
-    flex-shrink: 0;
-  }
-  details.section-expander[open] > summary::after { content: "−"; }
-  details.section-expander > .section-body { padding: 4px 22px 22px; }
-
-  /* Panel-level expander: makes a full <div class="panel"> collapsible by
-     replacing the wrapper with <details class="panel panel-collapsible">.
-     The summary inherits .panel-header styling so the look is unchanged. */
-  details.panel.panel-collapsible > summary.panel-header {
-    cursor: pointer;
-    list-style: none;
-    position: relative;
-  }
-  details.panel.panel-collapsible > summary.panel-header::-webkit-details-marker { display: none; }
-  details.panel.panel-collapsible > summary.panel-header::after {
-    content: "+";
-    position: absolute;
-    right: 28px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 30px;
-    color: var(--gold);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1;
-  }
-  details.panel.panel-collapsible[open] > summary.panel-header::after { content: "−"; }
   .method-body { padding: 0 22px 20px; font-size: 13px; color: var(--text); line-height: 1.7; }
   .method-body h4 {
     font-family: 'DM Sans', inherit;
@@ -1310,41 +1346,14 @@
     border: 1px solid rgba(191,155,48,0.25);
   }
 
-  /* ---------- V2: 20-Year Growth Chart panel ---------- */
-  /* (Wrapper chrome is now provided by .panel since the growth chart was
-     promoted to its own top-level panel-collapsible section. The wrapper
-     class is retained on the <details> only as a hook for selectors below.) */
-  .chart-sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-    max-width: 720px;
-    line-height: 1.6;
-  }
-  .growth-chart-canvas-wrap {
-    position: relative;
-    height: clamp(320px, 42vw, 460px);
-    width: 100%;
-  }
-  .growth-chart-legend-note {
-    font-size: 11.5px;
-    color: var(--text-muted);
-    margin-top: 14px;
-    font-style: italic;
-    line-height: 1.6;
-  }
-
   /* ---------- V2: Email-gate — block style (Detailed Comparison table) ---------- */
   .gated-wrap {
     position: relative;
     margin-top: 24px;
   }
-  /* Matches the scenarios-row treatment: blur + grayscale + opacity drop so
-     the figures behind the CTA read as background rather than competing for
-     attention. A soft white scrim is layered via .gated-wrap::after below. */
   .gated-content {
-    filter: grayscale(1) opacity(0.55) blur(3px);
-    -webkit-filter: grayscale(1) opacity(0.55) blur(3px);
+    filter: blur(7px);
+    -webkit-filter: blur(7px);
     pointer-events: none;
     user-select: none;
     transition: filter 0.3s ease;
@@ -1355,18 +1364,6 @@
     pointer-events: auto;
     user-select: auto;
   }
-  /* Soft white scrim — same gradient used on the 5-card scenarios row.
-     Sits above the blurred table but below the CTA (.gate-overlay z-index 5). */
-  .gated-wrap::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(255,255,255,0.18), rgba(255,255,255,0.35));
-    pointer-events: none;
-    border-radius: 12px;
-    z-index: 2;
-  }
-  .gated-wrap.unlocked::after { display: none; }
   .gate-overlay {
     position: absolute;
     inset: 0;
@@ -1397,16 +1394,7 @@
   .scenarios-gated-wrap .scenario-card.scenario-gated {
     pointer-events: none;
     user-select: none;
-    /* Desaturate the entire card (border + background + composited children)
-       so color stops competing with the visible cards and the CTA. */
-    filter: grayscale(1) opacity(0.55);
-    -webkit-filter: grayscale(1) opacity(0.55);
-    /* Promote to own compositing layer so sibling hover repaints (e.g.
-       neighboring card's translateY) don't briefly drop the filter and
-       cause a flash of the original colored borders. */
-    isolation: isolate;
-    will-change: filter;
-    transform: translateZ(0);
+    /* Keep border crisp by NOT applying filter to the card itself */
   }
   .scenarios-gated-wrap .scenario-card.scenario-gated > * {
     filter: blur(3px);
@@ -1422,31 +1410,6 @@
   .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated {
     pointer-events: auto;
     user-select: auto;
-    filter: none;
-    -webkit-filter: none;
-    /* Unlocked cards don't need GPU-layer promotion. Reset so the base
-       .scenario-card:hover transform (translateY(-2px)) can win — the
-       gated rule's transform: translateZ(0) had higher specificity and
-       was overriding hover. */
-    isolation: auto;
-    will-change: auto;
-    transform: none;
-  }
-  .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated:hover {
-    transform: translateY(-2px);
-  }
-  /* Soft white scrim layered over each gated card to push the region further
-     into the background. Sits above the blurred children but below the CTA. */
-  .scenarios-gated-wrap .scenario-card.scenario-gated::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(255,255,255,0.18), rgba(255,255,255,0.35));
-    pointer-events: none;
-    border-radius: inherit;
-  }
-  .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated::after {
-    display: none;
   }
   .scenarios-gated-wrap.unlocked .scenario-card.scenario-gated > * {
     filter: none;
@@ -1469,14 +1432,11 @@
   }
   .gate-card {
     background: var(--white);
-    border: 1px solid rgba(8, 23, 46, 0.12);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 32px 36px;
     max-width: 520px;
-    box-shadow:
-      0 2px 4px rgba(8, 23, 46, 0.08),
-      0 12px 24px rgba(8, 23, 46, 0.18),
-      0 32px 64px rgba(8, 23, 46, 0.28);
+    box-shadow: 0 18px 48px rgba(8, 23, 46, 0.18);
   }
   .gate-card .pill {
     margin-bottom: 14px;
@@ -1585,8 +1545,7 @@
 <header class="hero">
   <!-- Floating pill — matches tws-redesign / tws-resources page-hero-tag placement -->
   <div class="hero-badge" style="position:absolute;top:160px;left:50%;transform:translateX(-50%);z-index:3;white-space:nowrap;">
-    <span class="hero-badge-dot"></span>
-    Investor Tool · Free · No Sign-Up
+    Investor Tool
   </div>
   <div class="hero-inner">
     <h1>Property <em>Exit Strategy</em> Calculator</h1>
@@ -1606,7 +1565,8 @@
     </div>
     <div class="panel-body">
 
-      <!-- ROW 1 — Current Market Value (trigger field) + State of Property -->
+      <!-- ROW 1 — Trigger fields: Market Value, Purchase Price, Year Purchased,
+           Mortgage Rate. These four inputs drive every derived field in ROW 2. -->
       <div class="grid-mv">
         <div class="field">
           <label>Current Market Value</label>
@@ -1618,22 +1578,12 @@
         </div>
 
         <div class="field">
-          <label>State of Property</label>
-          <select id="state">
-            <!-- Populated by JS -->
-          </select>
-        </div>
-      </div>
-
-      <!-- ROW 2 — Property & loan inputs (6 fields) -->
-      <div class="grid-loan">
-        <div class="field">
-          <label>Original Purchase Price</label>
+          <label id="purchasePriceLabel">Original Purchase Price</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="purchasePrice" class="has-prefix" value="400000" min="0" step="10000" />
           </div>
-          <div class="field-helper">What you originally paid.</div>
+          <div class="field-helper" id="purchasePriceHelper">What you originally paid.</div>
         </div>
 
         <div class="field">
@@ -1650,7 +1600,11 @@
             <span class="suffix">%</span>
           </div>
         </div>
+      </div>
 
+      <!-- ROW 2 — Derived from ROW 1 (auto-populate, user may override):
+           Outstanding Mortgage, Annual Mtg Payment, Annual NOI, Accumulated Depreciation. -->
+      <div class="grid-loan">
         <div class="field">
           <label>Outstanding Mortgage Balance</label>
           <div class="input-wrap">
@@ -1677,13 +1631,7 @@
           </div>
           <div class="field-helper">Rent minus expenses. Estimate based on 6.0% cap rate on purchase price. Edit to override.</div>
         </div>
-      </div>
 
-      <!-- ROW 3 — Tax & projection setup. Order: Accumulated Depreciation,
-           Federal LT Cap Gains, [spacer], Reinvestment/Hold Period (+ Custom
-           Years which appears only when "Custom" is selected). The spacer
-           gives visual breathing room between tax inputs and the horizon. -->
-      <div class="grid-projection">
         <div class="field">
           <label>Accumulated Depreciation</label>
           <div class="input-wrap">
@@ -1692,7 +1640,59 @@
           </div>
           <div class="field-helper">Edit to override.</div>
         </div>
+      </div>
 
+      <!-- Prior 1031 Exchange toggle — placed after the property/loan grid so
+           it relates visually to the basis inputs above. -->
+      <div class="prior-1031-row" id="prior1031Row">
+        <button class="prior-1031-switch" id="prior1031Switch" type="button" role="switch" aria-checked="false" aria-label="Toggle prior 1031 exchange"></button>
+        <div class="prior-1031-label">
+          <p>
+            <span class="title">Has this property been part of a prior 1031 exchange?</span>
+            <span class="sub" id="prior1031SubLabel">Toggle on to carry basis forward from the relinquished property.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Original (relinquished) property sub-card — appears when toggle is on -->
+      <div class="prior-1031-card" id="prior1031Card">
+        <p class="sub-head">Original (relinquished) property</p>
+        <div class="sub-grid">
+          <div class="field">
+            <label>Original Purchase Price</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="text" inputmode="numeric" id="priorPurchase" class="has-prefix" value="220,000" min="0" step="10000" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Capital Improvements</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="text" inputmode="numeric" id="priorImprovements" class="has-prefix" value="0" min="0" step="1000" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Depreciation Taken</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="text" inputmode="numeric" id="priorDepreciation" class="has-prefix" value="0" min="0" step="1000" />
+            </div>
+          </div>
+        </div>
+        <div class="field-helper">Use figures from the original property's Schedule E and closing statements at the time of the first 1031. Your CPA can confirm.</div>
+      </div>
+
+      <!-- Live carryover basis readout — appears when toggle is on -->
+      <div class="prior-1031-readout" id="prior1031Readout">
+        <span class="line"><strong>Carryover adjusted basis: <span id="readoutCarryover">$220,000</span></strong> &nbsp;&middot;&nbsp; <span id="readoutMath">$220,000 original property purchase + $0 improvements &minus; $0 original property depreciation</span></span>
+        <span class="line">Depreciation from the original (relinquished) property is added to the replacement property's accumulated depreciation for &sect;1250 recapture at projected sale.</span>
+      </div>
+
+      <!-- ROW 3 — Tax environment + horizon: Federal LT Cap Gains, State of
+           Property (drives state-rate lookup), Reinvestment/Hold Period. Custom
+           Years field appears as a 4th column only when "Custom" is selected. -->
+      <div class="grid-projection">
         <div class="field">
           <label>Federal Long-Term Capital Gains</label>
           <select id="fedCG">
@@ -1703,7 +1703,12 @@
           <div class="field-helper">Most high earners → 20%.</div>
         </div>
 
-        <div class="field-spacer" aria-hidden="true"></div>
+        <div class="field">
+          <label>State of Property</label>
+          <select id="state">
+            <!-- Populated by JS -->
+          </select>
+        </div>
 
         <div class="field">
           <label>Reinvestment/Hold Period</label>
@@ -1896,17 +1901,17 @@
           <div class="grid-3">
             <div class="field">
               <label>Target Passive Portfolio Total Return</label>
-              <div class="input-wrap"><input type="number" id="passiveReturn" class="has-suffix" value="8" min="0" max="25" step="0.1" /><span class="suffix">%/yr</span></div>
+              <div class="input-wrap"><input type="number" id="passiveReturn" class="has-suffix" value="11" min="0" max="25" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
               <label>Targeted Cash Yield <span class="hint">dividends/interest</span></label>
-              <div class="input-wrap"><input type="number" id="passiveYield" class="has-suffix" value="7" min="0" max="20" step="0.1" /><span class="suffix">%/yr</span></div>
+              <div class="input-wrap"><input type="number" id="passiveYield" class="has-suffix" value="4.5" min="0" max="20" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
           </div>
           <details class="group-help">
             <summary>More information</summary>
             <div class="group-help-body">
-              <p><strong>How cash yield works here:</strong> Cash yield is paid out each year; the remainder (<strong>Total Return − Cash Yield</strong>) compounds as portfolio growth. Default of 8% total = 7% cash + 1% growth.</p>
+              <p><strong>How cash yield works here:</strong> Cash yield is paid out each year; the remainder (<strong>Total Return − Cash Yield</strong>) compounds as portfolio growth. Default of 11% total = 4.5% cash + 6.5% growth.</p>
             </div>
           </details>
           </div>
@@ -1956,25 +1961,8 @@
       </div>
     </div>
 
-    <!-- V2: 20-year growth comparison line chart, promoted to its own
-         top-level collapsible panel (matches Detailed Comparison styling). -->
-    <details class="panel panel-collapsible" id="growthChartDetails">
-      <summary class="panel-header"><div><h2>20-Year Projected Growth: <em>Pay Tax vs. 1031 Exchange</em></h2></div></summary>
-      <div class="panel-body">
-        <p class="chart-sub">
-          Hypothetical illustration based on your inputs. Compares <strong>after-tax sale proceeds invested at your cash yield</strong> against a <strong>1031 exchange into a DST</strong> over a 20-year horizon. The gold band visualizes the <strong>tax-deferral upside</strong> — the gap between the 1031's after-tax exit value (dashed, if cashed out at year&nbsp;t) and its full step-up / continued-exchange value (solid).
-        </p>
-        <div class="growth-chart-canvas-wrap">
-          <canvas id="growthChart20yr"></canvas>
-        </div>
-        <p class="growth-chart-legend-note">
-          <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. The full upside (solid gold line) is realized only if the investor (a) continues exchanging or (b) holds until death so heirs receive a stepped-up basis. Otherwise the realized outcome falls between the dashed and solid lines depending on exit timing and tax law at that time. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
-        </p>
-      </div>
-    </details>
-
-    <details class="panel panel-collapsible" id="detailedComparisonDetails">
-      <summary class="panel-header"><div><h2>Detailed Comparison</h2><p>All five paths, side by side.</p></div></summary>
+    <div class="panel">
+      <div class="panel-header"><div><h2>Detailed Comparison</h2><p>All five paths, side by side.</p></div></div>
       <div class="panel-body">
         <div class="gated-wrap" id="gatedCompWrap">
           <div class="gated-content">
@@ -1992,14 +1980,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </details>
 
-    <!-- Methodology + disclosures live OUTSIDE the Detailed Comparison
-         expander so they remain visible whether the comparison is open or
-         not. (Methodology is still its own inline expander.) -->
-    <div class="panel">
-      <div class="panel-body">
         <details class="methodology">
           <summary>How we calculated these numbers</summary>
           <div class="method-body">
@@ -2009,6 +1990,9 @@
                <strong>Depreciation recapture</strong> = min(Accumulated depreciation, Total gain) × 25% federal.<br>
                <strong>Capital gain</strong> = (Total gain − Recapture portion) × (Federal LTCG rate + NIIT if applicable + State rate).<br>
                Total tax = Recapture tax + Capital gain tax + State tax on full gain.</p>
+
+            <h4>Prior 1031 Exchange (when toggle is on)</h4>
+            <p>Carryover basis from a prior 1031 exchange is calculated as <strong>Original (relinquished) property purchase price + Capital improvements − Depreciation taken on the original property</strong>. This figure replaces "Original Purchase Price" in the adjusted-basis formula above. Cumulative depreciation taken across the original (relinquished) and replacement properties is included in the §1250 depreciation recapture calculation at projected sale. Annual depreciation on the replacement property is assumed to follow a fresh schedule based on the replacement property's cost; the carryover basis treatment for ongoing depreciation under Reg. §1.168(i)-6 may vary by election and should be confirmed with the client's tax advisor.</p>
 
             <h4>Hold (Status Quo)</h4>
             <p>No sale at Year 0, no tax event. Annual cashflow = (NOI grown at the NOI growth rate × (1 − capex reserve %)) − Debt service. When "Apply income tax to rental cashflow" is enabled, ordinary tax is applied to <code>(net NOI − annual depreciation − mortgage interest)</code>. Wealth at exit = Property value (grown at appreciation rate) − Remaining mortgage (reduced by annual paydown). If "After-tax wealth at exit" is enabled, a hypothetical sale at horizon end is taxed (recapture + cap gains + NIIT + state); "Step-up in basis" zeroes that exit tax.</p>
@@ -2060,13 +2044,13 @@
           <p style="margin-top: 12px;">Securities offered through Emerson Equity LLC, Member FINRA/SIPC. Only available in states where Emerson Equity LLC is registered. Emerson Equity LLC is not affiliated with Tangible Wealth Solutions or any other entity identified in this communication.</p>
         </div>
 
-      </div>
-    </div>
+        <div class="cta-band">
+          <h3>Ready to model <em>your actual numbers?</em></h3>
+          <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
+          <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
+        </div>
 
-    <div class="cta-band">
-      <h3>Ready to model <em>your actual numbers?</em></h3>
-      <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
-      <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
+      </div>
     </div>
 
   </section>
@@ -2196,6 +2180,22 @@ function compute() {
   const noi           = numv("noi");
   const debtService   = numv("debtService");
 
+  // Prior 1031 exchange: when toggle is on, basis carries over from the
+  // relinquished property — adjusted carryover basis = prior original
+  // purchase + prior capital improvements − prior depreciation. Prior
+  // depreciation also flows into §1250 recapture at projected sale (it
+  // doesn't disappear in an exchange).
+  const prior1031Switch = document.getElementById("prior1031Switch");
+  const prior1031On     = !!(prior1031Switch && prior1031Switch.classList.contains("on"));
+  const priorPurchase     = prior1031On ? numv("priorPurchase")      : 0;
+  const priorImprovements = prior1031On ? numv("priorImprovements")  : 0;
+  const priorDepreciation = prior1031On ? numv("priorDepreciation")  : 0;
+  // costBasisGross is the pre-depreciation cost basis used in adjusted-basis
+  // and recapture math throughout. effectiveAccumDep is the cumulative
+  // depreciation that's subject to §1250 recapture at sale.
+  const costBasisGross    = prior1031On ? (priorPurchase + priorImprovements) : purchasePrice;
+  const effectiveAccumDep = prior1031On ? (priorDepreciation + accumDep)      : accumDep;
+
   const horizonSel    = $("horizon").value;
   const N = horizonSel === "custom" ? Math.max(1, numv("horizonCustom")) : parseInt(horizonSel, 10);
 
@@ -2239,7 +2239,7 @@ function compute() {
   // ---------- Sale math (shared) ----------
   const sellingCosts  = marketValue * sellingPct;
   const netSale       = marketValue - sellingCosts;
-  const adjustedBasis = Math.max(0, purchasePrice - accumDep);
+  const adjustedBasis = Math.max(0, costBasisGross - effectiveAccumDep);
   const totalGain     = Math.max(0, netSale - adjustedBasis);
 
   // Current equity in the held property (before selling costs) — used for ROE
@@ -2248,7 +2248,7 @@ function compute() {
   const currentROE  = currentEquity > 0 ? currentNetCashflow / currentEquity : 0;
   const currentCapRate = marketValue > 0 ? noi / marketValue : 0;
 
-  const recapturePortion = Math.min(accumDep, totalGain);
+  const recapturePortion = Math.min(effectiveAccumDep, totalGain);
   const capGainPortion   = Math.max(0, totalGain - recapturePortion);
 
   const fedRecaptureTax  = recapturePortion * recaptureRate;
@@ -2312,9 +2312,10 @@ function compute() {
   if (afterTaxTerminal && !stepUp) {
     const futureSellingCosts = s1TerminalValue * sellingPct;
     const futureNetSale = s1TerminalValue - futureSellingCosts;
-    // accumulated dep grows by annualDep over the hold period
-    const futureAccumDep = accumDep + annualDep * N;
-    const futureAdjBasis = Math.max(0, purchasePrice - futureAccumDep);
+    // accumulated dep grows by annualDep over the hold period; prior 1031
+    // depreciation is included in the starting point via effectiveAccumDep.
+    const futureAccumDep = effectiveAccumDep + annualDep * N;
+    const futureAdjBasis = Math.max(0, costBasisGross - futureAccumDep);
     const futureGain = Math.max(0, futureNetSale - futureAdjBasis);
     const futureRecap = Math.min(futureAccumDep, futureGain);
     const futureCG = Math.max(0, futureGain - futureRecap);
@@ -2369,7 +2370,7 @@ function compute() {
   let s3TerminalTax = 0;
   if (afterTaxTerminal && !stepUp) {
     const dstGain = Math.max(0, s3TerminalAssetValue - adjustedBasis);
-    const dstRecap = Math.min(accumDep, dstGain);
+    const dstRecap = Math.min(effectiveAccumDep, dstGain);
     const dstCG = Math.max(0, dstGain - dstRecap);
     s3TerminalTax = dstRecap * recaptureRate
                   + dstCG * fedCG
@@ -2512,8 +2513,10 @@ function compute() {
     inputs: { N, totalGain, totalTax, grossEquity, recapturePortion, capGainPortion,
               fedRecaptureTax, fedCGTax, niitTax, stateTax,
               currentEquity, currentNetCashflow, currentROE, currentCapRate,
-              // V2 chart needs these to compute year-by-year after-tax DST exit value
-              adjustedBasis, accumDep, recaptureRate, fedCG, niitRate, applyNIIT, stateRate },
+              // V2 chart needs these to compute year-by-year after-tax DST exit value.
+              // accumDep here is the EFFECTIVE accumulated depreciation (current +
+              // prior 1031 carryover) so the chart correctly recaptures both portions.
+              adjustedBasis, accumDep: effectiveAccumDep, recaptureRate, fedCG, niitRate, applyNIIT, stateRate },
     scenarios: [
       {
         key: "hold",
@@ -2705,12 +2708,6 @@ function render() {
     cards.insertAdjacentHTML("beforeend", html);
   });
 
-  // ---------- V2: 20-Year Growth Comparison Chart ----------
-  // Compares Sell & Pay Tax (after-tax proceeds earning cash yield, flat per
-  // existing model) against 1031 Exchange to DST (equity appreciates at DST
-  // appreciation rate; cash distributions are flat per memory & model).
-  renderGrowthChart20yr(data);
-
   // ---------- Consolidated scenario disclosures (the "*" footnote block) ----------
   // Any scenario with suitability/riskNote/footnote content feeds this block.
   // Currently DST and LBD both qualify; other scenarios render nothing here.
@@ -2838,201 +2835,8 @@ window.addEventListener("resize", () => {
   _gateOverlayRaf = requestAnimationFrame(positionGateOverlay);
 });
 
-/* ============================================================
-   V2: 20-YEAR GROWTH COMPARISON CHART
-   ------------------------------------------------------------
-   Renders a Chart.js line chart comparing:
-     • Sell & Pay Tax — after-tax proceeds earning the cash yield
-       (flat, matching the model: principal stays static, yield paid out).
-     • 1031 Exchange to DST — equity appreciates at DST appreciation
-       rate; cash distributions are FLAT (paid to investor, not
-       reinvested) — see memory: dst-distributions-are-flat.
-   Horizon is fixed at 20 years (not the user's input N) per spec.
-   ============================================================ */
-let _growthChart20yrInstance = null;
-function renderGrowthChart20yr(data) {
-  const canvas = document.getElementById("growthChart20yr");
-  if (!canvas || typeof Chart === "undefined") return;
-
-  // Pull the same inputs compute() used so the chart stays consistent
-  // with the cards. We re-derive year-by-year curves here.
-  const numv = id => parseFloat((document.getElementById(id)?.value || "0").toString().replace(/[$,]/g, "")) || 0;
-  const grossEquity = data.inputs.grossEquity;
-  const totalTax   = data.inputs.totalTax;
-  const cashYield  = numv("cashYield") / 100;
-  const dstYield   = numv("dstYield") / 100;
-  const dstAppr    = numv("dstAppreciation") / 100;
-  const dstLoad    = numv("dstLoad") / 100;
-  const mortgage   = numv("mortgage");
-
-  // SELL & PAY TAX path — principal flat, yield paid out each year.
-  // Wealth(t) = netCash + netCash * cashYield * t
-  const s2NetCash  = grossEquity - totalTax;
-
-  // 1031 -> DST path — equity invested = grossEquity * (1 - dstLoad);
-  // replacement debt mirrors current mortgage so leverage carries over.
-  // Cash distributions are FLAT on equity; appreciation accrues to the
-  // full replacement-property value, then debt is subtracted.
-  const s3Equity           = grossEquity * (1 - dstLoad);
-  const s3ReplacementDebt  = mortgage;
-  const s3ReplacementValue = s3Equity + s3ReplacementDebt;
-  const s3AnnualCF         = s3Equity * dstYield;
-
-  // After-tax DST exit math — at year t, if the investor cashes out (no
-  // further exchange, no step-up at death), the deferred tax becomes due.
-  // Basis carries over from the original property, so the gain at exit is
-  // computed on the FULL replacement asset value vs. original adjusted basis.
-  const {
-    adjustedBasis = 0, accumDep = 0,
-    recaptureRate = 0, fedCG = 0, niitRate = 0,
-    applyNIIT = false, stateRate = 0,
-  } = data.inputs;
-
-  function dstExitTax(assetValueT) {
-    const gain  = Math.max(0, assetValueT - adjustedBasis);
-    const recap = Math.min(accumDep, gain);
-    const cg    = Math.max(0, gain - recap);
-    return recap * recaptureRate
-         + cg    * fedCG
-         + (applyNIIT ? gain * niitRate : 0)
-         + gain  * stateRate;
-  }
-
-  const HORIZON = 20;
-  const labels = [];
-  const payTaxSeries     = [];
-  const exchangeSeries   = [];   // pre-tax (step-up / swap-til-you-drop)
-  const exchangeAfterTax = [];   // after-tax if sold at year t
-  for (let t = 0; t <= HORIZON; t++) {
-    labels.push("Year " + t);
-    payTaxSeries.push(Math.round(s2NetCash + s2NetCash * cashYield * t));
-    const dstAssetT   = s3ReplacementValue * Math.pow(1 + dstAppr, t);
-    const dstEquityT  = dstAssetT - s3ReplacementDebt;
-    const dstCumCFT   = s3AnnualCF * t;
-    const pretax      = dstEquityT + dstCumCFT;
-    const exitTax     = dstExitTax(dstAssetT);
-    exchangeSeries.push(Math.round(pretax));
-    exchangeAfterTax.push(Math.round(pretax - exitTax));
-  }
-
-  // TWS brand colors
-  const navy = "#08172E";
-  const gold = "#BF9B30";
-  const goldLight = "#D4B55A";
-  const muted = "#5A6478";
-
-  const fmtCompact$ = v => {
-    if (Math.abs(v) >= 1_000_000) return "$" + (v / 1_000_000).toFixed(2) + "M";
-    if (Math.abs(v) >= 1_000)     return "$" + (v / 1_000).toFixed(0) + "K";
-    return "$" + Math.round(v).toLocaleString();
-  };
-  const fmtFull$ = v => "$" + Math.round(v).toLocaleString();
-
-  if (_growthChart20yrInstance) {
-    _growthChart20yrInstance.destroy();
-  }
-
-  // Dataset order = tooltip/legend order (top → bottom):
-  //   index 0: 1031 step-up / continued exchange (solid, top)
-  //   index 1: 1031 after-tax projected value    (dashed, middle) — fills UP
-  //            to dataset 0, creating the gold deferral-value band.
-  //   index 2: Sell & Pay Tax                    (muted, bottom)
-  _growthChart20yrInstance = new Chart(canvas.getContext("2d"), {
-    type: "line",
-    data: {
-      labels,
-      datasets: [
-        {
-          label: "1031 Exchange — with step-up / continued exchange",
-          data: exchangeSeries,
-          borderColor: gold,
-          backgroundColor: "rgba(191,155,48,0.18)",
-          borderWidth: 3,
-          tension: 0.15,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          fill: false,
-        },
-        {
-          label: "1031 Exchange — projected after-tax value",
-          data: exchangeAfterTax,
-          borderColor: gold,
-          backgroundColor: "rgba(191,155,48,0.18)", // band fill color
-          borderWidth: 2,
-          borderDash: [6, 5],
-          tension: 0.15,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          fill: "-1", // fill UP to dataset 0 (step-up line) → deferral band
-        },
-        {
-          label: "Sell & Pay Tax (proceeds + cash yield)",
-          data: payTaxSeries,
-          borderColor: muted,
-          backgroundColor: "rgba(90,100,120,0.08)",
-          borderWidth: 2.5,
-          tension: 0.15,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: "index", intersect: false },
-      plugins: {
-        legend: {
-          position: "top",
-          align: "start",
-          labels: {
-            font: { family: "'DM Sans', sans-serif", size: 12, weight: "500" },
-            color: navy,
-            usePointStyle: true,
-            boxWidth: 8,
-            padding: 16,
-          },
-        },
-        tooltip: {
-          backgroundColor: navy,
-          titleColor: goldLight,
-          bodyColor: "#fff",
-          titleFont: { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
-          bodyFont:  { family: "'DM Sans', sans-serif", size: 12 },
-          padding: 12,
-          borderColor: "rgba(191,155,48,0.4)",
-          borderWidth: 1,
-          callbacks: {
-            label: ctx => ctx.dataset.label + ": " + fmtFull$(ctx.parsed.y),
-          },
-        },
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: {
-            font: { family: "'DM Sans', sans-serif", size: 11 },
-            color: muted,
-            maxRotation: 0,
-            autoSkip: true,
-            autoSkipPadding: 12,
-          },
-        },
-        y: {
-          beginAtZero: false,
-          grid: { color: "rgba(8,23,46,0.06)" },
-          ticks: {
-            font: { family: "'DM Sans', sans-serif", size: 11 },
-            color: muted,
-            callback: v => fmtCompact$(v),
-          },
-        },
-      },
-    },
-  });
-}
-
+/* (Growth comparison chart removed from public version — available in
+   the gated portal version only.) */
 /* ============================================================
    WIRING
    ============================================================ */
@@ -3238,17 +3042,66 @@ window.addEventListener("DOMContentLoaded", () => {
   // CORS-enabled data source is identified.
   // fetchTreasuryYield();
 
-  // The 20-year growth chart lives inside a collapsed <details> by default.
-  // Chart.js sized the canvas while it was display:none (so 0×0). When the
-  // user opens the section, resize() makes it pick up real dimensions.
-  const growthDetails = document.getElementById("growthChartDetails");
-  if (growthDetails) {
-    growthDetails.addEventListener("toggle", () => {
-      if (growthDetails.open && _growthChart20yrInstance) {
-        _growthChart20yrInstance.resize();
-      }
+  // ============================================================
+  // Prior 1031 Exchange toggle wiring
+  // ============================================================
+  // Toggle reveals a sub-card capturing the relinquished property's original
+  // purchase price, capital improvements, and depreciation taken. These feed
+  // (a) carryover adjusted basis used in cap-gains math, and (b) cumulative
+  // depreciation used in §1250 recapture at projected sale.
+  const prior1031Switch  = document.getElementById("prior1031Switch");
+  const prior1031Row     = document.getElementById("prior1031Row");
+  const prior1031Card    = document.getElementById("prior1031Card");
+  const prior1031Readout = document.getElementById("prior1031Readout");
+  const purchasePriceLbl = document.getElementById("purchasePriceLabel");
+  const purchasePriceHlp = document.getElementById("purchasePriceHelper");
+  const PRIOR_FIELDS = ["priorPurchase","priorImprovements","priorDepreciation"];
+
+  function updatePrior1031Readout() {
+    const op = parseMoney(document.getElementById("priorPurchase").value || "0");
+    const ci = parseMoney(document.getElementById("priorImprovements").value || "0");
+    const pd = parseMoney(document.getElementById("priorDepreciation").value || "0");
+    const cb = Math.max(0, op + ci - pd);
+    const readoutCarryover = document.getElementById("readoutCarryover");
+    const readoutMath      = document.getElementById("readoutMath");
+    if (readoutCarryover) readoutCarryover.textContent = fmt$(cb);
+    if (readoutMath) {
+      readoutMath.innerHTML = `${fmt$(op)} original property purchase + ${fmt$(ci)} improvements &minus; ${fmt$(pd)} original property depreciation`;
+    }
+  }
+
+  function setPrior1031(on) {
+    if (prior1031Row)     prior1031Row.classList.toggle("on", on);
+    if (prior1031Switch) {
+      prior1031Switch.classList.toggle("on", on);
+      prior1031Switch.setAttribute("aria-checked", String(on));
+    }
+    if (prior1031Card)    prior1031Card.classList.toggle("on", on);
+    if (prior1031Readout) prior1031Readout.classList.toggle("on", on);
+    if (purchasePriceLbl) purchasePriceLbl.textContent = on
+      ? "Replacement Property Purchase Price"
+      : "Original Purchase Price";
+    if (purchasePriceHlp) purchasePriceHlp.textContent = on
+      ? "Price paid for the current property in the exchange."
+      : "What you originally paid.";
+    if (on) updatePrior1031Readout();
+  }
+
+  if (prior1031Switch) {
+    prior1031Switch.addEventListener("click", () => {
+      const on = !prior1031Switch.classList.contains("on");
+      setPrior1031(on);
     });
   }
+
+  PRIOR_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", updatePrior1031Readout);
+  });
+
+  // Default state: toggle off (typical client — no prior exchange)
+  setPrior1031(false);
 });
 
 /* The six fields recalcDerivedFields() can write to. Any field also in
