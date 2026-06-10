@@ -1072,15 +1072,19 @@
   table.comp {
     width: 100%;
     border-collapse: collapse;
-    min-width: 760px;
+    min-width: 880px;
     font-size: 13px;
+    table-layout: fixed;
   }
   table.comp th, table.comp td {
     padding: 12px 14px;
     border-bottom: 1px solid var(--border-soft);
     text-align: right;
     font-variant-numeric: tabular-nums;
+    overflow-wrap: break-word;
   }
+  /* Label column gets a set width; the data columns then split the rest equally. */
+  table.comp th:first-child, table.comp td:first-child { width: 24%; }
   table.comp th {
     background: rgba(191,155,48,0.06);
     font-weight: 500;
@@ -1222,13 +1226,15 @@
 
   /* Small clarifier under Tax Deferred dollar amount — reminds the reader
      that deferred is not eliminated. Matches .return-line styling. */
-  .metric .defer-clarifier {
+  .scenario-card .defer-footnote {
     font-size: 10.5px;
     color: var(--text-muted);
     font-weight: 400;
     font-style: italic;
-    margin-top: 2px;
     line-height: 1.4;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-soft);
   }
 
   /* Inline parenthetical in comparison-table row labels for caveats
@@ -1275,51 +1281,46 @@
   }
   .cta-band .btn { background: var(--gold); }
 
-  /* ---------- TWS Disclosure Footer (full chrome) ---------- */
-  .tws-footer {
-    background: var(--navy-mid);
-    padding: 60px 60px 40px;
+  /* ---------- TWS Disclosure Footer (matches 2026 website redesign) ---------- */
+  .disclosure-section {
+    background: var(--navy-mid); padding: 60px 80px;
     border-top: 1px solid rgba(191,155,48,0.15);
-    color: rgba(255,255,255,0.5);
   }
-  .tws-footer-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;
-    max-width: 1200px; margin: 0 auto 36px;
-  }
-  .tws-footer-grid h5 {
+  .disclosure-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; margin-bottom: 48px; }
+  .disclosure-block h5 {
     font-family: 'DM Sans', inherit;
     font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--gold); margin-bottom: 12px;
   }
-  .tws-footer-grid p { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.8; }
-  .tws-footer-grid a { color: rgba(191,155,48,0.7); text-decoration: none; }
-  .tws-footer-grid a:hover { color: var(--gold-light); }
-  .tws-footer-bottom {
-    max-width: 1200px; margin: 0 auto;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 28px;
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 20px;
+  .disclosure-block p { font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.8; }
+  .disclosure-block a { color: rgba(191,155,48,0.6); text-decoration: none; }
+  .disclosure-block a:hover { color: var(--gold-light); }
+  .disclosure-footer {
+    border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
   }
-  .tws-footer-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px; font-weight: 600; color: #fff;
-    letter-spacing: 0.04em; text-decoration: none;
-    display: inline-flex; align-items: center;
+  .disc-logo img { height: 104px; width: auto; }
+  .disc-logo-fallback { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; }
+  .disc-logo-fallback span { color: var(--gold-light); }
+  .brokercheck-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
+    padding: 9px 16px; text-decoration: none; transition: all 0.2s;
   }
-  .tws-footer-logo img { height: 104px; width: auto; display: block; }
-  .tws-footer-logo span { color: var(--gold-light); }
-  .tws-footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
-  .tws-footer-links a {
-    font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none;
-    transition: color 0.2s;
-  }
-  .tws-footer-links a:hover { color: var(--gold-light); }
-  .tws-footer-meta { font-size: 11px; color: rgba(255,255,255,0.3); }
+  .brokercheck-badge:hover { border-color: var(--gold); background: rgba(191,155,48,0.06); }
+  .brokercheck-badge svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .brokercheck-badge-text { display: flex; flex-direction: column; line-height: 1.3; }
+  .brokercheck-badge-text span:first-child { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  .brokercheck-badge-text span:last-child { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7); }
   @media (max-width: 900px) {
-    .tws-footer { padding: 48px 24px 32px; }
-    .tws-footer-grid { grid-template-columns: 1fr; gap: 28px; }
-    .tws-footer-bottom { flex-direction: column; align-items: flex-start; }
+    .disclosure-section { padding: 60px 24px; }
+    .disclosure-grid { grid-template-columns: 1fr; gap: 28px; }
+    .footer-sitemap { grid-template-columns: 1fr !important; }
+    .footer-sitemap .disc-logo { text-align: center; }
+    .footer-sitemap > div:nth-child(2) { grid-template-columns: repeat(2, 1fr) !important; grid-auto-flow: row !important; gap: 4px 24px !important; justify-items: center; }
+    .footer-contact-info { text-align: center !important; }
+    .footer-contact-info > div { justify-content: center !important; }
+    .footer-contact-info > div:first-child { justify-content: center !important; }
   }
 
   /* ---------- Helpers ---------- */
@@ -1379,7 +1380,7 @@
     line-height: 1.6;
   }
 
-  /* Chart mode toggle (Wealth Accumulation vs Cash Flow Goal) */
+  /* Chart mode toggle (Projected equity over time vs Income & growth split) */
   .chart-mode-toggle {
     display: inline-flex;
     gap: 0;
@@ -1477,6 +1478,75 @@
   }
   .chart-toggle-pill:has(input:not(:checked)) {
     opacity: 0.45;
+  }
+  .pill-income {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+
+  /* Per-client reinvestment controls + assumptions link */
+  .chart-reinvest-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin: 2px 0 18px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .chart-reinvest-row .reinvest-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .chart-reinvest-row .reinvest-chk {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--navy);
+    cursor: pointer;
+    user-select: none;
+  }
+  .chart-reinvest-row .reinvest-chk input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--text-muted);
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .chart-reinvest-row .reinvest-chk input[type="checkbox"]:checked {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .chart-reinvest-row .reinvest-chk input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 0px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .chart-assump-link {
+    margin-left: auto;
+    font-size: 12.5px;
+    color: #185FA5;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chart-assump-link:hover { text-decoration: underline; }
+  @media (max-width: 600px) {
+    .chart-assump-link { margin-left: 0; }
   }
 
   /* ---------- V2: Email-gate — block style (Detailed Comparison table) ---------- */
@@ -1623,7 +1693,7 @@
 
   /* Print */
   @media print {
-    .tws-nav, .tws-footer { display: none; }
+    .tws-nav, .disclosure-section { display: none; }
     .hero, .cta-band, .action-row, .advanced-toggle, .panel-header { background: #fff !important; color: #000 !important; }
     .panel { box-shadow: none; border: 1px solid #aaa; }
     .panel::before { display: none; }
@@ -2062,16 +2132,12 @@
               <label>S&amp;P 500 Dividend Yield</label>
               <div class="input-wrap"><input type="number" id="sp500DivYield" class="has-suffix" value="1.8" min="0" max="10" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
-            <div class="field">
-              <label>High-Yield Savings Rate</label>
-              <div class="input-wrap"><input type="number" id="hysaRate" class="has-suffix" value="4.5" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
-            </div>
           </div>
           <details class="group-help">
             <summary>More information</summary>
             <div class="group-help-body">
               <p><strong>S&amp;P 500 return (7% default):</strong> Long-term real (inflation-adjusted) total return per Damodaran/NYU Stern and Ibbotson SBBI historical data. Nominal long-term average is ~10%; the inflation-adjusted figure is more conservative for forward projections.</p>
-              <p><strong>S&amp;P 500 dividend yield (1.8% default):</strong> Approximate trailing 12-month yield of the S&amp;P 500 index. Used in the Cash Flow Goal view to model dividend income vs. required share sales to meet a target distribution.</p>
+              <p><strong>S&amp;P 500 dividend yield (1.8% default):</strong> Approximate trailing 12-month yield of the S&amp;P 500 index. By default the chart reinvests this dividend, so the S&amp;P 500 principal compounds at the full total return; if you switch off "reinvest S&amp;P 500 dividends," the dividend is taken as income instead and principal grows at total return minus this yield.</p>
               <p><strong>High-yield savings rate (4.5% default):</strong> Representative of current top-tier online savings APYs. Update as rates change. Compounded annually in the chart.</p>
               <p><em>These assumptions are illustrative benchmarks only and do not reflect any specific investment product. Past performance does not guarantee future results.</em></p>
             </div>
@@ -2096,10 +2162,13 @@
 
     <div class="panel">
       <div class="panel-header">
-        <div>
+        <div style="flex:1 1 100%;">
           <h2>Your Property Options Comparison</h2>
           <p id="resultsSubhead">Based on a <span id="holdLabel">10-year</span> reinvestment/hold period.</p>
           <p class="results-meta" id="resultsMeta"></p>
+          <div class="finra-callout" style="margin-top:14px;">
+            <strong>IMPORTANT:</strong> The projections or other information generated by the Property Exit Strategy Calculator regarding the likelihood of various investment outcomes are hypothetical in nature, do not reflect actual investment results and are not guarantees of future results. Results may vary with each use and over time as inputs, market conditions, tax law, and assumptions change.
+          </div>
         </div>
       </div>
       <div class="panel-body">
@@ -2120,49 +2189,73 @@
           </div>
         </div>
 
-        <!-- V2 ADDITION: 10-year growth comparison line chart (gated — portal only) -->
+        <!-- V2 ADDITION: 10-year growth comparison chart (gated — portal only) -->
         <div class="growth-chart-wrap">
           <h3>10-Year Projected Comparison: <em>1031 Exchange vs. Sell &amp; Invest Alternatives</em></h3>
           <p class="chart-sub">
-            Hypothetical illustration based on your inputs. Toggle between <strong>Wealth Accumulation</strong> (ending portfolio value over time) and <strong>Cash Flow Goal</strong> (net equity remaining after distributing income equal to the 1031 cash flow). Use the line toggles below the chart to compare any combination of strategies.
+            Hypothetical illustration based on your inputs. All five strategies from the Detailed Comparison are shown; the <strong>S&amp;P 500</strong> market benchmark is off by default — switch it on to compare against the public market. Switch between <strong>Projected equity over time</strong> (each strategy distributes its own cash flow; the line shows the equity that remains and grows) and <strong>Income &amp; growth split</strong> (10-year income taken vs. ending equity). DST and alt-fund distributions are taken as income — they cannot be reinvested back into the fund. Use the toggles below the chart to compare any combination of strategies.
           </p>
 
-          <!-- Mode toggle: Wealth Accumulation vs Cash Flow Goal -->
+          <!-- Mode toggle: Projected equity over time vs Income & growth split -->
           <div class="chart-mode-toggle" role="tablist" aria-label="Chart view mode">
-            <button type="button" class="chart-mode-btn active" data-mode="wealth" role="tab" aria-selected="true">Wealth Accumulation</button>
-            <button type="button" class="chart-mode-btn" data-mode="cashflow" role="tab" aria-selected="false">Cash Flow Goal</button>
+            <button type="button" class="chart-mode-btn active" data-mode="equity" role="tab" aria-selected="true">Projected equity over time</button>
+            <button type="button" class="chart-mode-btn" data-mode="split" role="tab" aria-selected="false">Income &amp; growth split</button>
+          </div>
+
+          <!-- Per-client reinvestment controls + assumptions link -->
+          <div class="chart-reinvest-row">
+            <span class="reinvest-label">Reinvest income (liquid strategies only):</span>
+            <label class="reinvest-chk"><input type="checkbox" id="reinvestSp" checked /> S&amp;P 500 dividends</label>
+            <label class="reinvest-chk"><input type="checkbox" id="reinvestHy" checked /> Cash yield</label>
+            <a href="#" class="chart-assump-link" id="seeCashflowAssumptions">See cash-flow assumptions →</a>
           </div>
 
           <div class="growth-chart-canvas-wrap">
             <canvas id="growthChart10yr"></canvas>
           </div>
 
-          <!-- Line toggle checkboxes -->
+          <!-- Line toggle checkboxes (each shows that strategy's own annual income) -->
           <div class="chart-line-toggles" id="chartLineToggles">
-            <label class="chart-toggle-pill" data-series="dst">
-              <input type="checkbox" data-series="dst" checked />
-              <span class="swatch" style="background:#BF9B30"></span>
-              <span>1031 Exchange</span>
-            </label>
-            <label class="chart-toggle-pill" data-series="sp500">
-              <input type="checkbox" data-series="sp500" checked />
-              <span class="swatch" style="background:#2E7D5B"></span>
-              <span>S&amp;P 500</span>
+            <label class="chart-toggle-pill" data-series="hold">
+              <input type="checkbox" data-series="hold" checked />
+              <span class="swatch" style="background:#7D6BAF"></span>
+              <span>Hold Current Property</span>
+              <span class="pill-income" data-income="hold"></span>
             </label>
             <label class="chart-toggle-pill" data-series="hysa">
               <input type="checkbox" data-series="hysa" checked />
               <span class="swatch" style="background:#5A6478"></span>
-              <span>Cash (HYSA)</span>
+              <span>Sell &amp; Pay Tax <span style="opacity:0.55;">(cash yield)</span></span>
+              <span class="pill-income" data-income="hysa"></span>
             </label>
             <label class="chart-toggle-pill" data-series="alts">
               <input type="checkbox" data-series="alts" checked />
               <span class="swatch" style="background:#6BA4D6"></span>
-              <span>TWS Custom Alts</span>
+              <span>Sell &amp; Invest Passively</span>
+              <span class="pill-income" data-income="alts"></span>
+            </label>
+            <label class="chart-toggle-pill" data-series="dst">
+              <input type="checkbox" data-series="dst" checked />
+              <span class="swatch" style="background:#BF9B30"></span>
+              <span>1031 Exchange to DST</span>
+              <span class="pill-income" data-income="dst"></span>
+            </label>
+            <label class="chart-toggle-pill" data-series="lbd">
+              <input type="checkbox" data-series="lbd" checked />
+              <span class="swatch" style="background:#C2603F"></span>
+              <span>Leveraged Bonus Depreciation</span>
+              <span class="pill-income" data-income="lbd"></span>
+            </label>
+            <label class="chart-toggle-pill" data-series="sp500">
+              <input type="checkbox" data-series="sp500" />
+              <span class="swatch" style="background:#2E7D5B"></span>
+              <span>S&amp;P 500 <span style="opacity:0.55;">(benchmark)</span></span>
+              <span class="pill-income" data-income="sp500"></span>
             </label>
           </div>
 
           <p class="growth-chart-legend-note">
-            <strong>Important:</strong> 1031 exchanges <em>defer</em> tax — they do not eliminate it. Carryover basis means deferred tax becomes due if the replacement property is sold without another exchange. S&amp;P 500 and HYSA scenarios assume after-tax sale proceeds are invested at the rates shown in the Benchmark Comparison Assumptions section. TWS Custom Alts uses the inputs from Alternative Portfolio Assumptions. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
+            <strong>Income vs. growth:</strong> strategies that pay more cash flow generally retain less for growth, and vice versa. Each line and bar uses that strategy's own distributions from your inputs — DST and alt-fund cash flow is taken as income and is not reinvested into the fund (only Sell &amp; Pay Tax and S&amp;P 500 can be set to reinvest, above). The five strategies match the Detailed Comparison table below; the S&amp;P 500 line is a public-market benchmark (off by default, no matching table row) — switch it on to compare against the market. Hold starts from your current (un-taxed) equity since there's no sale, while the sell-and-redeploy strategies start from after-tax proceeds. 1031 exchanges <em>defer</em> tax — they do not eliminate it; deferred tax becomes due if the replacement property is sold without another exchange. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
           </p>
         </div>
       </div>
@@ -2216,30 +2309,28 @@
             <h4>Sell &amp; Leveraged Bonus Depreciation</h4>
             <p>Modeled as a 2.0× (configurable) deduction multiplier: $1 invested in the LBD fund generates $2.00 of Year-1 passive loss. The exact multiplier depends on the specific fund's LTV and land allocation; typical range is 2.0–2.7× at current 100% bonus depreciation rates. Required LBD investment = Total gain ÷ Multiplier. The passive loss fully offsets the taxable gain at the federal level. Freed cash = Gross equity − LBD investment, which is then invested in the passive alternatives portfolio at the rate set in the Alternatives section. All deferred tax becomes due at the LBD fund's eventual disposition (when depreciation recapture applies). The LBD fund itself generates cash distributions and appreciation per the rates in the LBD section. <em>Note on state conformity:</em> states vary in how they treat federal bonus depreciation; this model assumes full conformity for simplicity, but actual state tax liability may differ in non-conforming states (CA, NY, NJ, MD, and others). <em>Note on passive activity rules:</em> the full passive-loss offset shown assumes the disposed-property gain qualifies as passive income. Real Estate Professionals (IRC §469(c)(7)) or investors with material participation should consult a tax advisor; the offset treatment may differ.</p>
 
-            <h4>10-Year Projected Comparison Chart</h4>
-            <p>The chart visualizes four after-tax exit alternatives over a fixed 10-year horizon, in two switchable views. Inputs come from the <strong>Benchmark Comparison Assumptions</strong> section (S&amp;P 500 return, S&amp;P 500 dividend yield, HYSA rate) and the <strong>Alternative Portfolio Assumptions</strong> section (passive total return, passive cash yield). The 1031 inputs reuse the DST appreciation rate, DST cash-on-cash yield, and DST upfront load from the main inputs.</p>
+            <h4 id="methodology-chart">10-Year Projected Comparison Chart</h4>
+            <p>The chart plots all five Detailed-Comparison strategies over a fixed 10-year horizon, in two switchable views, plus an optional S&amp;P 500 market benchmark (off by default). Inputs come from the <strong>Benchmark Comparison Assumptions</strong> (S&amp;P 500 return and dividend yield), the <strong>Alternative Portfolio Assumptions</strong> (passive total return and passive cash yield), the <strong>cash yield</strong> input (shared with the Sell &amp; Pay Tax scenario), the DST inputs (appreciation, cash-on-cash yield, upfront load), the Leveraged Bonus Depreciation inputs (fund yield and appreciation, plus the offset/freed-cash split computed from your sale), and the property inputs for the Hold line (market value, appreciation, NOI growth, debt service). In both views, each strategy distributes <strong>its own</strong> annual cash flow — taken by the investor as income. DST, TWS Alts, and LBD distributions cannot be reinvested back into the fund and are always taken as income; Hold's rental income is likewise taken; Sell &amp; Pay Tax (Cash) and S&amp;P 500 income are reinvested by default (compounding), and can be switched to "take income" using the toggles above the chart.</p>
 
-            <p><strong>Wealth Accumulation view</strong> — plots ending portfolio value at each year, assuming all cash distributions are reinvested where indicated:</p>
+            <p><strong>How the chart maps to the Detailed Comparison table:</strong> the chart's six lines are — Hold Current Property, Sell &amp; Pay Tax, Sell &amp; Invest Passively, 1031 Exchange to DST, and Leveraged Bonus Depreciation (the five table strategies, on by default), plus the S&amp;P 500 (a public-market benchmark with no table row, off by default). All five strategy lines use the same rate inputs, starting capital, and flat-distribution treatment as the matching table scenario. Note the two surfaces use complementary lenses: with reinvestment on, the chart's Sell &amp; Pay Tax and S&amp;P 500 lines emphasize growth and show $0 distributed income, whereas the table reports the cash flow each strategy would pay <em>if taken as income</em>. The underlying assumptions are identical; only the reinvest-vs-distribute presentation differs.</p>
+
+            <p><strong>Projected equity over time view</strong> — plots each strategy's equity/principal at each year, with its own cash flow distributed as income (not reinvested into that vehicle unless noted):</p>
             <p>
-              <em>1031 Exchange:</em> Reinvested equity = Gross equity × (1 − DST load). Equity grows on the full replacement-property value at the DST appreciation rate; existing mortgage carries to the replacement property. Each year's cash distribution (Equity × DST cash yield) is reinvested into an S&amp;P 500 sidecar earning the S&amp;P 500 return rate. Wealth(t) = Appreciated equity(t) + Sidecar FV(t).<br>
-              <em>S&amp;P 500:</em> After-tax sale proceeds compounded annually at the S&amp;P 500 return rate. Wealth(t) = After-tax proceeds × (1 + S&amp;P return)<sup>t</sup>.<br>
-              <em>Cash (HYSA):</em> After-tax sale proceeds compounded annually at the high-yield savings rate.<br>
-              <em>TWS Custom Alts:</em> Starts with after-tax sale proceeds. Equity grows at (Passive total return − Passive cash yield); annual cash distributions (After-tax proceeds × Passive cash yield) are reinvested into an S&amp;P 500 sidecar.
+              <em>Hold Current Property:</em> No sale and no tax event — the line starts from your current equity (Market value − Mortgage). Equity(t) = Market value × (1 + appreciation)<sup>t</sup> − remaining mortgage (reduced by annual principal paydown). Rental income — NOI grown at the NOI-growth rate, less the capex reserve and debt service (and less rental income tax if enabled) — is taken as income and grows over time.<br>
+              <em>Sell &amp; Pay Tax (Cash):</em> Starts from after-tax sale proceeds. By default interest is reinvested, so principal compounds at the cash yield; if "reinvest Cash yield" is off, interest (cash yield × principal) is withdrawn as income and principal stays level. Same cash assumption and rate as the table's Sell &amp; Pay Tax scenario.<br>
+              <em>Sell &amp; Invest Passively (TWS Alts):</em> Starts from after-tax sale proceeds; equity grows at (Passive total return − Passive cash yield) and a flat cash yield (After-tax proceeds × Passive cash yield) is distributed as income — alt-fund distributions cannot be reinvested into the fund.<br>
+              <em>1031 Exchange to DST:</em> Reinvested equity = Gross equity × (1 − DST load). Equity grows on the full replacement-property value at the DST appreciation rate; the existing mortgage carries to the replacement property. Flat annual cash flow (Equity × DST cash-on-cash yield) is distributed — DST distributions cannot be reinvested into the trust. Equity(t) = Replacement value × (1 + DST appreciation)<sup>t</sup> − Replacement debt.<br>
+              <em>Leveraged Bonus Depreciation:</em> Defers tax via bonus depreciation, so it deploys close to the full pre-tax proceeds — split between the LBD fund (grows at the bonus-depreciation appreciation rate) and freed cash invested in the alternatives portfolio (grows at Passive total return − Passive cash yield). Both sleeves distribute flat income (fund yield + freed-cash passive yield), taken by the investor.<br>
+              <em>S&amp;P 500 (benchmark, off by default):</em> Starts from after-tax sale proceeds. By default the dividend is reinvested, so principal compounds at the full S&amp;P total return; if "reinvest S&amp;P 500 dividends" is off, the dividend (S&amp;P dividend yield × balance) is taken as income and principal grows at (S&amp;P total return − dividend yield).
             </p>
 
-            <p><strong>Cash Flow Goal view</strong> — every non-1031 scenario distributes income equal to the 1031's annual cash flow (Reinvested equity × DST cash yield); plots the remaining net equity each year:</p>
-            <p>
-              <em>1031 Exchange:</em> Cash flow spent (not reinvested). Equity continues to grow at the DST appreciation rate.<br>
-              <em>S&amp;P 500:</em> Dividends each year = S&amp;P dividend yield × balance. If dividends &lt; target cash flow, the gap is funded by selling shares (which reduces principal). <strong>No capital-gains tax is applied to share sales</strong> in this model — a simplification for comparability; in practice, sales above basis would trigger LT cap gains tax. Remaining principal grows at the S&amp;P 500 return rate.<br>
-              <em>Cash (HYSA):</em> Principal compounds at the HYSA rate; target cash flow withdrawn each year. If withdrawals exceed interest earned, principal depletes (clamped at $0).<br>
-              <em>TWS Custom Alts:</em> Cash flow spent. Equity grows at (Passive total return − Passive cash yield).
-            </p>
+            <p><strong>Income &amp; growth split view</strong> — summarizes the same strategies at the 10-year horizon as a stacked bar: ending equity (the bottom segment, shown in each strategy's own color) plus the cumulative cash flow taken as income (the gold cap on top). A taller colored base means more was left to grow; a taller gold cap means more income was drawn over the decade. This makes the income-vs-growth trade-off explicit: higher-cash-flow strategies generally show a larger gold cash cap and a smaller colored growth base, and lower-cash-flow strategies the reverse. The bar total is the strategy's combined value delivered (income received + equity retained), before any tax on a future sale of the remaining equity.</p>
 
-            <p><strong>Source &amp; rationale for default benchmark assumptions:</strong> S&amp;P 500 long-term <em>real</em> (inflation-adjusted) total return is approximately 6.5–7% per Damodaran/NYU Stern historical equity-return data and Ibbotson SBBI; nominal long-term average is ~10%. The 7% default is the conservative real-return figure for forward projections. S&amp;P 500 dividend yield of ~1.8% reflects approximate trailing 12-month index yield. HYSA rate default of 4.5% reflects current top-tier online savings APYs and should be updated as rates change.</p>
+            <p><strong>Source &amp; rationale for default benchmark assumptions:</strong> S&amp;P 500 long-term <em>real</em> (inflation-adjusted) total return is approximately 6.5–7% per Damodaran/NYU Stern historical equity-return data and Ibbotson SBBI; nominal long-term average is ~10%. The 7% default is the conservative real-return figure for forward projections. S&amp;P 500 dividend yield of ~1.8% reflects approximate trailing 12-month index yield. The cash yield used for the Cash line is the same input the Sell &amp; Pay Tax scenario uses — a short-term cash / money-market rate (auto-populated from a 3-month Treasury proxy and adjustable), so the two surfaces always assume the same cash return.</p>
 
-            <p><strong>Tax treatment in the chart:</strong> The 1031 line in both views assumes successful tax deferral and does not show a hypothetical after-tax exit value at year t (unlike earlier chart versions). Tax deferred is not tax eliminated — see the 1031 / DST Risk Disclosure below. The S&amp;P 500, HYSA, and TWS Alts lines all start from after-tax sale proceeds (Gross equity − Total tax computed from the inputs), so the upfront tax cost of selling is already reflected in their starting position vs. the 1031 line.</p>
+            <p><strong>Tax treatment in the chart:</strong> The 1031 line in both views assumes successful tax deferral and does not show a hypothetical after-tax exit value at year t (unlike earlier chart versions). Tax deferred is not tax eliminated — see the 1031 / DST Risk Disclosure below. The Sell &amp; Pay Tax, Sell &amp; Invest Passively, and S&amp;P 500 lines all start from after-tax sale proceeds (Gross equity − Total tax computed from the inputs), so the upfront tax cost of selling is already reflected in their starting position. The Hold line has no sale, so it starts from your current (un-taxed) equity (Market value − Mortgage). The Leveraged Bonus Depreciation line defers the gain via bonus depreciation, so it starts from close to the full pre-tax proceeds (no immediate tax in the typical full-offset case), split between the fund and the freed cash. These different starting points are intentional — they reflect each strategy's real tax consequence at the moment of decision.</p>
 
-            <p><strong>FINRA Rule 2214 disclosure:</strong> The 10-year comparison chart is a hypothetical investment analysis tool. Results are mathematical projections based on the inputs and assumptions you provide; they do not reflect actual investment results and are not guarantees of future results. Different assumptions, market conditions, fees, taxes, or holding periods will produce materially different outcomes. The chart does not account for: investment-management fees on benchmark portfolios; bid/ask spreads or transaction costs on share sales; taxes on S&amp;P 500 dividends, HYSA interest, or share-sale gains; sequence-of-returns risk; or rebalancing.</p>
+            <p><strong>FINRA Rule 2214 disclosure:</strong> The 10-year comparison chart is a hypothetical investment analysis tool. Results are mathematical projections based on the inputs and assumptions you provide; they do not reflect actual investment results and are not guarantees of future results. Different assumptions, market conditions, fees, taxes, or holding periods will produce materially different outcomes. The chart does not account for: investment-management fees on benchmark portfolios; bid/ask spreads or transaction costs on share sales; taxes on S&amp;P 500 dividends, cash interest, or share-sale gains; sequence-of-returns risk; or rebalancing.</p>
 
             <h4>What this calculator does <em>not</em> model</h4>
             <p>• Income tax on DST/Fund distributions (some offset by depreciation pass-through; varies)<br>
@@ -2257,8 +2348,10 @@
             <strong>Accredited investors only.</strong> DST (Delaware Statutory Trust) and Leveraged Bonus Depreciation fund investments shown in this comparison are private placement securities offered under SEC Regulation D (typically Rule 506(c)) and are available only to <em>accredited investors</em> as defined in <a href="https://www.law.cornell.edu/cfr/text/17/230.501" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:2px;">SEC Rule 501 of Regulation D</a>. If you do not meet the accredited-investor thresholds (generally $1M net worth excluding primary residence, or $200K/$300K individual/joint income for two prior years), the DST and LBD scenarios shown here are not available to you.
           </div>
 
-          <div class="finra-callout">
-            <strong>IMPORTANT:</strong> The projections or other information generated by the Property Exit Strategy Calculator regarding the likelihood of various investment outcomes are hypothetical in nature, do not reflect actual investment results and are not guarantees of future results. Results may vary with each use and over time as inputs, market conditions, tax law, and assumptions change.
+          <div class="cta-band" style="margin-bottom: 32px;">
+            <h3>Ready to model <em>your actual numbers?</em></h3>
+            <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
+            <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
           </div>
 
           <h4>Important Disclosures</h4>
@@ -2276,44 +2369,99 @@
           <p style="margin-top: 12px;">Securities offered through Emerson Equity LLC, Member FINRA/SIPC. Only available in states where Emerson Equity LLC is registered. Emerson Equity LLC is not affiliated with Tangible Wealth Solutions or any other entity identified in this communication.</p>
         </div>
 
-        <div class="cta-band">
-          <h3>Ready to model <em>your actual numbers?</em></h3>
-          <p>Calculators handle the math. We help you figure out what to do with it. Bring us your actual numbers and we'll talk through which path fits your situation, your timing, and what you want next.</p>
-          <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn">Schedule a Consultation</a>
-        </div>
-
       </div>
     </div>
 
   </section>
 </main>
 
-<!-- ===================== TWS FOOTER (matches refresh) ===================== -->
-<footer class="tws-footer">
-  <div class="tws-footer-grid">
-    <div>
-      <h5>About This Calculator</h5>
-      <p>This tool is provided by Tangible Wealth Solutions for educational purposes. Outputs are illustrative estimates based on inputs you provide and simplified tax assumptions; actual results will differ. This is not an offer to buy or sell securities and does not constitute investment, tax, or legal advice. Speak to a qualified professional before acting on any of these scenarios.</p>
+<!-- ═══ TWS FOOTER / DISCLOSURES (matches 2026 website redesign) ═══ -->
+<footer class="disclosure-section">
+  <div class="disclosure-grid">
+    <div class="disclosure-block">
+      <h5>General Disclosure</h5>
+      <p>Not an offer to buy, nor a solicitation to sell securities. All investing involves risk. Past performance is not indicative of future results. Speak to your finance and/or tax professional prior to investing. Any information provided on this site has been prepared from sources believed to be reliable, but is not guaranteed by Tangible Wealth Solutions or Emerson Equity, LLC and is not a complete summary or statement of all available data necessary for making an investment decision. Any information provided is for informational purposes only and does not constitute a recommendation.</p>
+      <p style="margin-top:10px;">Securities offered through Emerson Equity LLC Member: <a href="https://www.finra.org" target="_blank" rel="noopener">FINRA</a> / <a href="https://www.sipc.org" target="_blank" rel="noopener">SIPC</a>. Only available in states where Emerson Equity LLC is registered. Emerson Equity LLC is not affiliated with any other entities identified in this communication.</p>
     </div>
-    <div>
-      <h5>Securities Disclosure</h5>
-      <p>Securities offered through Emerson Equity LLC Member: <a href="https://www.finra.org" target="_blank" rel="noopener">FINRA</a> / <a href="https://www.sipc.org" target="_blank" rel="noopener">SIPC</a>. Only available in states where Emerson Equity LLC is registered. Emerson Equity LLC is not affiliated with Tangible Wealth Solutions or any other entities identified in this communication. All investing involves risk, including loss of principal.</p>
+    <div class="disclosure-block">
+      <h5>1031 / DST Risk Disclosure</h5>
+      <p>There is no guarantee that any strategy will be successful or achieve investment objectives; Potential for property value loss - All real estate investments have the potential to lose value during the life of the investments; Change of tax status - The income stream and depreciation schedule for any investment property may affect the property owner's income bracket and/or tax status. An unfavorable tax ruling may cancel deferral of capital gains and result in immediate tax liabilities; Potential for foreclosure - All financed real estate investments have potential for foreclosure; Liquidity - Because 1031 exchanges are commonly offered through private placement offerings and are illiquid securities. There is no secondary market for these investments. Reduction or Elimination of Monthly Cash Flow Distributions - Like any investment in real estate, if a property unexpectedly loses tenants or sustains substantial damage, there is potential for suspension of cash flow distributions; Impact of fees/expenses - Costs associated with the transaction may impact investors' returns and may outweigh the tax benefits.</p>
+    </div>
+    <div class="disclosure-block">
+      <h5>Oil &amp; Gas Investment Risks</h5>
+      <p>Private investments in oil and gas are high risk, including but not limited to, the following considerations: Political risk - Federal or local governments could enact regulations or legislation that could adversely affect the oil and gas industry, thereby negatively affecting your investment. Geographical risk - Oil and gas production can be negatively impacted by extraction challenges and the possibility that accessible reserves in a deposit may be smaller than estimated. There is no guarantee that any drilling operation will be successful. Supply demand and pricing risk - A reduction in oil and gas prices and/or governmental action can reduce or even eliminate investment returns. Discounted costs - Any dividend payments may be reduced or eliminated if the company is unable to generate sufficient revenue to fund payments to investors. Oil spill risk - Beyond the cost of repairs, cleanup, potential fines, and possible litigation, oil spills can damage the company's reputation, all of which can reduce or eliminate investment returns.</p>
+    </div>
+    <div class="disclosure-block">
+      <h5>Opportunity Zone Disclosures</h5>
+      <p>Investing in Opportunity Zones is speculative. Opportunity Zones are newly formed entities with no operating history. There is no assurance of investment return, property appreciation, or profits. The ability to meet the fund's underlying investment properties or businesses is not guaranteed. Investing in Opportunity Zone funds may involve higher risk than other established real estate offerings. Long-term investment - Opportunity Zone funds held require investors to maintain investments that may not be easily sold. The return of capital and realization of gains, if any, generally occur only upon partial or complete disposition or refinancing of such investments. Limited secondary market for Opportunity Zone - Although secondary markets may provide a limited liquidity option, the amount typically realized is often discounted from current valuations. Difficult valuation assessments - The portfolio holdings in Opportunity Zone funds may be challenging to value, as financial markets or exchanges usually do not quote or trade these holdings. Therefore, market prices for most of a fund's holdings are not readily available. Capital call default consequences - Meeting capital calls is a contractual obligation. Failure to fulfill this requirement in a timely manner could result in significant adverse consequences, including, but not limited to, forfeiture of your interest in the fund. Leverage - Opportunity Zone funds may use leverage in connection with real estate investments. Leverage creates a high degree of financial risk and may increase exposure to factors such as rising interest rates, economic downturns, or unanticipated investment. Regulation - Due to tax, regulatory, or investment decisions, it is possible that a fund or its investors may be unable to realize anticipated tax benefits. It is advisable to evaluate the merits of the underlying investment and not invest solely for potential tax advantages.</p>
     </div>
   </div>
-  <div class="tws-footer-bottom">
-    <a href="https://tws-preview.vercel.app/tws-redesign.html" class="tws-footer-logo">
-      <img src="https://tws-preview.vercel.app/tws-logo-white.png"
-           alt="Tangible Wealth Solutions"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">
-      <span style="display:none;">Tangible Wealth <span style="color:var(--gold-light);">Solutions</span></span>
-    </a>
-    <div class="tws-footer-links">
-      <a href="https://tws-preview.vercel.app/tws-solutions.html">Solutions</a>
-      <a href="https://tws-preview.vercel.app/tws-resources.html">Resources</a>
-      <a href="https://tws-preview.vercel.app/tws-about.html">Our Team</a>
-      <a href="https://tws-preview.vercel.app/tws-contact.html">Contact</a>
+  <div class="disclosure-footer">
+    <!-- Footer top: Logo + Sitemap + Contact -->
+    <div style="display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:center;width:100%;" class="footer-sitemap">
+      <div class="disc-logo">
+        <img src="https://tws-preview.vercel.app/tws-logo-white.png" alt="Tangible Wealth Solutions"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"
+             style="margin-bottom:8px;">
+        <span class="disc-logo-fallback" style="display:none;">Tangible Wealth <span>Solutions</span></span>
+      </div>
+      <div style="display:grid;grid-template-rows:repeat(3,auto);grid-template-columns:repeat(5,auto);grid-auto-flow:column;gap:3px 36px;justify-self:center;">
+        <a href="https://tws-preview.vercel.app/tws-redesign.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Home</a>
+        <a href="https://tws-preview.vercel.app/tws-solutions.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Solutions</a>
+        <a href="https://tws-preview.vercel.app/tws-1031-exchange.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">1031 Exchange</a>
+        <a href="https://tws-preview.vercel.app/tws-private-placements.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Private Placements</a>
+        <a href="https://tws-preview.vercel.app/tws-oil-gas.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Oil &amp; Gas</a>
+        <a href="https://tws-preview.vercel.app/tws-solutions.html#wealth" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Wealth Solutions</a>
+        <a href="https://tws-preview.vercel.app/tws-solutions.html#tax-strategies" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Tax Strategies</a>
+        <a href="https://tws-preview.vercel.app/tws-solutions.html#opportunity-zones" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Opportunity Zones</a>
+        <a href="https://tws-preview.vercel.app/tws-resources.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Resources</a>
+        <a href="https://tws-preview.vercel.app/tws-glossary.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Glossary</a>
+        <a href="https://tws-preview.vercel.app/tws-about.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Our Team</a>
+        <a href="https://tws-preview.vercel.app/tws-client-portal.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Client Portal</a>
+        <a href="https://tws-preview.vercel.app/tws-contact.html" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;padding:3px 0;transition:color .2s;">Contact Us</a>
+      </div>
+      <div class="footer-contact-info" style="text-align:left;">
+        <div style="display:flex;gap:16px;margin-bottom:10px;">
+          <a href="https://www.linkedin.com/company/35451978/admin/dashboard/" target="_blank" rel="noopener" title="LinkedIn" style="color:var(--gold);transition:opacity .2s;opacity:0.7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+          <a href="https://www.instagram.com/tangiblewealthsolutions?igsh=ZnRkejRhbmRlb2Fh" target="_blank" rel="noopener" title="Instagram" style="color:var(--gold);transition:opacity .2s;opacity:0.7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="https://www.youtube.com/@TangibleWealthSolutions" target="_blank" rel="noopener" title="YouTube" style="color:var(--gold);transition:opacity .2s;opacity:0.7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" style="flex-shrink:0;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          <a href="tel:7209961794" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;">720-996-1794</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" style="flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:info@yourtws.com" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;">info@yourtws.com</a>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" style="margin-top:2px;flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <a href="https://share.google/NiOIftonJjaNIc1L0" target="_blank" rel="noopener" style="font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;line-height:1.5;">9250 E Costilla Ave., Suite 105<br>Greenwood Village, CO 80112</a>
+        </div>
+      </div>
     </div>
-    <div class="tws-footer-meta">© Tangible Wealth Solutions · Greenwood Village, CO · 720‑996‑1794</div>
+    <!-- BrokerCheck -->
+    <div style="display:flex;justify-content:center;padding:10px 0 14px;width:100%;">
+      <a href="https://brokercheck.finra.org" target="_blank" rel="noopener" class="brokercheck-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(191,155,48,0.8)" stroke-width="1.5">
+          <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+        </svg>
+        <div class="brokercheck-badge-text">
+          <span>Verify on</span>
+          <span>FINRA BrokerCheck</span>
+        </div>
+      </a>
+    </div>
+    <!-- Copyright -->
+    <div style="text-align:center;width:100%;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
+      <span style="font-size:11px;color:rgba(255,255,255,0.3);">Copyright &copy; 2026 <strong style="color:rgba(255,255,255,0.45);">Tangible Wealth Solutions</strong> &nbsp;
+        <a href="https://tws-preview.vercel.app/tws-sitemap.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">Sitemap</a> |
+        <a href="https://tws-preview.vercel.app/tws-privacy-policy.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">Privacy Policy</a> |
+        <a href="https://tws-preview.vercel.app/tws-terms.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">Terms &amp; Conditions</a> |
+        <a href="https://tws-preview.vercel.app/tws-linking-policy.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">Linking Policy</a> |
+        <span style="color:rgba(255,255,255,0.25);">Website Design by Denver Web Success</span>
+      </span>
+    </div>
   </div>
 </footer>
 
@@ -2560,7 +2708,7 @@ function compute() {
   const s1TerminalWealth = s1Equity - s1TerminalTax + s1CumCF + s1RefiCashBalance;
 
   // ============================================================
-  // SCENARIO 2 — SELL & PAY TAX (cash in MM/HYSA, no growth beyond yield)
+  // SCENARIO 2 — SELL & PAY TAX (cash / money market at cashYield, no growth beyond yield)
   // ============================================================
   const s2NetCash = grossEquity - totalTax;
   // Cash sits — principal stays flat, yield paid out each year (already taxed at ordinary on yield, ignored for simplicity)
@@ -2664,8 +2812,10 @@ function compute() {
   // Freed cash invested in passive alternatives at the passive return assumption
   let freedBalance = freedCash;
   let freedCumCF = 0;
+  const freedAnnualCF = freedCash * passiveYield;
   for (let y = 1; y <= N; y++) {
-    freedCumCF += freedBalance * passiveYield;
+    // FLAT distribution on the freed-cash alt sleeve (matches s5 and the chart).
+    freedCumCF += freedAnnualCF;
     freedBalance = freedBalance * (1 + Math.max(0, passiveReturn - passiveYield));
   }
 
@@ -2704,8 +2854,10 @@ function compute() {
   let s5CumCF = 0;
   const s5AnnualCF_Y1 = s5NetCash * passiveYield;
   for (let y = 1; y <= N; y++) {
-    const cf = s5Balance * passiveYield;
-    s5CumCF += cf;
+    // Alt-fund distribution is FLAT (fixed cash-on-cash on the initial
+    // investment), mirroring the DST and the 10-year chart — not a yield
+    // paid on the growing balance. Balance still appreciates for terminal.
+    s5CumCF += s5AnnualCF_Y1;
     s5Balance = s5Balance * (1 + Math.max(0, passiveReturn - passiveYield));
   }
 
@@ -2748,7 +2900,9 @@ function compute() {
               // V2 chart needs these to compute year-by-year after-tax DST exit value.
               // accumDep here is the EFFECTIVE accumulated depreciation (current +
               // prior 1031 carryover) so the chart correctly recaptures both portions.
-              adjustedBasis, accumDep: effectiveAccumDep, recaptureRate, fedCG, niitRate, applyNIIT, stateRate },
+              adjustedBasis, accumDep: effectiveAccumDep, recaptureRate, fedCG, niitRate, applyNIIT, stateRate,
+              // LBD scalars the 10-year chart needs to build the LBD line.
+              s4LBDInvestment, freedCash },
     scenarios: [
       {
         key: "hold",
@@ -2768,7 +2922,7 @@ function compute() {
       },
       {
         key: "sell",
-        title: "Sell &amp; Pay Tax",
+        title: "Sell &amp; Pay Tax (cash yield)",
         sub: "Hold cash.",
         taxNow: totalTax,
         taxDeferred: 0,
@@ -2914,8 +3068,7 @@ function render() {
 
         <div class="metric metric-defer">
           <div class="label">Tax Deferred</div>
-          <div class="value neutral small">${s.taxDeferred > 0 ? fmt$(s.taxDeferred) : "—"}</div>
-          ${s.taxDeferred > 0 ? `<div class="defer-clarifier">Becomes due at disposition unless step-up applies.</div>` : ""}
+          <div class="value neutral small">${s.taxDeferred > 0 ? `${fmt$(s.taxDeferred)}<sup class="card-asterisk">&dagger;</sup>` : "—"}</div>
         </div>
 
         <div class="metric metric-cf">
@@ -2935,15 +3088,16 @@ function render() {
         </div>
 
         <div class="scenario-benefits">${s.benefits}</div>
+        ${s.taxDeferred > 0 ? `<div class="defer-footnote"><sup>&dagger;</sup> Becomes due at a taxable disposition — unless deferred again (another 1031 or LBD placement) or eliminated by a step-up in basis at death.</div>` : ""}
       </div>
     `;
     cards.insertAdjacentHTML("beforeend", html);
   });
 
-  // ---------- V2: 20-Year Growth Comparison Chart ----------
-  // Compares Sell & Pay Tax (after-tax proceeds earning cash yield, flat per
-  // existing model) against 1031 Exchange to DST (equity appreciates at DST
-  // appreciation rate; cash distributions are flat per memory & model).
+  // ---------- V2: 10-Year Growth Comparison Chart ----------
+  // Plots all five Detailed-Comparison strategies (Hold, Sell & Pay Tax,
+  // Sell & Invest Passively, 1031→DST, LBD) plus an optional S&P 500
+  // benchmark, using the same rate inputs and flat-distribution model.
   renderGrowthChart10yr(data);
 
   // ---------- Consolidated scenario disclosures (the "*" footnote block) ----------
@@ -2987,7 +3141,7 @@ function render() {
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Sale-Year Tax Impact</td></tr>`;
   html += rowFmt("Real Estate / Sales Commissions", scenarios.map(s => s.sellingCosts > 0 ? fmt$(s.sellingCosts) : "—"));
   html += rowFmt("Capital Gains Tax + Depreciation Recapture Due", scenarios.map(s => fmt$(s.taxNow)));
-  html += rowFmt(`Tax Deferred <span class="row-caveat">(becomes due at disposition unless step-up applies)</span>`, scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
+  html += rowFmt(`Tax Deferred <span class="row-caveat">(becomes due at a taxable disposition unless deferred again via another 1031 or LBD placement, or eliminated by a step-up at death)</span>`, scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
   html += rowFmt("Replacement Debt (1031 carryover)", scenarios.map(s => s.replacementDebt > 0 ? fmt$(s.replacementDebt) : "—"));
   // "Net Cash / Equity Deployed" now reflects TOTAL capital reinvested for 1031 compliance:
   // investor's equity slice + replacement debt carried over at the DST. For non-DST scenarios,
@@ -3076,40 +3230,69 @@ window.addEventListener("resize", () => {
 /* ============================================================
    V2 PORTAL: 10-YEAR GROWTH COMPARISON CHART (gated — portal only)
    ------------------------------------------------------------
-   Four toggleable scenario lines × two view modes:
+   Six toggleable lines × two view modes: the five Detailed-Comparison
+   strategies (Hold, Sell & Pay Tax, Sell & Invest Passively, 1031→DST,
+   LBD — all ON by default) plus an S&P 500 market benchmark (OFF by
+   default, no table row). Each strategy distributes ITS OWN cash flow
+   (taken as income); DST, TWS Alts, LBD cannot reinvest into the fund
+   and Hold's rent is taken; Sell & Pay Tax (Cash) and S&P 500 optionally
+   reinvest (default ON). Rates/starting capital match the table.
 
-   WEALTH ACCUMULATION mode — ending wealth at year t
-     • 1031 Exchange: equity appreciates at DST appreciation rate;
-       annual cash distributions reinvested in an S&P 500 sidecar
-       at the S&P 500 return rate (compounded annually).
-     • S&P 500: after-tax proceeds compounded at S&P 500 return.
-     • Cash (HYSA): after-tax proceeds compounded at HYSA rate.
-     • TWS Custom Alts: after-tax proceeds; equity grows at
-       (passiveReturn − passiveYield); annual cash distributions
-       reinvested in an S&P 500 sidecar.
+   PROJECTED EQUITY OVER TIME mode (line) — equity/principal at year t:
+     • Hold: equity = marketValue×(1+appr)^t − remaining mortgage;
+       rent (NOI-grown, less capex/debt/tax) taken as income. Starts
+       from current un-taxed equity (no sale).
+     • Sell & Pay Tax (Cash): distribute → level principal, cashYield
+       taken; reinvest → compounds at cashYield.
+     • Sell & Invest Passively (TWS Alts): equity grows at
+       (passiveReturn − passiveYield); flat distribution taken.
+     • 1031→DST: equity = replacementValue×(1+dstAppr)^t − debt;
+       flat cash distribution taken as income.
+     • LBD: fund grows at bdAppr + freed cash at (passiveReturn −
+       passiveYield); flat distribution. Starts near full pre-tax.
+     • S&P 500: distribute → principal grows at (sp500Return −
+       sp500DivYield), dividend taken; reinvest → full sp500Return.
 
-   CASH FLOW GOAL mode — net equity remaining at year t, after
-   each scenario distributes income matching the 1031's annual
-   cash flow target.
-     • 1031: equity appreciates; cash flow spent (not reinvested).
-     • S&P 500: dividends (sp500DivYield × balance) help meet the
-       target; remaining gap is funded by selling shares (NO tax
-       on share sales per spec). Net equity grows at sp500Return.
-     • Cash (HYSA): interest withdrawn to meet target; principal
-       depletes if interest < target. Clamped at $0.
-     • TWS Custom Alts: cash flow spent; equity grows at
-       (passiveReturn − passiveYield).
+   INCOME & GROWTH SPLIT mode (stacked bar) — at the 10-year horizon,
+   cumulative income taken (gold cap) + ending equity (each strategy's
+   color base). Total = combined value delivered, pre exit-tax.
 
    Horizon fixed at 10 years (per spec, not user's hold input).
    ============================================================ */
 let _growthChart10yrInstance = null;
 let _growthChart10yrData = null;     // last-computed series for both modes
-let _growthChart10yrMode = "wealth"; // "wealth" | "cashflow"
+let _growthChart10yrMode = "equity"; // "equity" | "split"
 let _growthChart10yrWired = false;   // event-listener idempotency guard
+let _growthChart10yrLastData = null; // last compute() payload, for reinvest-toggle recompute
+let _growthChart10yrType = null;     // chart.js type of the live instance ("line" | "bar")
+
+function _growthReinvestFlags() {
+  return {
+    sp: !!document.getElementById("reinvestSp")?.checked,
+    hy: !!document.getElementById("reinvestHy")?.checked,
+  };
+}
+
+// Compact per-year income label for the legend pills.
+function _fmtGrowthIncome(v) {
+  if (!v || v <= 0) return "reinvested";
+  if (v >= 1000) return "$" + Math.round(v / 1000) + "K/yr";
+  return "$" + Math.round(v) + "/yr";
+}
+
+function _updateGrowthLegendIncome() {
+  if (!_growthChart10yrData) return;
+  const inc = _growthChart10yrData.incomeY1;
+  document.querySelectorAll(".pill-income").forEach(el => {
+    const k = el.dataset.income;
+    el.textContent = "· " + _fmtGrowthIncome(inc[k]);
+  });
+}
 
 function renderGrowthChart10yr(data) {
   const canvas = document.getElementById("growthChart10yr");
   if (!canvas || typeof Chart === "undefined") return;
+  _growthChart10yrLastData = data;
 
   // Pull all inputs the chart depends on. (compute() already populated
   // data.inputs with the tax-derived figures; we read the assumption
@@ -3123,7 +3306,7 @@ function renderGrowthChart10yr(data) {
   const mortgage        = numv("mortgage");
   const sp500Return     = numv("sp500Return")     / 100;   // total return, real
   const sp500DivYield   = numv("sp500DivYield")   / 100;
-  const hysaRate        = numv("hysaRate")        / 100;
+  const cashYield       = numv("cashYield")       / 100;   // cash / money-market yield (shared with the Sell & Pay Tax table scenario)
   const passiveReturn   = numv("passiveReturn")   / 100;
   const passiveYield    = numv("passiveYield")    / 100;
   const passiveGrowth   = Math.max(0, passiveReturn - passiveYield); // equity-only growth component
@@ -3135,103 +3318,124 @@ function renderGrowthChart10yr(data) {
   const s3ReplacementValue = s3Equity + s3ReplacementDebt;
   const s3AnnualCF         = s3Equity * dstYield;                     // flat annual 1031 cash flow
 
-  // Annuity future-value helper — sum of CF deposits compounding at r
-  // through year t. Handles r=0 with linear fallback.
-  const annuityFV = (cf, r, t) => {
-    if (t <= 0) return 0;
-    if (Math.abs(r) < 1e-9) return cf * t;
-    return cf * (Math.pow(1 + r, t) - 1) / r;
-  };
+  // Additional inputs for the Hold and Leveraged Bonus Depreciation lines.
+  const marketValue   = numv("marketValue");
+  const apprRate      = numv("appreciationRate") / 100;
+  const annualPaydown = numv("principalPaydown");
+  const noi           = numv("noi");
+  const debtService   = numv("debtService");
+  const capexPct      = numv("capexPct") / 100;
+  const noiGrowth     = numv("noiGrowthRate") / 100;
+  const applyRentalTax= document.getElementById("applyRentalTax")?.value === "true";
+  const annualDep     = numv("annualDep");
+  const annualInterest= numv("annualInterest");
+  const ordRate       = numv("ordRate") / 100;
+  const bdYield       = numv("bdYield") / 100;
+  const bdAppr        = numv("bdAppreciation") / 100;
+  const lbdInvestment = data.inputs.s4LBDInvestment || 0;   // from compute() (tax-offset logic)
+  const freedCash     = data.inputs.freedCash || 0;         // from compute()
 
+  const flags = _growthReinvestFlags();
   const HORIZON = 10;
   const labels  = [];
   for (let t = 0; t <= HORIZON; t++) labels.push("Year " + t);
 
-  // ---------- WEALTH ACCUMULATION series ----------
-  const wDst  = [];  // 1031 Exchange
-  const wSp   = [];  // S&P 500
-  const wHy   = [];  // Cash / HYSA
-  const wAlt  = [];  // TWS Custom Alts
+  // ---------- EQUITY-OVER-TIME series ----------
+  // Each strategy distributes its OWN cash flow, taken as income. DST, TWS
+  // Alts, and LBD cannot reinvest distributions back into the vehicle (fixed
+  // offerings); Hold distributes rental income (grows with NOI). Sell & Pay
+  // Tax (Cash) and S&P 500 optionally reinvest (flags). We also accumulate
+  // the cash flow taken, for the income/growth split view.
+  const eqHold = [], eqHy = [], eqAlt = [], eqDst = [], eqLbd = [], eqSp = [];
+  let cumHold = 0, cumHy = 0, cumAlt = 0, cumDst = 0, cumLbd = 0, cumSp = 0;
+  let holdY1 = 0;
+
+  // S&P principal growth: full total return if reinvesting; otherwise
+  // price-only appreciation (total return − dividend yield).
+  const spGrowth = flags.sp ? sp500Return : Math.max(0, sp500Return - sp500DivYield);
+  const lbdAnnualCF = lbdInvestment * bdYield + freedCash * passiveYield; // flat
+
   for (let t = 0; t <= HORIZON; t++) {
-    // 1031: equity appreciates on full replacement value, debt netted out;
-    // plus S&P 500 sidecar of reinvested cash distributions.
-    const dstAssetT  = s3ReplacementValue * Math.pow(1 + dstAppr, t);
-    const dstEquityT = dstAssetT - s3ReplacementDebt;
-    const dstSidecarT = annuityFV(s3AnnualCF, sp500Return, t);
-    wDst.push(Math.round(dstEquityT + dstSidecarT));
+    // Hold: property appreciates, mortgage pays down; rent taken as income.
+    const propVal = marketValue * Math.pow(1 + apprRate, t);
+    const remMort = Math.max(0, mortgage - annualPaydown * t);
+    eqHold.push(Math.round(propVal - remMort));
 
-    // S&P 500: after-tax proceeds compounded at sp500Return.
-    wSp.push(Math.round(s2NetCash * Math.pow(1 + sp500Return, t)));
+    // Sell & Pay Tax (Cash): level principal (interest taken) or compounding (reinvest).
+    const hyEq = flags.hy ? s2NetCash * Math.pow(1 + cashYield, t) : s2NetCash;
+    eqHy.push(Math.round(hyEq));
 
-    // HYSA: after-tax proceeds compounded at hysaRate.
-    wHy.push(Math.round(s2NetCash * Math.pow(1 + hysaRate, t)));
+    // Sell & Invest Passively (TWS Alts): equity grows at (passive total − passive yield).
+    const altEq = s2NetCash * Math.pow(1 + passiveGrowth, t);
+    eqAlt.push(Math.round(altEq));
 
-    // TWS Alts: after-tax proceeds; equity grows at (passiveReturn - passiveYield);
-    // annual cash yield reinvested in S&P 500 sidecar.
-    const altEquityT = s2NetCash * Math.pow(1 + passiveGrowth, t);
-    const altAnnualCF = s2NetCash * passiveYield;
-    const altSidecarT = annuityFV(altAnnualCF, sp500Return, t);
-    wAlt.push(Math.round(altEquityT + altSidecarT));
-  }
+    // 1031 → DST: equity appreciates on full replacement value, debt netted out.
+    const dstEq = s3ReplacementValue * Math.pow(1 + dstAppr, t) - s3ReplacementDebt;
+    eqDst.push(Math.round(dstEq));
 
-  // ---------- CASH FLOW GOAL series ----------
-  // Annual cash flow target = the 1031's annual CF. Each non-1031 scenario
-  // distributes that same dollar amount per year; we plot the remaining
-  // net equity.
-  const cashTarget = s3AnnualCF;
-  const cDst = [];
-  const cSp  = [];
-  const cHy  = [];
-  const cAlt = [];
-  let spBal  = s2NetCash;
-  let hyBal  = s2NetCash;
-  for (let t = 0; t <= HORIZON; t++) {
-    if (t === 0) {
-      cDst.push(Math.round(s3Equity));
-      cSp.push(Math.round(spBal));
-      cHy.push(Math.round(hyBal));
-      cAlt.push(Math.round(s2NetCash));
-      continue;
+    // LBD: fund sleeve appreciates at bonus-depreciation appreciation; freed cash grows at passive growth.
+    const lbdEq = lbdInvestment * Math.pow(1 + bdAppr, t) + freedCash * Math.pow(1 + passiveGrowth, t);
+    eqLbd.push(Math.round(lbdEq));
+
+    // S&P 500: price-only growth (distribute) or total return (reinvest).
+    const spEq = s2NetCash * Math.pow(1 + spGrowth, t);
+    eqSp.push(Math.round(spEq));
+
+    if (t >= 1) {
+      // Hold rental income (grows with NOI), taken as income.
+      const grossNOI = noi * Math.pow(1 + noiGrowth, t - 1);
+      const netNOI   = grossNOI * (1 - capexPct);
+      let holdCF = netNOI - debtService;
+      if (applyRentalTax) {
+        const taxableRental = Math.max(0, netNOI - annualDep - annualInterest);
+        holdCF = (netNOI - debtService) - taxableRental * ordRate;
+      }
+      if (t === 1) holdY1 = holdCF;
+      cumHold += holdCF;
+
+      cumDst += s3AnnualCF;                                  // flat DST distribution
+      cumAlt += s2NetCash * passiveYield;                   // flat alt distribution
+      cumLbd += lbdAnnualCF;                                // flat LBD distribution
+      if (!flags.sp) cumSp += sp500DivYield * eqSp[t - 1];  // dividend on prior-year balance
+      if (!flags.hy) cumHy += cashYield * s2NetCash;        // interest on level principal
     }
-
-    // 1031: equity appreciates, CF spent.
-    const dstAssetT  = s3ReplacementValue * Math.pow(1 + dstAppr, t);
-    const dstEquityT = dstAssetT - s3ReplacementDebt;
-    cDst.push(Math.round(dstEquityT));
-
-    // S&P 500: dividends + share-sale gap; remaining principal grows at sp500Return.
-    // Per spec: NO tax on share sales (simplification).
-    const dividends = sp500DivYield * spBal;
-    const gap       = Math.max(0, cashTarget - dividends);
-    spBal = Math.max(0, (spBal - gap) * (1 + sp500Return));
-    cSp.push(Math.round(spBal));
-
-    // HYSA: principal compounds at hysaRate, target withdrawn each year.
-    hyBal = Math.max(0, hyBal * (1 + hysaRate) - cashTarget);
-    cHy.push(Math.round(hyBal));
-
-    // TWS Alts: equity grows at (passiveReturn - passiveYield); CF spent.
-    cAlt.push(Math.round(s2NetCash * Math.pow(1 + passiveGrowth, t)));
   }
+
+  // Year-1 income per strategy (shown in the legend pills).
+  const incomeY1 = {
+    hold:  holdY1,
+    hysa:  flags.hy ? 0 : cashYield * s2NetCash,
+    alts:  s2NetCash * passiveYield,
+    dst:   s3AnnualCF,
+    lbd:   lbdAnnualCF,
+    sp500: flags.sp ? 0 : sp500DivYield * s2NetCash,
+  };
 
   // Cache so mode/checkbox handlers can re-render without recompute.
   _growthChart10yrData = {
     labels,
-    wealth:   { dst: wDst, sp500: wSp, hysa: wHy, alts: wAlt },
-    cashflow: { dst: cDst, sp500: cSp, hysa: cHy, alts: cAlt },
-    cashTarget,
+    equity: { hold: eqHold, hysa: eqHy, alts: eqAlt, dst: eqDst, lbd: eqLbd, sp500: eqSp },
+    split: {
+      income: { hold: Math.round(cumHold), hysa: Math.round(cumHy), alts: Math.round(cumAlt), dst: Math.round(cumDst), lbd: Math.round(cumLbd), sp500: Math.round(cumSp) },
+      equity: { hold: eqHold[HORIZON], hysa: eqHy[HORIZON], alts: eqAlt[HORIZON], dst: eqDst[HORIZON], lbd: eqLbd[HORIZON], sp500: eqSp[HORIZON] },
+    },
+    incomeY1,
+    horizon: HORIZON,
   };
 
+  _updateGrowthLegendIncome();
   buildOrUpdateGrowthChart10yr();
   wireGrowthChart10yrControlsOnce();
 }
 
 // Series styling — keep in sync with the toggle-pill swatches in markup.
 const _GROWTH_CHART_10YR_STYLE = {
-  dst:   { label: "1031 Exchange",        color: "#BF9B30", dash: [],     width: 3   },
-  sp500: { label: "S&P 500",              color: "#2E7D5B", dash: [],     width: 2.5 },
-  hysa:  { label: "Cash (HYSA)",          color: "#5A6478", dash: [],     width: 2.5 },
-  alts:  { label: "TWS Custom Alts",      color: "#6BA4D6", dash: [],     width: 2.5 },
+  hold:  { label: "Hold Current Property",        color: "#7D6BAF", dash: [],    width: 2.5 },
+  hysa:  { label: "Sell & Pay Tax (cash yield)",  color: "#5A6478", dash: [],    width: 2.5 },
+  alts:  { label: "Sell & Invest Passively",      color: "#6BA4D6", dash: [],    width: 2.5 },
+  dst:   { label: "1031 Exchange to DST",         color: "#BF9B30", dash: [],    width: 3   },
+  lbd:   { label: "Leveraged Bonus Depreciation", color: "#C2603F", dash: [],    width: 2.5 },
+  sp500: { label: "S&P 500 (benchmark)",          color: "#2E7D5B", dash: [6, 4], width: 2   },
 };
 
 function buildOrUpdateGrowthChart10yr() {
@@ -3249,12 +3453,88 @@ function buildOrUpdateGrowthChart10yr() {
 
   // Read current checkbox state for each series.
   const toggleEls = document.querySelectorAll("#chartLineToggles input[type='checkbox']");
-  const enabled = { dst: true, sp500: true, hysa: true, alts: true };
+  const enabled = { hold: true, hysa: true, alts: true, dst: true, lbd: true, sp500: false };
   toggleEls.forEach(el => { enabled[el.dataset.series] = el.checked; });
 
-  const modeData = _growthChart10yrData[_growthChart10yrMode];
+  const needType = _growthChart10yrMode === "split" ? "bar" : "line";
+  // Chart.js can't switch type in place — tear down if the type changed.
+  if (_growthChart10yrInstance && _growthChart10yrType !== needType) {
+    _growthChart10yrInstance.destroy();
+    _growthChart10yrInstance = null;
+  }
+
+  // ===== Income & growth split (stacked bar at the 10-year horizon) =====
+  if (needType === "bar") {
+    const order = ["hold", "hysa", "alts", "dst", "lbd", "sp500"].filter(k => enabled[k]);
+    const barLabels   = order.map(k => _GROWTH_CHART_10YR_STYLE[k].label);
+    const incomeData  = order.map(k => _growthChart10yrData.split.income[k]);
+    const equityData  = order.map(k => _growthChart10yrData.split.equity[k]);
+    const equityColors = order.map(k => _GROWTH_CHART_10YR_STYLE[k].color); // each strategy's own color
+    // Growth (each strategy's color) sits on the bottom; cash distributed
+    // (gold) caps the top. White separators keep the split visible even on
+    // the DST bar, whose own color is also gold.
+    const datasets = [
+      { label: "Ending equity (growth)",   data: equityData, backgroundColor: equityColors, stack: "s", borderColor: "#fff", borderWidth: 1.5, maxBarThickness: 80 },
+      { label: "Cash distributed (10-yr)", data: incomeData, backgroundColor: "#D4B55A",    stack: "s", borderColor: "#fff", borderWidth: 1.5, maxBarThickness: 80 },
+    ];
+
+    if (_growthChart10yrInstance) {
+      _growthChart10yrInstance.data.labels = barLabels;
+      _growthChart10yrInstance.data.datasets = datasets;
+      _growthChart10yrInstance.update();
+      return;
+    }
+
+    _growthChart10yrInstance = new Chart(canvas.getContext("2d"), {
+      type: "bar",
+      data: { labels: barLabels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: navy,
+            titleColor: "#D4B55A",
+            bodyColor: "#fff",
+            footerColor: "#D4B55A",
+            boxPadding: 6,
+            titleFont:  { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
+            bodyFont:   { family: "'DM Sans', sans-serif", size: 12 },
+            footerFont: { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
+            padding: 12,
+            borderColor: "rgba(191,155,48,0.4)",
+            borderWidth: 1,
+            callbacks: {
+              label: ctx => ctx.dataset.label + ": " + fmtFull$(ctx.parsed.y),
+              footer: items => "Total value: " + fmtFull$(items.reduce((s, it) => s + it.parsed.y, 0)),
+            },
+          },
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+            ticks: { font: { family: "'DM Sans', sans-serif", size: 11 }, color: muted },
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            grid: { color: "rgba(8,23,46,0.06)" },
+            title: { display: true, text: "10-year value ($)", color: muted, font: { family: "'DM Sans', sans-serif", size: 11, weight: "500" } },
+            ticks: { font: { family: "'DM Sans', sans-serif", size: 11 }, color: muted, callback: v => fmtCompact$(v) },
+          },
+        },
+      },
+    });
+    _growthChart10yrType = "bar";
+    return;
+  }
+
+  // ===== Projected equity over time (line) =====
+  const modeData = _growthChart10yrData.equity;
   const datasets = [];
-  ["dst", "sp500", "hysa", "alts"].forEach(key => {
+  ["hold", "hysa", "alts", "dst", "lbd", "sp500"].forEach(key => {
     if (!enabled[key]) return;
     const style = _GROWTH_CHART_10YR_STYLE[key];
     datasets.push({
@@ -3271,9 +3551,7 @@ function buildOrUpdateGrowthChart10yr() {
     });
   });
 
-  const yAxisLabel = _growthChart10yrMode === "wealth"
-    ? "Projected Wealth"
-    : "Net Equity Remaining (after distributing target cash flow)";
+  const yAxisLabel = "Projected equity ($)";
 
   if (_growthChart10yrInstance) {
     _growthChart10yrInstance.data.labels = _growthChart10yrData.labels;
@@ -3296,6 +3574,7 @@ function buildOrUpdateGrowthChart10yr() {
           backgroundColor: navy,
           titleColor: "#D4B55A",
           bodyColor: "#fff",
+          boxPadding: 6,
           titleFont: { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
           bodyFont:  { family: "'DM Sans', sans-serif", size: 12 },
           padding: 12,
@@ -3335,6 +3614,7 @@ function buildOrUpdateGrowthChart10yr() {
       },
     },
   });
+  _growthChart10yrType = "line";
 }
 
 // Attach mode-toggle and checkbox listeners once. Idempotent so repeated
@@ -3359,6 +3639,25 @@ function wireGrowthChart10yrControlsOnce() {
 
   document.querySelectorAll("#chartLineToggles input[type='checkbox']").forEach(cb => {
     cb.addEventListener("change", () => buildOrUpdateGrowthChart10yr());
+  });
+
+  // Per-client reinvestment toggles change the underlying series, so they
+  // trigger a full recompute from the last compute() payload.
+  ["reinvestSp", "reinvestHy"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("change", () => {
+      if (_growthChart10yrLastData) renderGrowthChart10yr(_growthChart10yrLastData);
+    });
+  });
+
+  // "See cash-flow assumptions" opens the methodology accordion and scrolls to it.
+  const assumpLink = document.getElementById("seeCashflowAssumptions");
+  if (assumpLink) assumpLink.addEventListener("click", e => {
+    e.preventDefault();
+    const det = document.querySelector("details.methodology");
+    if (det) det.open = true;
+    const tgt = document.getElementById("methodology-chart") || det;
+    if (tgt) tgt.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
@@ -3507,6 +3806,11 @@ function attachCustomSpinners() {
 
 // Auto-run once with defaults on first load
 window.addEventListener("DOMContentLoaded", () => {
+  // Always open at the top on load/refresh — don't let the browser restore
+  // the previous scroll position (which could land the user mid-results).
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+
   // sync state rate to default state
   const r = STATE_RATES[document.getElementById("state").value];
   if (r !== undefined) document.getElementById("stateRate").value = r;
