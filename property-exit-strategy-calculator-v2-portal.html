@@ -1236,6 +1236,9 @@
     padding-top: 10px;
     border-top: 1px dashed var(--border-soft);
   }
+  /* Non-deferral cards still render the footnote (hidden) so it reserves the
+     same height and the "Hypothetical Value" rows stay aligned across cards. */
+  .scenario-card .defer-footnote.is-empty { visibility: hidden; }
 
   /* Inline parenthetical in comparison-table row labels for caveats
      (e.g., "Tax Deferred ( ... )"). Keeps label readable without
@@ -3088,7 +3091,7 @@ function render() {
         </div>
 
         <div class="scenario-benefits">${s.benefits}</div>
-        ${s.taxDeferred > 0 ? `<div class="defer-footnote"><sup>&dagger;</sup> Becomes due at a taxable disposition — unless deferred again (another 1031 or LBD placement) or eliminated by a step-up in basis at death.</div>` : ""}
+        <div class="defer-footnote${s.taxDeferred > 0 ? '' : ' is-empty'}" aria-hidden="${s.taxDeferred > 0 ? 'false' : 'true'}"><sup>&dagger;</sup> Becomes due at a taxable disposition — unless deferred again (another 1031 or LBD placement) or eliminated by a step-up in basis at death.</div>
       </div>
     `;
     cards.insertAdjacentHTML("beforeend", html);
