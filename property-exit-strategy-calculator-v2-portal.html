@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Property Exit Strategy Calculator — Client Portal | Tangible Wealth Solutions</title>
+<title>Property Exit Strategy Calculator, Client Portal | Tangible Wealth Solutions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -52,8 +52,8 @@
   }
   h1 em, h2 em, h3 em { color: var(--gold); font-style: italic; font-weight: 400; }
 
-  /* ---------- TWS Nav (matches refresh — 120px desktop, 80px mobile) ---------- */
-  /* position:fixed (not sticky) is critical — the website's nav floats above
+  /* ---------- TWS Nav (matches refresh, 120px desktop, 80px mobile) ---------- */
+  /* position:fixed (not sticky) is critical, the website's nav floats above
      the hero rather than taking 120px of document flow. The .hero element's
      220px padding-top assumes the nav is overlaying, so a sticky nav would
      add 120px of extra space between nav and pill on desktop. */
@@ -151,7 +151,7 @@
     }
   }
 
-  /* ---------- Hero (matches TWS refresh — navy, Cormorant Garamond) ---------- */
+  /* ---------- Hero (matches TWS refresh, navy, Cormorant Garamond) ---------- */
   .hero {
     position: relative; overflow: hidden;
     background: var(--navy);
@@ -203,7 +203,7 @@
   .hero h1 .accent {
     font-style: italic;
     color: var(--gold-light);
-    /* no font-weight override — inherits 300 from h1 to match website's lighter italic accent */
+    /* no font-weight override, inherits 300 from h1 to match website's lighter italic accent */
   }
   .hero-sub-eyebrow {
     font-size: 13px; font-weight: 400; letter-spacing: 0.10em; text-transform: uppercase;
@@ -301,10 +301,10 @@
   }
 
   /* ---------- Inputs ---------- */
-  /* Row 1 — Current Market Value (the trigger field) + State of Property
+  /* Row 1, Current Market Value (the trigger field) + State of Property
      sit at top-left as two side-by-side fields, each constrained so the row
      doesn't span the page. Wraps to a stack on narrow screens. */
-  /* Row 1 — Trigger fields (4 fields the user must provide): Market Value,
+  /* Row 1, Trigger fields (4 fields the user must provide): Market Value,
      Purchase Price, Year Purchased, Mortgage Rate. Drives derived row below. */
   .grid-mv {
     display: grid;
@@ -315,7 +315,7 @@
   @media (max-width: 720px) { .grid-mv { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px) { .grid-mv { grid-template-columns: 1fr; } }
 
-  /* Row 2 — Derived from trigger fields (4 fields, auto-populate, editable):
+  /* Row 2, Derived from trigger fields (4 fields, auto-populate, editable):
      Outstanding Mortgage, Annual Mtg Payment, Annual NOI, Accumulated Depreciation. */
   .grid-loan {
     display: grid;
@@ -326,7 +326,7 @@
   @media (max-width: 720px)  { .grid-loan { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px)  { .grid-loan { grid-template-columns: 1fr; } }
 
-  /* Row 3 — Tax environment + horizon (3 fields normally; Custom horizon adds a 4th):
+  /* Row 3, Tax environment + horizon (3 fields normally; Custom horizon adds a 4th):
      Federal LT Cap Gains, State of Property, Reinvestment/Hold Period. */
   .grid-projection {
     display: grid;
@@ -339,7 +339,7 @@
   @media (max-width: 720px)  { .grid-projection { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 420px)  { .grid-projection { grid-template-columns: 1fr; } }
 
-  /* Legacy .grid still used inside advanced section — keep working */
+  /* Legacy .grid still used inside advanced section, keep working */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -428,7 +428,7 @@
   /* Pale-green highlight on formula-driven fields whose value will recompute
      when the currently-focused parent input changes. Driven by JS focus/blur
      listeners (see FORMULA_DEPENDENCIES). Skipped for fields the user has
-     manually overridden — those won't actually auto-update. */
+     manually overridden, those won't actually auto-update. */
   .field input.formula-affected,
   .field select.formula-affected {
     background: var(--good-pale);
@@ -441,7 +441,7 @@
     background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
   }
 
-  /* Below-input helper text — short, italic, muted */
+  /* Below-input helper text, short, italic, muted */
   .field-helper {
     font-size: 11px;
     color: var(--text-muted);
@@ -878,7 +878,7 @@
   @media (max-width: 1180px) { .scenarios { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 820px)  { .scenarios { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 480px) {
-    .scenarios { grid-template-columns: 1fr; }
+    .scenarios { grid-template-columns: 1fr; gap: 10px; }
     /* When cards collapse to a single-column stack, the white-on-cream
        contrast is too subtle for quick card-to-card delineation. Switch
        non-"best" cards to the light gold palette so each card reads as a
@@ -889,6 +889,27 @@
       border-color: rgba(191, 155, 48, 0.30);
     }
   }
+  /* Rankings are shown as a soft background panel behind the winning metric —
+     no badge text. The best-VALUE card gets a gold panel behind its
+     Hypothetical Value row; the best-CASHFLOW card gets a grey panel behind its
+     Projected Monthly Cashflow row. Side margins bleed the panel toward the
+     card edges; padding + min-height are tuned so the panels don't shift the
+     other cards' row alignment. */
+  .scenario-card.best-cf .metric-cf {
+    background: #ECEEF1;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 0 -10px 11px;
+    min-height: 64px;
+  }
+  .scenario-card.best .metric-wealth {
+    background: #F6EFD9;
+    border-radius: 8px;
+    padding: 9px 10px;
+    margin: auto -10px 0;
+    border-top: none;
+  }
+
   /* Cards: all 5 are structurally identical (same row composition),
      and min-heights on each block force every metric row to align
      horizontally across the five cards regardless of title wrap. */
@@ -908,8 +929,8 @@
     box-shadow: 0 12px 28px rgba(8, 23, 46, 0.08);
     transform: translateY(-2px);
   }
-  /* Card with the greatest projected wealth — gold-accent highlight.
-     No banner/flag/ribbon — just a thicker gold border, a gold gradient
+  /* Card with the greatest projected wealth, gold-accent highlight.
+     No banner/flag/ribbon, just a thicker gold border, a gold gradient
      bar across the top, and a slightly warmer background. */
   .scenario-card.best {
     border-color: var(--gold);
@@ -926,28 +947,43 @@
     background: linear-gradient(90deg, var(--gold), var(--gold-light));
   }
   .scenario-card.best .metric-wealth .value {
-    color: var(--gold);
+    color: var(--navy);   /* gold panel carries the emphasis; text stays card-navy */
   }
-  /* Card with the greatest avg monthly cashflow — silver-accent highlight.
+  /* Card with the greatest avg monthly cashflow, silver-accent highlight.
      Mirrors the .best (gold) treatment but in a neutral steel tone so the
      two highlights coexist without competing. Only applied when the
      highest-cashflow card is different from the .best card (see render()). */
   .scenario-card.best-cf {
-    border-color: #A0A4AB;
+    border-color: #6E7681;
     border-width: 2px;
     padding: 21px 17px 21px;  /* compensate the extra 1px of border */
-    background: linear-gradient(180deg, rgba(160,164,171,0.08) 0%, var(--white) 60%);
-    box-shadow: 0 8px 22px rgba(120, 124, 132, 0.12);
+    background: linear-gradient(180deg, rgba(110,118,129,0.08) 0%, var(--white) 60%);
+    box-shadow: 0 8px 22px rgba(110, 118, 129, 0.16);
   }
   .scenario-card.best-cf::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #8B8E96, #C8CBD1);
+    background: linear-gradient(90deg, #6E7681, #AEB3BC);
   }
   .scenario-card.best-cf .metric-cf .value {
-    color: #6B6E76;
+    color: #343B45;
+    font-weight: 500;
+  }
+  /* "Highest cash flow" chip on the silver (best-cashflow) card. Fits within
+     the metric-cf block's existing min-height, so it doesn't shift the rows. */
+  .scenario-card .cf-best-chip {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    background: #5C636E;
+    padding: 3px 9px;
+    border-radius: 5px;
+    margin-bottom: 7px;
   }
   /* Hairline gold rule sitting just below each card title. Spans the full
      content width of the card (respects the card's horizontal padding).
@@ -968,6 +1004,17 @@
     font-weight: 600;
     line-height: 1.2;
     min-height: 48px;        /* reserve two lines so every card's sub-row starts at the same y */
+  }
+  /* Sub-qualifier (e.g. "(cash yield)") rendered as a smaller second line of
+     the card title, instead of wrapping as same-size title text. */
+  .scenario-card .scenario-title .title-qual {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.2;
+    margin-top: 1px;
   }
   .scenario-card .scenario-sub {
     font-size: 12px;
@@ -1005,7 +1052,7 @@
   .metric .value.good { color: var(--good); }
   .metric .value.bad { color: var(--bad); }
   .metric .value.neutral { color: var(--navy); }
-  /* Inline glossary links — inherit color, no underline. Turn gold on hover. */
+  /* Inline glossary links, inherit color, no underline. Turn gold on hover. */
   .glossary-link {
     color: inherit;
     text-decoration: none;
@@ -1068,7 +1115,16 @@
   }
 
   /* ---------- Comparison table ---------- */
-  .comp-table-wrap { overflow-x: auto; margin-top: 8px; }
+  .comp-table-wrap { overflow-x: auto; margin-top: 8px; -webkit-overflow-scrolling: touch; }
+  /* Swipe hint shown only when the table is wider than the screen (< its min-width). */
+  .comp-scroll-hint { display: none; }
+  @media (max-width: 880px) {
+    .comp-scroll-hint {
+      display: block;
+      font-size: 11.5px; color: var(--text-muted); font-style: italic;
+      margin: 0 0 6px; letter-spacing: 0.02em;
+    }
+  }
   table.comp {
     width: 100%;
     border-collapse: collapse;
@@ -1178,7 +1234,7 @@
   }
   .disclosures p { margin-bottom: 8px; }
 
-  /* Accredited-investor callout — prominent, sits at top of disclosures
+  /* Accredited-investor callout, prominent, sits at top of disclosures
      so the eligibility constraint is visible before the long-form text. */
   .accredited-callout {
     margin: 0 0 18px;
@@ -1195,7 +1251,7 @@
     font-weight: 600;
   }
 
-  /* FINRA Rule 2214 required disclosure — visually distinct from accredited
+  /* FINRA Rule 2214 required disclosure, visually distinct from accredited
      callout so the verbatim "IMPORTANT:" hypothetical-results language reads
      as a regulatory statement, not marketing copy. */
   .finra-callout {
@@ -1213,7 +1269,7 @@
     font-weight: 600;
   }
 
-  /* Results metadata — generation timestamp + auditability note.
+  /* Results metadata, generation timestamp + auditability note.
      Sits under the results panel header so the user sees the freshness of
      the numbers and a pointer to the methodology accordion. */
   .results-meta {
@@ -1224,7 +1280,7 @@
     font-style: italic;
   }
 
-  /* Small clarifier under Tax Deferred dollar amount — reminds the reader
+  /* Small clarifier under Tax Deferred dollar amount, reminds the reader
      that deferred is not eliminated. Matches .return-line styling. */
   .scenario-card .defer-footnote {
     font-size: 10.5px;
@@ -1239,6 +1295,64 @@
   /* Non-deferral cards still render the footnote (hidden) so it reserves the
      same height and the "Hypothetical Value" rows stay aligned across cards. */
   .scenario-card .defer-footnote.is-empty { visibility: hidden; }
+
+  /* === Mobile accordion: comparison cards collapse to title-only; tap to
+     expand. Placed AFTER the base .scenario-card rules so that, at equal
+     specificity, these mobile overrides win on source order. The desktop
+     min-heights exist only to align metric rows ACROSS columns; in a
+     single-column accordion they add dead space, so they're zeroed. */
+  @media (max-width: 480px) {
+    .scenario-card,
+    .scenario-card.best,
+    .scenario-card.best-cf {
+      padding: 0 16px;            /* title supplies its own vertical tap padding */
+    }
+    .scenario-card .scenario-title {
+      min-height: 0;
+      margin: 0;
+      padding: 16px 30px 16px 0;  /* right room for the chevron */
+      font-size: 18px;
+      cursor: pointer;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .scenario-card .scenario-title::after {
+      content: "";
+      position: absolute;
+      right: 3px;
+      top: 21px;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+    .scenario-card.is-expanded .scenario-title::after {
+      top: 24px;
+      transform: rotate(225deg);
+    }
+    /* Collapsed: show only the title. */
+    .scenario-card > *:not(.scenario-title) { display: none; }
+    .scenario-card.is-expanded > *          { display: block; }
+    .scenario-card.is-expanded,
+    .scenario-card.best.is-expanded,
+    .scenario-card.best-cf.is-expanded      { padding-bottom: 20px; }
+    .scenario-card.is-expanded .title-divider { margin: 4px 0 12px; }
+    .scenario-card.is-expanded .scenario-sub  { min-height: 0; margin-bottom: 14px; }
+    .scenario-card.is-expanded .metric-tax,
+    .scenario-card.is-expanded .metric-defer,
+    .scenario-card.is-expanded .metric-cf,
+    .scenario-card.is-expanded .metric-cum { min-height: 0; }
+
+    /* Locked (gated) cards stay in their blurred + CTA state on mobile, they
+       aren't tap-to-expand, so re-show their content and hide the chevron.
+       The portal unlocks gated cards, so this only takes effect in the public
+       version where .scenarios-gated-wrap lacks .unlocked. */
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated > * { display: block; }
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated .scenario-title { cursor: default; }
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated .scenario-title::after { display: none; }
+  }
 
   /* Inline parenthetical in comparison-table row labels for caveats
      (e.g., "Tax Deferred ( ... )"). Keeps label readable without
@@ -1367,7 +1481,6 @@
     font-size: 13px;
     color: var(--text-muted);
     margin-bottom: 20px;
-    max-width: 720px;
     line-height: 1.6;
   }
   .growth-chart-canvas-wrap {
@@ -1381,6 +1494,43 @@
     margin-top: 14px;
     font-style: italic;
     line-height: 1.6;
+  }
+
+  /* Custom HTML tooltip for the growth chart, lets us mix font weights in
+     the title (strategy/year semibold, "(Projected)" lighter). */
+  .growth-chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
+    background: var(--navy);
+    border: 1px solid rgba(191,155,48,0.4);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #fff;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity .12s ease;
+    z-index: 20;
+    box-shadow: 0 6px 20px rgba(8,23,46,0.28);
+  }
+  .growth-chart-tooltip .gct-title { color: #D4B55A; margin-bottom: 6px; }
+  .growth-chart-tooltip .gct-title-main { font-weight: 600; }
+  .growth-chart-tooltip .gct-title-proj { font-weight: 400; opacity: 0.8; }
+  .growth-chart-tooltip .gct-row { display: flex; align-items: center; gap: 7px; }
+  .growth-chart-tooltip .gct-swatch {
+    width: 11px; height: 11px; border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.5); flex: 0 0 auto;
+  }
+  .growth-chart-tooltip .gct-after {
+    color: rgba(255,255,255,0.7); font-size: 11px; margin: 1px 0 4px 18px;
+  }
+  .growth-chart-tooltip .gct-footer {
+    color: #D4B55A; font-weight: 600; margin-top: 6px;
+    padding-top: 6px; border-top: 1px solid rgba(191,155,48,0.25);
   }
 
   /* Chart mode toggle (Projected equity over time vs Income & growth split) */
@@ -1512,6 +1662,19 @@
     cursor: pointer;
     user-select: none;
   }
+  /* The "S&P 500 dividends" reinvest toggle is greyed (like the benchmark
+     pill) while the S&P 500 series is OFF; it returns to standard navy text
+     when the benchmark is switched on in the line toggles below the chart. */
+  .growth-chart-wrap:has(.chart-line-toggles input[data-series="sp500"]:not(:checked)) .reinvest-chk--sp {
+    color: var(--text-muted);
+    opacity: 0.55;
+  }
+  .growth-chart-wrap:has(.chart-line-toggles input[data-series="sp500"]:not(:checked)) .reinvest-chk--sp input[type="checkbox"] {
+    border-color: var(--text-muted);
+  }
+  /* Disabled while the benchmark is off, show the not-allowed cursor. */
+  .chart-reinvest-row .reinvest-chk--sp:has(input:disabled) { cursor: not-allowed; }
+  .chart-reinvest-row .reinvest-chk--sp input[type="checkbox"]:disabled { cursor: not-allowed; }
   .chart-reinvest-row .reinvest-chk input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
@@ -1550,9 +1713,13 @@
   .chart-assump-link:hover { text-decoration: underline; }
   @media (max-width: 600px) {
     .chart-assump-link { margin-left: 0; }
+    /* Mode toggle goes full-width with two equal halves so neither label
+       clips on a phone (desktop/tablet keep the compact inline pill). */
+    .chart-mode-toggle { display: flex; width: 100%; }
+    .chart-mode-btn { flex: 1 1 0; padding: 8px 6px; font-size: 11.5px; text-align: center; line-height: 1.25; }
   }
 
-  /* ---------- V2: Email-gate — block style (Detailed Comparison table) ---------- */
+  /* ---------- V2: Email-gate, block style (Detailed Comparison table) ---------- */
   .gated-wrap {
     position: relative;
     margin-top: 24px;
@@ -1587,7 +1754,7 @@
   }
   .gated-wrap.unlocked .gate-overlay { display: none; }
 
-  /* ---------- V2: Email-gate — inline per-card blur (scenario cards row) ---------- */
+  /* ---------- V2: Email-gate, inline per-card blur (scenario cards row) ---------- */
   /* Wrapper for the unified scenarios grid + inline overlay. Position
      relative so the overlay can be absolutely placed over the gated cards. */
   .scenarios-gated-wrap {
@@ -1595,7 +1762,7 @@
   }
   /* Individual gated cards: blur the *contents* (children) so the card's
      own border/shape stays crisp. Lower blur radius (~4.5px) makes text
-     unreadable but still recognizable as numbers/labels — enough tease
+     unreadable but still recognizable as numbers/labels, enough tease
      without giving away figures. */
   .scenarios-gated-wrap .scenario-card.scenario-gated {
     pointer-events: none;
@@ -1607,7 +1774,7 @@
     -webkit-filter: blur(3px);
     transition: filter 0.3s ease;
   }
-  /* Title-divider is a 1px gold line — keep it crisp too so each card reads
+  /* Title-divider is a 1px gold line, keep it crisp too so each card reads
      clearly as a card. */
   .scenarios-gated-wrap .scenario-card.scenario-gated > .title-divider {
     filter: none;
@@ -1621,7 +1788,7 @@
     filter: none;
     -webkit-filter: none;
   }
-  /* CTA dialog — absolutely positioned. Its top/left/width are set in JS
+  /* CTA dialog, absolutely positioned. Its top/left/width are set in JS
      based on the bounding box of the gated cards so it stays centered over
      just the blurred region at every breakpoint. */
   .gate-overlay-inline {
@@ -1635,6 +1802,13 @@
   .scenarios-gated-wrap.unlocked .gate-overlay-inline { display: none; }
   .gate-overlay-inline .gate-card {
     pointer-events: auto;
+  }
+  /* On stacked / tablet-portrait layouts the blurred region is tall; pin the
+     Client Access card to the top of the first blurred card so it's visible
+     immediately instead of vertically centered deep inside the blur. */
+  @media (max-width: 820px) {
+    .gate-overlay-inline { align-items: flex-start; }
+    .gate-overlay-inline .gate-card { margin-top: 16px; position: sticky; top: 16px; }
   }
   .gate-card {
     background: var(--white);
@@ -1749,7 +1923,7 @@
 
 <!-- ===================== HERO ===================== -->
 <header class="hero">
-  <!-- Floating pill — matches tws-redesign / tws-resources page-hero-tag placement -->
+  <!-- Floating pill, matches tws-redesign / tws-resources page-hero-tag placement -->
   <div class="hero-badge" style="position:absolute;top:160px;left:50%;transform:translateX(-50%);z-index:3;white-space:nowrap;">
     Investor Tool
   </div>
@@ -1771,7 +1945,7 @@
     </div>
     <div class="panel-body">
 
-      <!-- ROW 1 — Trigger fields: Market Value, Purchase Price, Year Purchased,
+      <!-- ROW 1, Trigger fields: Market Value, Purchase Price, Year Purchased,
            Mortgage Rate. These four inputs drive every derived field in ROW 2. -->
       <div class="grid-mv">
         <div class="field">
@@ -1808,7 +1982,7 @@
         </div>
       </div>
 
-      <!-- ROW 2 — Derived from ROW 1 (auto-populate, user may override):
+      <!-- ROW 2, Derived from ROW 1 (auto-populate, user may override):
            Outstanding Mortgage, Annual Mtg Payment, Annual NOI, Accumulated Depreciation. -->
       <div class="grid-loan">
         <div class="field">
@@ -1848,7 +2022,7 @@
         </div>
       </div>
 
-      <!-- Prior 1031 Exchange toggle — placed after the property/loan grid so
+      <!-- Prior 1031 Exchange toggle, placed after the property/loan grid so
            it relates visually to the basis inputs above. -->
       <div class="prior-1031-row" id="prior1031Row">
         <button class="prior-1031-switch" id="prior1031Switch" type="button" role="switch" aria-checked="false" aria-label="Toggle prior 1031 exchange"></button>
@@ -1860,7 +2034,7 @@
         </div>
       </div>
 
-      <!-- Original (relinquished) property sub-card — appears when toggle is on -->
+      <!-- Original (relinquished) property sub-card, appears when toggle is on -->
       <div class="prior-1031-card" id="prior1031Card">
         <p class="sub-head">Original (relinquished) property</p>
         <div class="sub-grid">
@@ -1889,13 +2063,13 @@
         <div class="field-helper">Use figures from the original property's Schedule E and closing statements at the time of the first 1031. Your CPA can confirm.</div>
       </div>
 
-      <!-- Live carryover basis readout — appears when toggle is on -->
+      <!-- Live carryover basis readout, appears when toggle is on -->
       <div class="prior-1031-readout" id="prior1031Readout">
         <span class="line"><strong>Carryover adjusted basis: <span id="readoutCarryover">$220,000</span></strong> &nbsp;&middot;&nbsp; <span id="readoutMath">$220,000 original property purchase + $0 improvements &minus; $0 original property depreciation</span></span>
         <span class="line">Depreciation from the original (relinquished) property is added to the replacement property's accumulated depreciation for &sect;1250 recapture at projected sale.</span>
       </div>
 
-      <!-- ROW 3 — Tax environment + horizon: Federal LT Cap Gains, State of
+      <!-- ROW 3, Tax environment + horizon: Federal LT Cap Gains, State of
            Property (drives state-rate lookup), Reinvestment/Hold Period. Custom
            Years field appears as a 4th column only when "Custom" is selected. -->
       <div class="grid-projection">
@@ -2192,11 +2366,11 @@
           </div>
         </div>
 
-        <!-- V2 ADDITION: 10-year growth comparison chart (gated — portal only) -->
+        <!-- V2 ADDITION: 10-year growth comparison chart (gated, portal only) -->
         <div class="growth-chart-wrap">
           <h3>10-Year Projected Comparison: <em>1031 Exchange vs. Sell &amp; Invest Alternatives</em></h3>
           <p class="chart-sub">
-            Hypothetical illustration based on your inputs. All five strategies from the Detailed Comparison are shown; the <strong>S&amp;P 500</strong> market benchmark is off by default — switch it on to compare against the public market. Switch between <strong>Projected equity over time</strong> (each strategy distributes its own cash flow; the line shows the equity that remains and grows) and <strong>Income &amp; growth split</strong> (10-year income taken vs. ending equity). DST and alt-fund distributions are taken as income — they cannot be reinvested back into the fund. Use the toggles below the chart to compare any combination of strategies.
+            Hypothetical illustration based on your inputs. All five strategies from the Detailed Comparison are shown; the <strong>S&amp;P 500</strong> market benchmark is off by default. Switch it on to compare against the public market. Switch between <strong>Projected equity over time</strong> (each strategy distributes its own cash flow; the line shows the equity that remains and grows) and <strong>Income &amp; growth split</strong> (10-year income taken vs. ending equity). DST and alt-fund distributions are taken as income. They cannot be reinvested back into the fund. Use the toggles below the chart to compare any combination of strategies.
           </p>
 
           <!-- Mode toggle: Projected equity over time vs Income & growth split -->
@@ -2209,7 +2383,7 @@
           <div class="chart-reinvest-row">
             <span class="reinvest-label">Reinvest income (liquid strategies only):</span>
             <label class="reinvest-chk"><input type="checkbox" id="reinvestHy" /> Sell &amp; Pay Tax (cash yield)</label>
-            <label class="reinvest-chk"><input type="checkbox" id="reinvestSp" /> S&amp;P 500 dividends</label>
+            <label class="reinvest-chk reinvest-chk--sp"><input type="checkbox" id="reinvestSp" /> S&amp;P 500 dividends</label>
             <a href="#" class="chart-assump-link" id="seeCashflowAssumptions">See cash-flow assumptions →</a>
           </div>
 
@@ -2258,7 +2432,7 @@
           </div>
 
           <p class="growth-chart-legend-note">
-            <strong>Income vs. growth:</strong> strategies that pay more cash flow generally retain less for growth, and vice versa. Each line and bar uses that strategy's own distributions from your inputs — DST and alt-fund cash flow is taken as income and is not reinvested into the fund (only Sell &amp; Pay Tax and S&amp;P 500 can be set to reinvest, above). The five strategies match the Detailed Comparison table below; the S&amp;P 500 line is a public-market benchmark (off by default, no matching table row) — switch it on to compare against the market. Hold starts from your current (un-taxed) equity since there's no sale, while the sell-and-redeploy strategies start from after-tax proceeds. 1031 exchanges <em>defer</em> tax — they do not eliminate it; deferred tax becomes due if the replacement property is sold without another exchange. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
+            <strong>Income vs. growth:</strong> strategies that pay more cash flow generally retain less for growth, and vice versa. Each line and bar uses that strategy's own distributions from your inputs. DST and alt-fund cash flow is taken as income and is not reinvested into the fund (only Sell &amp; Pay Tax and S&amp;P 500 can be set to reinvest, above). The five strategies match the Detailed Comparison table below; the S&amp;P 500 line is a public-market benchmark (off by default, no matching table row). Switch it on to compare against the market. Hold starts from your current (un-taxed) equity since there's no sale, while the sell-and-redeploy strategies start from after-tax proceeds. 1031 exchanges <em>defer</em> tax; they do not eliminate it; deferred tax becomes due if the replacement property is sold without another exchange. Projections are hypothetical, do not reflect actual investment results, and are not guarantees of future results. See full methodology and disclosures below.
           </p>
         </div>
       </div>
@@ -2270,6 +2444,7 @@
         <div class="gated-wrap unlocked" id="gatedCompWrap">
           <div class="gated-content">
             <div id="roeBanner"></div>
+            <p class="comp-scroll-hint" aria-hidden="true">Swipe to compare all options →</p>
             <div class="comp-table-wrap">
               <table class="comp" id="compTable"></table>
             </div>
@@ -2307,31 +2482,31 @@
             <p>Same after-tax cash as the Sell &amp; Pay Tax path, but invested at the higher target passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
 
             <h4>1031 Exchange to DST</h4>
-            <p>Tax fully deferred (assuming compliant exchange). Equity reinvested = (Sale price − Selling costs − Mortgage payoff) × (1 − DST load). Annual cashflow = Equity × DST cash-on-cash. Wealth at exit = Equity grown at DST appreciation. <em>Tax deferred is not tax eliminated — basis carries over.</em> When "After-tax wealth at exit" is enabled, exit tax is calculated on the gain over the carried-over basis from the original property. "Step-up in basis" zeroes that tax (a key estate-planning advantage of swap-til-you-drop).</p>
+            <p>Tax fully deferred (assuming compliant exchange). Equity reinvested = (Sale price − Selling costs − Mortgage payoff) × (1 − DST load). Annual cashflow = Equity × DST cash-on-cash. Wealth at exit = Equity grown at DST appreciation. <em>Tax deferred is not tax eliminated, basis carries over.</em> When "After-tax wealth at exit" is enabled, exit tax is calculated on the gain over the carried-over basis from the original property. "Step-up in basis" zeroes that tax (a key estate-planning advantage of swap-til-you-drop).</p>
 
             <h4>Sell &amp; Leveraged Bonus Depreciation</h4>
             <p>Modeled as a 2.0× (configurable) deduction multiplier: $1 invested in the LBD fund generates $2.00 of Year-1 passive loss. The exact multiplier depends on the specific fund's LTV and land allocation; typical range is 2.0–2.7× at current 100% bonus depreciation rates. Required LBD investment = Total gain ÷ Multiplier. The passive loss fully offsets the taxable gain at the federal level. Freed cash = Gross equity − LBD investment, which is then invested in the passive alternatives portfolio at the rate set in the Alternatives section. All deferred tax becomes due at the LBD fund's eventual disposition (when depreciation recapture applies). The LBD fund itself generates cash distributions and appreciation per the rates in the LBD section. <em>Note on state conformity:</em> states vary in how they treat federal bonus depreciation; this model assumes full conformity for simplicity, but actual state tax liability may differ in non-conforming states (CA, NY, NJ, MD, and others). <em>Note on passive activity rules:</em> the full passive-loss offset shown assumes the disposed-property gain qualifies as passive income. Real Estate Professionals (IRC §469(c)(7)) or investors with material participation should consult a tax advisor; the offset treatment may differ.</p>
 
             <h4 id="methodology-chart">10-Year Projected Comparison Chart</h4>
-            <p>The chart plots all five Detailed-Comparison strategies over a fixed 10-year horizon, in two switchable views, plus an optional S&amp;P 500 market benchmark (off by default). Inputs come from the <strong>Benchmark Comparison Assumptions</strong> (S&amp;P 500 return and dividend yield), the <strong>Alternative Portfolio Assumptions</strong> (passive total return and passive cash yield), the <strong>cash yield</strong> input (shared with the Sell &amp; Pay Tax scenario), the DST inputs (appreciation, cash-on-cash yield, upfront load), the Leveraged Bonus Depreciation inputs (fund yield and appreciation, plus the offset/freed-cash split computed from your sale), and the property inputs for the Hold line (market value, appreciation, NOI growth, debt service). In both views, each strategy distributes <strong>its own</strong> annual cash flow — taken by the investor as income. DST, TWS Alts, and LBD distributions cannot be reinvested back into the fund and are always taken as income; Hold's rental income is likewise taken; Sell &amp; Pay Tax (Cash) and S&amp;P 500 income are also distributed (taken as income) by default — so the chart opens comparing every strategy's cash flow — but each can be switched to reinvest (compound) using the toggles above the chart.</p>
+            <p>The chart plots all five Detailed-Comparison strategies over a fixed 10-year horizon, in two switchable views, plus an optional S&amp;P 500 market benchmark (off by default). Inputs come from the <strong>Benchmark Comparison Assumptions</strong> (S&amp;P 500 return and dividend yield), the <strong>Alternative Portfolio Assumptions</strong> (passive total return and passive cash yield), the <strong>cash yield</strong> input (shared with the Sell &amp; Pay Tax scenario), the DST inputs (appreciation, cash-on-cash yield, upfront load), the Leveraged Bonus Depreciation inputs (fund yield and appreciation, plus the offset/freed-cash split computed from your sale), and the property inputs for the Hold line (market value, appreciation, NOI growth, debt service). In both views, each strategy distributes <strong>its own</strong> annual cash flow, taken by the investor as income. DST, TWS Alts, and LBD distributions cannot be reinvested back into the fund and are always taken as income; Hold's rental income is likewise taken; Sell &amp; Pay Tax (Cash) and S&amp;P 500 income are also distributed (taken as income) by default, so the chart opens comparing every strategy's cash flow, but each can be switched to reinvest (compound) using the toggles above the chart.</p>
 
-            <p><strong>How the chart maps to the Detailed Comparison table:</strong> the chart's six lines are — Hold Current Property, Sell &amp; Pay Tax, Sell &amp; Invest Passively, 1031 Exchange to DST, and Leveraged Bonus Depreciation (the five table strategies, on by default), plus the S&amp;P 500 (a public-market benchmark with no table row, off by default). All five strategy lines use the same rate inputs, starting capital, and flat-distribution treatment as the matching table scenario. By default every strategy distributes its income, so the chart and the table agree out of the box. The two reinvest toggles let you optionally compound the Sell &amp; Pay Tax and S&amp;P 500 income instead — when turned on, those lines emphasize growth and show $0 distributed income, while the table still reports the cash flow each strategy would pay <em>if taken as income</em>. The underlying assumptions are identical; only the reinvest-vs-distribute presentation changes.</p>
+            <p><strong>How the chart maps to the Detailed Comparison table:</strong> the chart's six lines are: Hold Current Property, Sell &amp; Pay Tax, Sell &amp; Invest Passively, 1031 Exchange to DST, and Leveraged Bonus Depreciation (the five table strategies, on by default), plus the S&amp;P 500 (a public-market benchmark with no table row, off by default). All five strategy lines use the same rate inputs, starting capital, and flat-distribution treatment as the matching table scenario. By default every strategy distributes its income, so the chart and the table agree out of the box. The two reinvest toggles let you optionally compound the Sell &amp; Pay Tax and S&amp;P 500 income instead, when turned on, those lines emphasize growth and show $0 distributed income, while the table still reports the cash flow each strategy would pay <em>if taken as income</em>. The underlying assumptions are identical; only the reinvest-vs-distribute presentation changes.</p>
 
-            <p><strong>Projected equity over time view</strong> — plots each strategy's equity/principal at each year, with its own cash flow distributed as income (not reinvested into that vehicle unless noted):</p>
+            <p><strong>Projected equity over time view</strong>, plots each strategy's equity/principal at each year, with its own cash flow distributed as income (not reinvested into that vehicle unless noted):</p>
             <p>
-              <em>Hold Current Property:</em> No sale and no tax event — the line starts from your current equity (Market value − Mortgage). Equity(t) = Market value × (1 + appreciation)<sup>t</sup> − remaining mortgage (reduced by annual principal paydown). Rental income — NOI grown at the NOI-growth rate, less the capex reserve and debt service (and less rental income tax if enabled) — is taken as income and grows over time.<br>
+              <em>Hold Current Property:</em> No sale and no tax event, the line starts from your current equity (Market value − Mortgage). Equity(t) = Market value × (1 + appreciation)<sup>t</sup> − remaining mortgage (reduced by annual principal paydown). Rental income, NOI grown at the NOI-growth rate, less the capex reserve and debt service (and less rental income tax if enabled), is taken as income and grows over time.<br>
               <em>Sell &amp; Pay Tax (Cash):</em> Starts from after-tax sale proceeds. By default interest (cash yield × principal) is taken as income and principal stays level; if "reinvest Sell &amp; Pay Tax (cash yield)" is turned on, interest compounds at the cash yield instead. Same cash assumption and rate as the table's Sell &amp; Pay Tax scenario.<br>
-              <em>Sell &amp; Invest Passively (TWS Alts):</em> Starts from after-tax sale proceeds; equity grows at (Passive total return − Passive cash yield) and a flat cash yield (After-tax proceeds × Passive cash yield) is distributed as income — alt-fund distributions cannot be reinvested into the fund.<br>
-              <em>1031 Exchange to DST:</em> Reinvested equity = Gross equity × (1 − DST load). Equity grows on the full replacement-property value at the DST appreciation rate; the existing mortgage carries to the replacement property. Flat annual cash flow (Equity × DST cash-on-cash yield) is distributed — DST distributions cannot be reinvested into the trust. Equity(t) = Replacement value × (1 + DST appreciation)<sup>t</sup> − Replacement debt.<br>
-              <em>Leveraged Bonus Depreciation:</em> Defers tax via bonus depreciation, so it deploys close to the full pre-tax proceeds — split between the LBD fund (grows at the bonus-depreciation appreciation rate) and freed cash invested in the alternatives portfolio (grows at Passive total return − Passive cash yield). Both sleeves distribute flat income (fund yield + freed-cash passive yield), taken by the investor.<br>
+              <em>Sell &amp; Invest Passively (TWS Alts):</em> Starts from after-tax sale proceeds; equity grows at (Passive total return − Passive cash yield) and a flat cash yield (After-tax proceeds × Passive cash yield) is distributed as income, alt-fund distributions cannot be reinvested into the fund.<br>
+              <em>1031 Exchange to DST:</em> Reinvested equity = Gross equity × (1 − DST load). Equity grows on the full replacement-property value at the DST appreciation rate; the existing mortgage carries to the replacement property. Flat annual cash flow (Equity × DST cash-on-cash yield) is distributed, DST distributions cannot be reinvested into the trust. Equity(t) = Replacement value × (1 + DST appreciation)<sup>t</sup> − Replacement debt.<br>
+              <em>Leveraged Bonus Depreciation:</em> Defers tax via bonus depreciation, so it deploys close to the full pre-tax proceeds, split between the LBD fund (grows at the bonus-depreciation appreciation rate) and freed cash invested in the alternatives portfolio (grows at Passive total return − Passive cash yield). Both sleeves distribute flat income (fund yield + freed-cash passive yield), taken by the investor.<br>
               <em>S&amp;P 500 (benchmark, off by default):</em> Starts from after-tax sale proceeds. By default the dividend (S&amp;P dividend yield × balance) is taken as income and principal grows at the price-appreciation rate (S&amp;P total return − dividend yield); if "reinvest S&amp;P 500 dividends" is turned on, no income is taken and principal compounds at the full S&amp;P total return.
             </p>
 
-            <p><strong>Income &amp; growth split view</strong> — summarizes the same strategies at the 10-year horizon as a stacked bar: ending equity (the bottom segment, shown in each strategy's own color) plus the cumulative cash flow taken as income (the gold cap on top). A taller colored base means more was left to grow; a taller gold cap means more income was drawn over the decade. This makes the income-vs-growth trade-off explicit: higher-cash-flow strategies generally show a larger gold cash cap and a smaller colored growth base, and lower-cash-flow strategies the reverse. The bar total is the strategy's combined value delivered (income received + equity retained), before any tax on a future sale of the remaining equity.</p>
+            <p><strong>Income &amp; growth split view</strong>, summarizes the same strategies at the 10-year horizon as a stacked bar: ending equity (the bottom segment, shown in each strategy's own color) plus the cumulative cash flow taken as income (the gold cap on top). A taller colored base means more was left to grow; a taller gold cap means more income was drawn over the decade. This makes the income-vs-growth trade-off explicit: higher-cash-flow strategies generally show a larger gold cash cap and a smaller colored growth base, and lower-cash-flow strategies the reverse. The bar total is the strategy's combined value delivered (income received + equity retained), before any tax on a future sale of the remaining equity.</p>
 
-            <p><strong>Source &amp; rationale for default benchmark assumptions:</strong> S&amp;P 500 long-term <em>real</em> (inflation-adjusted) total return is approximately 6.5–7% per Damodaran/NYU Stern historical equity-return data and Ibbotson SBBI; nominal long-term average is ~10%. The 7% default is the conservative real-return figure for forward projections. S&amp;P 500 dividend yield of ~1.8% reflects approximate trailing 12-month index yield. The cash yield used for the Cash line is the same input the Sell &amp; Pay Tax scenario uses — a short-term cash / money-market rate (auto-populated from a 3-month Treasury proxy and adjustable), so the two surfaces always assume the same cash return.</p>
+            <p><strong>Source &amp; rationale for default benchmark assumptions:</strong> S&amp;P 500 long-term <em>real</em> (inflation-adjusted) total return is approximately 6.5–7% per Damodaran/NYU Stern historical equity-return data and Ibbotson SBBI; nominal long-term average is ~10%. The 7% default is the conservative real-return figure for forward projections. S&amp;P 500 dividend yield of ~1.8% reflects approximate trailing 12-month index yield. The cash yield used for the Cash line is the same input the Sell &amp; Pay Tax scenario uses, a short-term cash / money-market rate (auto-populated from a 3-month Treasury proxy and adjustable), so the two surfaces always assume the same cash return.</p>
 
-            <p><strong>Tax treatment in the chart:</strong> The 1031 line in both views assumes successful tax deferral and does not show a hypothetical after-tax exit value at year t (unlike earlier chart versions). Tax deferred is not tax eliminated — see the 1031 / DST Risk Disclosure below. The Sell &amp; Pay Tax, Sell &amp; Invest Passively, and S&amp;P 500 lines all start from after-tax sale proceeds (Gross equity − Total tax computed from the inputs), so the upfront tax cost of selling is already reflected in their starting position. The Hold line has no sale, so it starts from your current (un-taxed) equity (Market value − Mortgage). The Leveraged Bonus Depreciation line defers the gain via bonus depreciation, so it starts from close to the full pre-tax proceeds (no immediate tax in the typical full-offset case), split between the fund and the freed cash. These different starting points are intentional — they reflect each strategy's real tax consequence at the moment of decision.</p>
+            <p><strong>Tax treatment in the chart:</strong> The 1031 line in both views assumes successful tax deferral and does not show a hypothetical after-tax exit value at year t (unlike earlier chart versions). Tax deferred is not tax eliminated, see the 1031 / DST Risk Disclosure below. The Sell &amp; Pay Tax, Sell &amp; Invest Passively, and S&amp;P 500 lines all start from after-tax sale proceeds (Gross equity − Total tax computed from the inputs), so the upfront tax cost of selling is already reflected in their starting position. The Hold line has no sale, so it starts from your current (un-taxed) equity (Market value − Mortgage). The Leveraged Bonus Depreciation line defers the gain via bonus depreciation, so it starts from close to the full pre-tax proceeds (no immediate tax in the typical full-offset case), split between the fund and the freed cash. These different starting points are intentional, they reflect each strategy's real tax consequence at the moment of decision.</p>
 
             <p><strong>FINRA Rule 2214 disclosure:</strong> The 10-year comparison chart is a hypothetical investment analysis tool. Results are mathematical projections based on the inputs and assumptions you provide; they do not reflect actual investment results and are not guarantees of future results. Different assumptions, market conditions, fees, taxes, or holding periods will produce materially different outcomes. The chart does not account for: investment-management fees on benchmark portfolios; bid/ask spreads or transaction costs on share sales; taxes on S&amp;P 500 dividends, cash interest, or share-sale gains; sequence-of-returns risk; or rebalancing.</p>
 
@@ -2361,7 +2536,7 @@
           <p>This calculator is provided by Tangible Wealth Solutions for educational and informational purposes only. It is not an offer to buy or sell securities and does not constitute investment, tax, or legal advice. Outputs are hypothetical estimates based on inputs you provide and simplified assumptions; actual results will differ, and results may vary with each use and over time. All investing involves risk, including loss of principal. Past performance is not indicative of future results. Speak to a qualified financial, tax, and legal professional before making any investment decision.</p>
 
           <h4>Scope of Analysis &amp; Strategy Selection</h4>
-          <p>The universe of strategies considered by this calculator is limited to the five archetypes shown: (1) Hold the property, (2) Sell &amp; pay tax, (3) Sell &amp; reinvest in a passive portfolio, (4) 1031 Exchange into a Delaware Statutory Trust, and (5) Sell &amp; pair with a Leveraged Bonus Depreciation fund. The tool does not select securities — it models generic strategy archetypes using inputs and assumptions you provide. Tangible Wealth Solutions and its representatives may earn compensation when clients invest in DST or Leveraged Bonus Depreciation offerings distributed through Emerson Equity LLC; the inclusion of these scenarios reflects the strategies TWS is positioned to help implement and should not be interpreted as a recommendation that they are superior for your situation. Other strategies not modeled here — including but not limited to Qualified Opportunity Zone funds, oil &amp; gas working interests, NNN direct ownership, conservation easements, charitable remainder trusts, installment sales under IRC §453, and direct reinvestment in other real estate — may have characteristics similar or superior to the strategies analyzed and should be evaluated with a qualified advisor.</p>
+          <p>The universe of strategies considered by this calculator is limited to the five archetypes shown: (1) Hold the property, (2) Sell &amp; pay tax, (3) Sell &amp; reinvest in a passive portfolio, (4) 1031 Exchange into a Delaware Statutory Trust, and (5) Sell &amp; pair with a Leveraged Bonus Depreciation fund. The tool does not select securities; it models generic strategy archetypes using inputs and assumptions you provide. Tangible Wealth Solutions and its representatives may earn compensation when clients invest in DST or Leveraged Bonus Depreciation offerings distributed through Emerson Equity LLC; the inclusion of these scenarios reflects the strategies TWS is positioned to help implement and should not be interpreted as a recommendation that they are superior for your situation. Other strategies not modeled here, including but not limited to Qualified Opportunity Zone funds, oil &amp; gas working interests, NNN direct ownership, conservation easements, charitable remainder trusts, installment sales under IRC §453, and direct reinvestment in other real estate, may have characteristics similar or superior to the strategies analyzed and should be evaluated with a qualified advisor.</p>
 
           <h4>1031 / DST Risk Disclosure</h4>
           <p>There is no guarantee that any strategy will be successful or achieve investment objectives. DSTs and 1031 exchanges involve illiquid securities offered through private placements, potential loss of property value, foreclosure risk on financed properties, suspension of cash flow distributions, and adverse tax rulings that may cancel deferral. Costs associated with the transaction may impact returns and may outweigh the tax benefits.</p>
@@ -2543,7 +2718,7 @@ const fmtIntStr = n => (n === null || n === undefined || n === "") ? "" : Math.r
 const numv = id => {
   const el = $(id);
   if (!el) return 0;
-  // Money fields are type="text" with comma separators — strip non-numerics before parsing.
+  // Money fields are type="text" with comma separators, strip non-numerics before parsing.
   if (el.type === "text") return parseMoney(el.value);
   return parseFloat(el.value) || 0;
 };
@@ -2564,7 +2739,7 @@ function compute() {
   const debtService   = numv("debtService");
 
   // Prior 1031 exchange: when toggle is on, basis carries over from the
-  // relinquished property — adjusted carryover basis = prior original
+  // relinquished property, adjusted carryover basis = prior original
   // purchase + prior capital improvements − prior depreciation. Prior
   // depreciation also flows into §1250 recapture at projected sale (it
   // doesn't disappear in an exchange).
@@ -2601,7 +2776,7 @@ function compute() {
   // Terminal & refi options
   const afterTaxTerminal = $("afterTaxTerminal").value === "true";
   const stepUp           = $("stepUp").value === "true";
-  // Refinance feature retired — inputs removed from UI; logic preserved but inert.
+  // Refinance feature retired, inputs removed from UI; logic preserved but inert.
   const refiEnabled      = false;
   const refiYear         = 5;
   const refiCashOut      = 0;
@@ -2625,7 +2800,7 @@ function compute() {
   const adjustedBasis = Math.max(0, costBasisGross - effectiveAccumDep);
   const totalGain     = Math.max(0, netSale - adjustedBasis);
 
-  // Current equity in the held property (before selling costs) — used for ROE
+  // Current equity in the held property (before selling costs), used for ROE
   const currentEquity = Math.max(0, marketValue - mortgage);
   const currentNetCashflow = noi - debtService;
   const currentROE  = currentEquity > 0 ? currentNetCashflow / currentEquity : 0;
@@ -2643,7 +2818,7 @@ function compute() {
   const grossEquity      = netSale - mortgage; // cash before tax
 
   // ============================================================
-  // SCENARIO 1 — HOLD
+  // SCENARIO 1, HOLD
   // ============================================================
   // Annual cashflow with capex reserve, optional income tax, and optional refi
   let s1CumCF = 0;
@@ -2711,20 +2886,20 @@ function compute() {
   const s1TerminalWealth = s1Equity - s1TerminalTax + s1CumCF + s1RefiCashBalance;
 
   // ============================================================
-  // SCENARIO 2 — SELL & PAY TAX (cash / money market at cashYield, no growth beyond yield)
+  // SCENARIO 2, SELL & PAY TAX (cash / money market at cashYield, no growth beyond yield)
   // ============================================================
   const s2NetCash = grossEquity - totalTax;
-  // Cash sits — principal stays flat, yield paid out each year (already taxed at ordinary on yield, ignored for simplicity)
+  // Cash sits, principal stays flat, yield paid out each year (already taxed at ordinary on yield, ignored for simplicity)
   let s2CumCF = 0;
   const s2AnnualCF_Y1 = s2NetCash * cashYield;
   for (let y = 1; y <= N; y++) {
     s2CumCF += s2NetCash * cashYield;
   }
-  // No terminal tax — principal already taxed at sale; yield assumed taxed in cum CF if user enabled
+  // No terminal tax, principal already taxed at sale; yield assumed taxed in cum CF if user enabled
   const s2TerminalWealth = s2NetCash + s2CumCF;
 
   // ============================================================
-  // SCENARIO 3 — 1031 to DST
+  // SCENARIO 3, 1031 to DST
   // ------------------------------------------------------------
   // Cash-on-cash distribution is paid on the EQUITY invested.
   // Asset appreciation applies to the full REPLACEMENT VALUE
@@ -2738,7 +2913,7 @@ function compute() {
   const s3ReplacementValue = s3Equity + s3ReplacementDebt;   // total asset exposure on the replacement property
 
   const s3AnnualCF_Y1 = s3Equity * dstYield;                 // cash-on-cash, paid on equity
-  // DST cash distributions are FLAT — paid out each year to the investor,
+  // DST cash distributions are FLAT, paid out each year to the investor,
   // not reinvested into the DST. Asset appreciation only accrues to terminal
   // equity (via s3TerminalAssetValue below); it does NOT grow the cash
   // distribution stream.
@@ -2765,7 +2940,7 @@ function compute() {
   const s3TaxDeferred = totalTax;
 
   // ============================================================
-  // SCENARIO 4 — Sell & Leveraged Bonus Depreciation (2:1 multiplier model)
+  // SCENARIO 4, Sell & Leveraged Bonus Depreciation (2:1 multiplier model)
   // ============================================================
   // Investor sells the rental, invests JUST enough into the LBD fund to fully offset
   // the gain at the multiplier ratio, and parks the remaining cash in the passive
@@ -2804,9 +2979,9 @@ function compute() {
   // Freed cash that goes into the passive alternatives portfolio
   const freedCash = Math.max(0, grossEquity - s4LBDInvestment - taxOwedUnoffset);
 
-  // LBD fund growth — cash distribution + appreciation tracks
+  // LBD fund growth, cash distribution + appreciation tracks
   const lbdY1CF = s4LBDInvestment * bdYield;
-  // LBD fund cash distributions are FLAT — paid out each year to the investor,
+  // LBD fund cash distributions are FLAT, paid out each year to the investor,
   // not reinvested into the fund. Asset appreciation accrues only to terminal
   // equity via lbdTerminalEquity. Mirrors DST treatment.
   const lbdCumCF = lbdY1CF * N;
@@ -2849,7 +3024,7 @@ function compute() {
   const s4TerminalWealth = lbdTerminalEquity + freedBalance - s4TerminalTax + s4CumCF;
 
   // ============================================================
-  // SCENARIO 5 — Sell & Invest Passively (alternative portfolio)
+  // SCENARIO 5, Sell & Invest Passively (alternative portfolio)
   // ============================================================
   // Same after-tax cash as s2 but invested at higher passive total return
   const s5NetCash = grossEquity - totalTax;
@@ -2858,7 +3033,7 @@ function compute() {
   const s5AnnualCF_Y1 = s5NetCash * passiveYield;
   for (let y = 1; y <= N; y++) {
     // Alt-fund distribution is FLAT (fixed cash-on-cash on the initial
-    // investment), mirroring the DST and the 10-year chart — not a yield
+    // investment), mirroring the DST and the 10-year chart, not a yield
     // paid on the growing balance. Balance still appreciates for terminal.
     s5CumCF += s5AnnualCF_Y1;
     s5Balance = s5Balance * (1 + Math.max(0, passiveReturn - passiveYield));
@@ -2877,7 +3052,7 @@ function compute() {
 
   // ---------- "Cash Yield + Asset Appreciation Assumption" row values ----------
   // This row reports the sum of return-assumption inputs for each scenario. It deliberately
-  // excludes derived cashflow (e.g. NOI minus debt service for Hold) — that lives in the
+  // excludes derived cashflow (e.g. NOI minus debt service for Hold), that lives in the
   // Cashflow & Yield section. Each scenario shows its raw assumption inputs only.
   //
   // Hold: just the asset appreciation input (no yield-style input exists for Hold; its
@@ -2965,7 +3140,7 @@ function compute() {
         annualCF: s3AnnualCF_Y1,
         cumCF: s3CumCF,
         terminal: s3TerminalWealth,
-        netInvested: s3Equity,             // equity slice — used as denominator for cash-on-cash yield
+        netInvested: s3Equity,             // equity slice, used as denominator for cash-on-cash yield
         replacementDebt: s3ReplacementDebt,// debt carried over at the replacement DST per 1031 mortgage-boot rule
         returnAssumption: s3ReturnAssumption,
         benefits: "Tax deferral, diversification, estate planning",
@@ -3032,7 +3207,7 @@ function render() {
   const cards = document.getElementById("scenarios");
   cards.innerHTML = "";
   // Identify the scenario with the greatest projected wealth (terminal value).
-  // That card gets a gold-accent highlight — no banner/flag, just the visual cue.
+  // That card gets a gold-accent highlight, no banner/flag, just the visual cue.
   const bestKey = scenarios.reduce(
     (best, s) => (s.terminal > best.terminal ? s : best),
     scenarios[0]
@@ -3059,8 +3234,8 @@ function render() {
     const isGated = !PUBLIC_KEYS.has(s.key);
     const gatedClass = isGated ? ' scenario-gated' : '';
     const html = `
-      <div class="scenario-card${isBest ? ' best' : ''}${isBestCF ? ' best-cf' : ''}${gatedClass}" data-scenario-key="${s.key}">
-        <h3 class="scenario-title">${s.title}${asteriskMark}</h3>
+      <div class="scenario-card${isBest ? ' best is-expanded' : ''}${isBestCF ? ' best-cf' : ''}${gatedClass}" data-scenario-key="${s.key}">
+        <h3 class="scenario-title">${s.title.replace(' (cash yield)', '<span class="title-qual">(cash yield)</span>')}${asteriskMark}</h3>
         <div class="title-divider" aria-hidden="true"></div>
         <div class="scenario-sub">${s.sub}</div>
 
@@ -3075,7 +3250,7 @@ function render() {
         </div>
 
         <div class="metric metric-cf">
-          <div class="label">Avg Monthly Cashflow</div>
+          <div class="label">Projected Monthly Cashflow</div>
           <div class="value small">${fmt$(monthly)}/mo</div>
           <div class="return-line">${s.netInvested > 0 ? `${((s.annualCF / s.netInvested) * 100).toFixed(2)}% cash yield${s.key === "lbd" ? " (weighted)" : ""}` : "—"}</div>
         </div>
@@ -3091,11 +3266,14 @@ function render() {
         </div>
 
         <div class="scenario-benefits">${s.benefits}</div>
-        <div class="defer-footnote${s.taxDeferred > 0 ? '' : ' is-empty'}" aria-hidden="${s.taxDeferred > 0 ? 'false' : 'true'}"><sup>&dagger;</sup> Becomes due at a taxable disposition — unless deferred again (another 1031 or LBD placement) or eliminated by a step-up in basis at death.</div>
+        <div class="defer-footnote${s.taxDeferred > 0 ? '' : ' is-empty'}" aria-hidden="${s.taxDeferred > 0 ? 'false' : 'true'}"><sup>&dagger;</sup> Becomes due at a taxable disposition, unless deferred again (another 1031 or LBD placement) or eliminated by a step-up in basis at death.</div>
       </div>
     `;
     cards.insertAdjacentHTML("beforeend", html);
   });
+
+  // Mobile accordion: collapse each card to its title, tap to expand.
+  wireScenarioCardCollapse();
 
   // ---------- V2: 10-Year Growth Comparison Chart ----------
   // Plots all five Detailed-Comparison strategies (Hold, Sell & Pay Tax,
@@ -3153,7 +3331,7 @@ function render() {
   html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested + (s.replacementDebt || 0))));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Cashflow & Yield</td></tr>`;
-  html += rowFmt("Avg Monthly Cashflow", scenarios.map(s => fmt$(s.annualCF / 12)));
+  html += rowFmt("Projected Monthly Cashflow", scenarios.map(s => fmt$(s.annualCF / 12)));
   html += rowFmt("Annual Cashflow", scenarios.map(s => fmt$(s.annualCF)));
   html += rowFmt("Annual Yield on Equity Deployed",
     scenarios.map(s => s.netInvested > 0 ? ((s.annualCF / s.netInvested) * 100).toFixed(2) + "%" : "—"));
@@ -3192,7 +3370,7 @@ function rowFmt(label, cells) {
    ------------------------------------------------------------
    Measures the bounding box of the blurred (.scenario-gated)
    cards and positions the .gate-overlay-inline dialog to be
-   centered over that region. Works across breakpoints — if
+   centered over that region. Works across breakpoints, if
    the grid wraps at a smaller width, the bbox spans whatever
    rows the gated cards occupy.
    ============================================================ */
@@ -3231,17 +3409,17 @@ window.addEventListener("resize", () => {
 });
 
 /* ============================================================
-   V2 PORTAL: 10-YEAR GROWTH COMPARISON CHART (gated — portal only)
+   V2 PORTAL: 10-YEAR GROWTH COMPARISON CHART (gated, portal only)
    ------------------------------------------------------------
    Six toggleable lines × two view modes: the five Detailed-Comparison
    strategies (Hold, Sell & Pay Tax, Sell & Invest Passively, 1031→DST,
-   LBD — all ON by default) plus an S&P 500 market benchmark (OFF by
+   LBD, all ON by default) plus an S&P 500 market benchmark (OFF by
    default, no table row). Each strategy distributes ITS OWN cash flow
    (taken as income); DST, TWS Alts, LBD cannot reinvest into the fund
    and Hold's rent is taken; Sell & Pay Tax (Cash) and S&P 500 optionally
    reinvest (default ON). Rates/starting capital match the table.
 
-   PROJECTED EQUITY OVER TIME mode (line) — equity/principal at year t:
+   PROJECTED EQUITY OVER TIME mode (line), equity/principal at year t:
      • Hold: equity = marketValue×(1+appr)^t − remaining mortgage;
        rent (NOI-grown, less capex/debt/tax) taken as income. Starts
        from current un-taxed equity (no sale).
@@ -3256,7 +3434,7 @@ window.addEventListener("resize", () => {
      • S&P 500: distribute → principal grows at (sp500Return −
        sp500DivYield), dividend taken; reinvest → full sp500Return.
 
-   INCOME & GROWTH SPLIT mode (stacked bar) — at the 10-year horizon,
+   INCOME & GROWTH SPLIT mode (stacked bar), at the 10-year horizon,
    cumulative income taken (gold cap) + ending equity (each strategy's
    color base). Total = combined value delivered, pre exit-tax.
 
@@ -3274,6 +3452,17 @@ function _growthReinvestFlags() {
     sp: !!document.getElementById("reinvestSp")?.checked,
     hy: !!document.getElementById("reinvestHy")?.checked,
   };
+}
+
+// The "S&P 500 dividends" reinvest toggle only applies when the S&P 500
+// benchmark line is on, so it's disabled (and cleared) while the benchmark is
+// off. Mirrors the greyed styling driven by the :has() rule in CSS.
+function _syncSpReinvestEnabled() {
+  const spOn = !!document.querySelector('#chartLineToggles input[data-series="sp500"]')?.checked;
+  const rein = document.getElementById("reinvestSp");
+  if (!rein) return;
+  rein.disabled = !spOn;
+  if (!spOn) rein.checked = false;
 }
 
 // Compact per-year income label for the legend pills.
@@ -3350,6 +3539,9 @@ function renderGrowthChart10yr(data) {
   // Tax (Cash) and S&P 500 optionally reinvest (flags). We also accumulate
   // the cash flow taken, for the income/growth split view.
   const eqHold = [], eqHy = [], eqAlt = [], eqDst = [], eqLbd = [], eqSp = [];
+  // Cumulative cash distributed to date, per year (index t). Year 0 = 0.
+  // Used by the line-chart tooltip to show combined value (equity + cash).
+  const cashHold = [], cashHy = [], cashAlt = [], cashDst = [], cashLbd = [], cashSp = [];
   let cumHold = 0, cumHy = 0, cumAlt = 0, cumDst = 0, cumLbd = 0, cumSp = 0;
   let holdY1 = 0;
 
@@ -3402,6 +3594,14 @@ function renderGrowthChart10yr(data) {
       if (!flags.sp) cumSp += sp500DivYield * eqSp[t - 1];  // dividend on prior-year balance
       if (!flags.hy) cumHy += cashYield * s2NetCash;        // interest on level principal
     }
+
+    // Snapshot cumulative cash distributed through year t (year 0 = 0).
+    cashHold.push(Math.round(cumHold));
+    cashHy.push(Math.round(cumHy));
+    cashAlt.push(Math.round(cumAlt));
+    cashDst.push(Math.round(cumDst));
+    cashLbd.push(Math.round(cumLbd));
+    cashSp.push(Math.round(cumSp));
   }
 
   // Year-1 income per strategy (shown in the legend pills).
@@ -3418,6 +3618,7 @@ function renderGrowthChart10yr(data) {
   _growthChart10yrData = {
     labels,
     equity: { hold: eqHold, hysa: eqHy, alts: eqAlt, dst: eqDst, lbd: eqLbd, sp500: eqSp },
+    cash:   { hold: cashHold, hysa: cashHy, alts: cashAlt, dst: cashDst, lbd: cashLbd, sp500: cashSp },
     split: {
       income: { hold: Math.round(cumHold), hysa: Math.round(cumHy), alts: Math.round(cumAlt), dst: Math.round(cumDst), lbd: Math.round(cumLbd), sp500: Math.round(cumSp) },
       equity: { hold: eqHold[HORIZON], hysa: eqHy[HORIZON], alts: eqAlt[HORIZON], dst: eqDst[HORIZON], lbd: eqLbd[HORIZON], sp500: eqSp[HORIZON] },
@@ -3431,7 +3632,7 @@ function renderGrowthChart10yr(data) {
   wireGrowthChart10yrControlsOnce();
 }
 
-// Series styling — keep in sync with the toggle-pill swatches in markup.
+// Series styling, keep in sync with the toggle-pill swatches in markup.
 const _GROWTH_CHART_10YR_STYLE = {
   hold:  { label: "Hold Current Property",        color: "#7D6BAF", dash: [],    width: 2.5 },
   hysa:  { label: "Sell & Pay Tax (cash yield)",  color: "#5A6478", dash: [],    width: 2.5 },
@@ -3440,6 +3641,100 @@ const _GROWTH_CHART_10YR_STYLE = {
   lbd:   { label: "Leveraged Bonus Depreciation", color: "#C2603F", dash: [],    width: 2.5 },
   sp500: { label: "S&P 500 (benchmark)",          color: "#2E7D5B", dash: [6, 4], width: 2   },
 };
+
+// Custom HTML tooltip shared by both growth-chart modes. Canvas tooltips
+// render a title in a single weight; this lets us show the strategy/year
+// label semibold and "(Projected)" in a lighter weight. Reads the standard
+// Chart.js tooltip model (title/body/after/footer + label colors).
+function _growthChartHtmlTooltip(context) {
+  const { chart, tooltip } = context;
+  const wrap = chart.canvas.parentNode;
+  let el = wrap.querySelector(".growth-chart-tooltip");
+  if (!el) {
+    el = document.createElement("div");
+    el.className = "growth-chart-tooltip";
+    wrap.appendChild(el);
+  }
+
+  if (tooltip.opacity === 0) { el.style.opacity = "0"; return; }
+
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  let html = "";
+
+  (tooltip.title || []).forEach(t => {
+    html += '<div class="gct-title"><span class="gct-title-main">' + esc(t) +
+            '</span> <span class="gct-title-proj">(Projected)</span></div>';
+  });
+
+  (tooltip.body || []).forEach((body, i) => {
+    const c = (tooltip.labelColors && tooltip.labelColors[i]) || {};
+    (body.lines || []).forEach(line => {
+      html += '<div class="gct-row"><span class="gct-swatch" style="background:' +
+              (c.backgroundColor || "transparent") + ";border-color:" +
+              (c.borderColor || "rgba(255,255,255,0.5)") + '"></span><span>' +
+              esc(line) + "</span></div>";
+    });
+    (body.after || []).forEach(a => { html += '<div class="gct-after">' + esc(a) + "</div>"; });
+  });
+
+  (tooltip.footer || []).forEach(f => { html += '<div class="gct-footer">' + esc(f) + "</div>"; });
+
+  el.innerHTML = html;
+  el.style.opacity = "1";
+  el.style.left = (chart.canvas.offsetLeft + tooltip.caretX) + "px";
+  el.style.top  = (chart.canvas.offsetTop  + tooltip.caretY) + "px";
+}
+
+// Mobile accordion for the five comparison cards. At <=480px each card shows
+// only its title; tapping the title toggles .is-expanded (CSS handles the
+// reveal). Re-run after every render() since cards are recreated. ARIA/role
+// attributes are only applied at the mobile breakpoint, and kept in sync when
+// the viewport crosses it (rotation/resize), so the cards behave as plain
+// headings on desktop.
+const _scenarioCollapseMQ = window.matchMedia("(max-width: 480px)");
+// Locked (gated, not unlocked) cards are blurred behind the CTA and are NOT
+// tap-to-expand. In the portal the wrap is .unlocked, so every card collapses.
+function _scenarioCardCollapsible(card) {
+  if (!card.classList.contains("scenario-gated")) return true;
+  const wrap = card.closest(".scenarios-gated-wrap");
+  return !!(wrap && wrap.classList.contains("unlocked"));
+}
+function _syncScenarioCollapseA11y() {
+  document.querySelectorAll("#scenarios .scenario-card").forEach(card => {
+    const title = card.querySelector(".scenario-title");
+    if (!title || !_scenarioCardCollapsible(card)) return;
+    if (_scenarioCollapseMQ.matches) {
+      title.setAttribute("role", "button");
+      title.setAttribute("tabindex", "0");
+      title.setAttribute("aria-expanded", card.classList.contains("is-expanded") ? "true" : "false");
+    } else {
+      title.removeAttribute("role");
+      title.removeAttribute("tabindex");
+      title.removeAttribute("aria-expanded");
+    }
+  });
+}
+function wireScenarioCardCollapse() {
+  document.querySelectorAll("#scenarios .scenario-card").forEach(card => {
+    const title = card.querySelector(".scenario-title");
+    if (!title || title._collapseWired || !_scenarioCardCollapsible(card)) return;
+    title._collapseWired = true;
+    const toggle = () => {
+      if (!_scenarioCollapseMQ.matches) return;      // tap only matters on mobile
+      const expanded = card.classList.toggle("is-expanded");
+      title.setAttribute("aria-expanded", expanded ? "true" : "false");
+    };
+    title.addEventListener("click", toggle);
+    title.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    });
+  });
+  _syncScenarioCollapseA11y();
+  if (!wireScenarioCardCollapse._mqWired) {
+    wireScenarioCardCollapse._mqWired = true;
+    _scenarioCollapseMQ.addEventListener("change", _syncScenarioCollapseA11y);
+  }
+}
 
 function buildOrUpdateGrowthChart10yr() {
   const canvas = document.getElementById("growthChart10yr");
@@ -3460,7 +3755,7 @@ function buildOrUpdateGrowthChart10yr() {
   toggleEls.forEach(el => { enabled[el.dataset.series] = el.checked; });
 
   const needType = _growthChart10yrMode === "split" ? "bar" : "line";
-  // Chart.js can't switch type in place — tear down if the type changed.
+  // Chart.js can't switch type in place, tear down if the type changed.
   if (_growthChart10yrInstance && _growthChart10yrType !== needType) {
     _growthChart10yrInstance.destroy();
     _growthChart10yrInstance = null;
@@ -3494,23 +3789,21 @@ function buildOrUpdateGrowthChart10yr() {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        // Index mode so hovering a bar shows BOTH stacked segments (growth +
+        // income), making the footer a true combined total.
+        interaction: { mode: "index", intersect: false },
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: navy,
-            titleColor: "#D4B55A",
-            bodyColor: "#fff",
-            footerColor: "#D4B55A",
-            boxPadding: 6,
-            titleFont:  { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
-            bodyFont:   { family: "'DM Sans', sans-serif", size: 12 },
-            footerFont: { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
-            padding: 12,
-            borderColor: "rgba(191,155,48,0.4)",
-            borderWidth: 1,
+            enabled: false,                       // custom HTML tooltip instead
+            external: _growthChartHtmlTooltip,
+            // List cash (gold, top of the bar) first, growth (bottom) second —
+            // matching the visual stack. Doesn't affect rendering order.
+            itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
             callbacks: {
+              title: items => items[0]?.label ?? "",   // "(Projected)" added by the HTML tooltip
               label: ctx => ctx.dataset.label + ": " + fmtFull$(ctx.parsed.y),
-              footer: items => "Total value: " + fmtFull$(items.reduce((s, it) => s + it.parsed.y, 0)),
+              footer: items => "Total combined value: " + fmtFull$(items.reduce((s, it) => s + it.parsed.y, 0)),
             },
           },
         },
@@ -3524,7 +3817,7 @@ function buildOrUpdateGrowthChart10yr() {
             stacked: true,
             beginAtZero: true,
             grid: { color: "rgba(8,23,46,0.06)" },
-            title: { display: true, text: "10-year value ($)", color: muted, font: { family: "'DM Sans', sans-serif", size: 11, weight: "500" } },
+            title: { display: true, text: "Projected 10-year value ($)", color: muted, font: { family: "'DM Sans', sans-serif", size: 11, weight: "500" } },
             ticks: { font: { family: "'DM Sans', sans-serif", size: 11 }, color: muted, callback: v => fmtCompact$(v) },
           },
         },
@@ -3542,6 +3835,7 @@ function buildOrUpdateGrowthChart10yr() {
     const style = _GROWTH_CHART_10YR_STYLE[key];
     datasets.push({
       label: style.label,
+      _key: key,                       // for tooltip cash lookup
       data: modeData[key],
       borderColor: style.color,
       backgroundColor: style.color + "22",
@@ -3574,17 +3868,24 @@ function buildOrUpdateGrowthChart10yr() {
       plugins: {
         legend: { display: false }, // we use custom pills below the chart
         tooltip: {
-          backgroundColor: navy,
-          titleColor: "#D4B55A",
-          bodyColor: "#fff",
-          boxPadding: 6,
-          titleFont: { family: "'DM Sans', sans-serif", size: 12, weight: "600" },
-          bodyFont:  { family: "'DM Sans', sans-serif", size: 12 },
-          padding: 12,
-          borderColor: "rgba(191,155,48,0.4)",
-          borderWidth: 1,
+          enabled: false,                       // custom HTML tooltip instead
+          external: _growthChartHtmlTooltip,
           callbacks: {
-            label: ctx => ctx.dataset.label + ": " + fmtFull$(ctx.parsed.y),
+            title: items => items[0]?.label ?? "",   // "(Projected)" added by the HTML tooltip
+            // Show each strategy's TOTAL COMBINED VALUE at the hovered year:
+            // equity retained plus cumulative cash distributed to date.
+            label: ctx => {
+              const key  = ctx.dataset._key;
+              const eq   = ctx.parsed.y;
+              const cash = (_growthChart10yrData.cash?.[key] || [])[ctx.dataIndex] || 0;
+              return ctx.dataset.label + ": " + fmtFull$(eq + cash);
+            },
+            afterLabel: ctx => {
+              const key  = ctx.dataset._key;
+              const eq   = ctx.parsed.y;
+              const cash = (_growthChart10yrData.cash?.[key] || [])[ctx.dataIndex] || 0;
+              return "   equity " + fmtCompact$(eq) + " + cash " + fmtCompact$(cash);
+            },
           },
         },
       },
@@ -3641,8 +3942,12 @@ function wireGrowthChart10yrControlsOnce() {
   });
 
   document.querySelectorAll("#chartLineToggles input[type='checkbox']").forEach(cb => {
-    cb.addEventListener("change", () => buildOrUpdateGrowthChart10yr());
+    cb.addEventListener("change", () => {
+      _syncSpReinvestEnabled();      // enable/disable the S&P reinvest toggle
+      buildOrUpdateGrowthChart10yr();
+    });
   });
+  _syncSpReinvestEnabled();          // set initial state (benchmark off by default)
 
   // Per-client reinvestment toggles change the underlying series, so they
   // trigger a full recompute from the last compute() payload.
@@ -3669,7 +3974,7 @@ function wireGrowthChart10yrControlsOnce() {
    ============================================================ */
 document.getElementById("calcBtn").addEventListener("click", render);
 document.getElementById("resetBtn").addEventListener("click", () => {
-  // 1. Reset every input (number AND text — the money fields are now text
+  // 1. Reset every input (number AND text, the money fields are now text
   //    so they get missed by an input[type='number'] selector).
   document.querySelectorAll("input").forEach(el => {
     if (el.type === "button" || el.type === "submit") return;
@@ -3683,7 +3988,7 @@ document.getElementById("resetBtn").addEventListener("click", () => {
     for (const opt of sel.options) opt.selected = opt.defaultSelected;
   });
 
-  // 3. Re-format the money fields with commas — defaultValue stores the raw
+  // 3. Re-format the money fields with commas, defaultValue stores the raw
   //    "400000", but the visible value should be "400,000".
   document.querySelectorAll("input.has-prefix").forEach(el => {
     if (el.value !== "") el.value = fmtIntStr(parseMoney(el.value));
@@ -3748,12 +4053,12 @@ async function fetchTreasuryYield() {
       prettyDate = d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
     } catch (_) { /* keep raw */ }
 
-    badge.innerHTML = `<span class="pulse"></span>Live: ${yieldPct.toFixed(2)}% (3-mo T-bill, ${prettyDate}) — US Treasury`;
+    badge.innerHTML = `<span class="pulse"></span>Live: ${yieldPct.toFixed(2)}% (3-mo T-bill, ${prettyDate}), US Treasury`;
     badge.style.display = "block";
     badge.classList.remove("error");
 
   } catch (err) {
-    // Silent fallback — keep manual default and hide any badge.
+    // Silent fallback, keep manual default and hide any badge.
     badge.style.display = "none";
     badge.textContent = "";
     badge.classList.remove("error");
@@ -3809,7 +4114,7 @@ function attachCustomSpinners() {
 
 // Auto-run once with defaults on first load
 window.addEventListener("DOMContentLoaded", () => {
-  // Always open at the top on load/refresh — don't let the browser restore
+  // Always open at the top on load/refresh, don't let the browser restore
   // the previous scroll position (which could land the user mid-results).
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   window.scrollTo(0, 0);
@@ -3842,7 +4147,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   /* Pale-green-highlight affected child fields while the parent has focus.
-     Skips children the user has manually overridden — those won't recompute. */
+     Skips children the user has manually overridden, those won't recompute. */
   Object.entries(FORMULA_DEPENDENCIES).forEach(([parentId, childIds]) => {
     const parent = document.getElementById(parentId);
     if (!parent) return;
@@ -3850,7 +4155,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const child = document.getElementById(cid);
       if (!child) return;
       // If the user has typed their own value into the child, it won't
-      // auto-update — don't suggest otherwise by highlighting it.
+      // auto-update, don't suggest otherwise by highlighting it.
       if (on && manualOverrides.has(cid)) return;
       child.classList.toggle("formula-affected", on);
     });
@@ -3868,7 +4173,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (el) el.addEventListener("input", () => manualOverrides.add(id));
   });
 
-  // Treasury auto-fetch DISABLED — the 3-mo T-bill rate doesn't reflect the
+  // Treasury auto-fetch DISABLED, the 3-mo T-bill rate doesn't reflect the
   // money-market / HYSA rate end-investors actually earn. Static 3.75% default
   // is used instead. Re-enable by uncommenting the line below when a better
   // CORS-enabled data source is identified.
@@ -3932,12 +4237,12 @@ window.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("input", updatePrior1031Readout);
   });
 
-  // Default state: toggle off (typical client — no prior exchange)
+  // Default state: toggle off (typical client, no prior exchange)
   setPrior1031(false);
 });
 
 /* The six fields recalcDerivedFields() can write to. Any field also in
-   manualOverrides has been edited by the user — auto-recalc skips it so
+   manualOverrides has been edited by the user, auto-recalc skips it so
    the user's typed value sticks. */
 const DERIVED_FIELD_IDS = ["accumDep","annualDep","mortgage","debtService","annualInterest","principalPaydown","noi"];
 
@@ -3961,7 +4266,7 @@ function setIfNotOverridden(id, value) {
   if (manualOverrides.has(id)) return;
   const el = document.getElementById(id);
   if (!el) return;
-  // Round auto-calculated dollar amounts to the nearest $100 — these are
+  // Round auto-calculated dollar amounts to the nearest $100, these are
   // estimates from rule-of-thumb formulas, so spurious precision implies
   // a level of accuracy the auto-fill doesn't really have.
   const rounded = Math.round(value / 100) * 100;
@@ -3976,7 +4281,7 @@ function setIfNotOverridden(id, value) {
    ─ Depreciation: 80% building × straight-line / 27.5 yr (residential rental)
    ─ Loan model:   75% LTV × 30-yr fixed amortization at the user's rate */
 function recalcDerivedFields() {
-  // purchasePrice is a comma-formatted text input — parseMoney strips the commas.
+  // purchasePrice is a comma-formatted text input, parseMoney strips the commas.
   const purchasePrice = parseMoney(document.getElementById("purchasePrice").value);
   const yearPurchased = parseInt(document.getElementById("yearPurchased").value, 10) || new Date().getFullYear();
   const mortgageRate  = (parseFloat(document.getElementById("mortgageRate").value) || 0) / 100;
