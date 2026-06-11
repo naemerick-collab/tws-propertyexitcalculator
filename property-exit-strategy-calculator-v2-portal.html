@@ -119,8 +119,8 @@
     .tws-nav { padding: 0 30px; }
   }
   @media (max-width: 900px) {
-    .tws-nav { padding: 0 24px; height: 80px; position: relative; }
-    .tws-nav .nav-logo img { height: 70px; }
+    .tws-nav { padding: 0 20px; height: 64px; position: fixed; }
+    .tws-nav .nav-logo img { height: 44px; }
     .tws-nav .nav-links { display: none; }
     .tws-nav .btn-nav-primary { display: none; }
     .tws-nav .hamburger-btn { display: flex; }
@@ -240,8 +240,8 @@
   }
 
   @media (max-width: 900px) {
-    .hero { padding: 160px 20px 60px; }
-    .hero-badge { top: 110px !important; }
+    .hero { padding: 92px 20px 52px; }
+    .hero-badge { position: static !important; top: auto !important; left: auto !important; transform: none !important; margin: 0 0 16px !important; }
   }
   @media (max-width: 700px) {
     .hero-trust-chip { flex-direction: column; gap: 8px; }
@@ -736,6 +736,12 @@
     transition: transform 0.2s;
   }
   details.adv-group-detail[open] > summary::after { content: "−"; }
+  details.adv-group-detail > summary .adv-summary-label { flex: 1; min-width: 0; }
+  details.adv-group-detail > summary .hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 400; font-style: italic;
+    color: var(--text-muted); white-space: nowrap; margin-left: 6px;
+  }
   details.adv-group-detail .adv-group-body {
     padding: 4px 22px 22px;
     border-top: 1px dashed var(--border-soft);
@@ -2298,7 +2304,7 @@
         </details>
 
         <details class="adv-group-detail">
-          <summary>Benchmark Comparison Assumptions <span class="hint">(used in 10-year growth chart)</span></summary>
+          <summary><span class="adv-summary-label">Benchmark Comparison Assumptions <span class="hint">(used in 10-year growth chart)</span></span></summary>
           <div class="adv-group-body">
           <div class="grid-3">
             <div class="field">
@@ -4331,5 +4337,17 @@ function recalcDerivedFields() {
 }
 </script>
 
+<script>
+(function () {
+  // Close the mobile nav menu when tapping anywhere outside it (but not the hamburger).
+  document.addEventListener('click', function (e) {
+    var menu = document.getElementById('twsMobileMenu');
+    if (!menu || !menu.classList.contains('open')) return;
+    var btn = document.querySelector('.tws-nav .hamburger-btn');
+    if (menu.contains(e.target) || (btn && btn.contains(e.target))) return;
+    menu.classList.remove('open');
+  });
+})();
+</script>
 </body>
 </html>
