@@ -119,8 +119,8 @@
     .tws-nav { padding: 0 30px; }
   }
   @media (max-width: 900px) {
-    .tws-nav { padding: 0 20px; height: 64px; position: fixed; }
-    .tws-nav .nav-logo img { height: 44px; }
+    .tws-nav { padding: 0 24px; height: 80px; position: fixed; }
+    .tws-nav .nav-logo img { height: 70px; }
     .tws-nav .nav-links { display: none; }
     .tws-nav .btn-nav-primary { display: none; }
     .tws-nav .hamburger-btn { display: flex; }
@@ -240,8 +240,8 @@
   }
 
   @media (max-width: 900px) {
-    .hero { padding: 92px 20px 52px; }
-    .hero-badge { position: static !important; top: auto !important; left: auto !important; transform: none !important; margin: 0 0 16px !important; }
+    .hero { padding: 160px 20px 60px; }
+    .hero-badge { top: 110px !important; }
   }
   @media (max-width: 700px) {
     .hero-trust-chip { flex-direction: column; gap: 8px; }
@@ -1351,13 +1351,26 @@
     .scenario-card.is-expanded .metric-cf,
     .scenario-card.is-expanded .metric-cum { min-height: 0; }
 
-    /* Locked (gated) cards stay in their blurred + CTA state on mobile, they
-       aren't tap-to-expand, so re-show their content and hide the chevron.
-       The portal unlocks gated cards, so this only takes effect in the public
-       version where .scenarios-gated-wrap lacks .unlocked. */
-    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated > * { display: block; }
-    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated .scenario-title { cursor: default; }
-    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated .scenario-title::after { display: none; }
+    /* Public mobile: collapse ALL five cards including the gated/blurred ones
+       (portal already does, since it is unlocked). Keep the gated card TITLE
+       readable (un-blurred) and tappable so it works as an accordion header;
+       its metrics stay blurred when expanded. Drop the floating scenario CTA,
+       the Detailed Comparison CTA below serves as the single gate. */
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated > .scenario-title {
+      filter: none; -webkit-filter: none; pointer-events: auto;
+    }
+    .scenarios-gated-wrap:not(.unlocked) .gate-overlay-inline { display: none !important; }
+    /* Collapse the blurred Detailed Comparison table; show the Client Access
+       CTA card in normal flow right after the section heading. */
+    .gated-wrap:not(.unlocked) .gated-content { display: none; }
+    .gated-wrap:not(.unlocked) .gate-overlay {
+      position: static; inset: auto;
+      padding: 24px 20px; background: none;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+    }
+    /* Glossary links inside a card title must not hijack the tap-to-expand
+       (the LBD title is entirely a glossary link). */
+    .scenario-card .scenario-title .glossary-link { pointer-events: none; }
   }
 
   /* Inline parenthetical in comparison-table row labels for caveats
@@ -3701,9 +3714,9 @@ const _scenarioCollapseMQ = window.matchMedia("(max-width: 480px)");
 // Locked (gated, not unlocked) cards are blurred behind the CTA and are NOT
 // tap-to-expand. In the portal the wrap is .unlocked, so every card collapses.
 function _scenarioCardCollapsible(card) {
-  if (!card.classList.contains("scenario-gated")) return true;
-  const wrap = card.closest(".scenarios-gated-wrap");
-  return !!(wrap && wrap.classList.contains("unlocked"));
+  // Every comparison card is tap-to-collapse on mobile. Gated (public) cards
+  // collapse to a readable title and expand to a blurred tease.
+  return true;
 }
 function _syncScenarioCollapseA11y() {
   document.querySelectorAll("#scenarios .scenario-card").forEach(card => {
