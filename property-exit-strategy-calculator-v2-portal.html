@@ -1360,17 +1360,21 @@
       filter: none; -webkit-filter: none; pointer-events: auto;
     }
     .scenarios-gated-wrap:not(.unlocked) .gate-overlay-inline { display: none !important; }
-    /* Collapse the blurred Detailed Comparison table; show the Client Access
-       CTA card in normal flow right after the section heading. */
-    .gated-wrap:not(.unlocked) .gated-content { display: none; }
-    .gated-wrap:not(.unlocked) .gate-overlay {
-      position: static; inset: auto;
-      padding: 24px 20px; background: none;
-      backdrop-filter: none; -webkit-backdrop-filter: none;
+    /* Detailed Comparison on mobile: hide the blurred table but PULL the ROE
+       banner out (un-blurred) as a backdrop; the Client Access overlay stays
+       absolute, sitting over the ROE banner under the section heading. */
+    .gated-wrap:not(.unlocked) .gated-content {
+      filter: none; -webkit-filter: none; pointer-events: auto;
     }
+    .gated-wrap:not(.unlocked) .gated-content .comp-scroll-hint,
+    .gated-wrap:not(.unlocked) .gated-content .comp-table-wrap { display: none; }
     /* Glossary links inside a card title must not hijack the tap-to-expand
        (the LBD title is entirely a glossary link). */
     .scenario-card .scenario-title .glossary-link { pointer-events: none; }
+    /* Gated (public) cards: expanding reveals an in-card Client Access CTA
+       in place of the blurred metrics. */
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated.is-expanded > *:not(.scenario-title):not(.card-gate-cta) { display: none; }
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated.is-expanded > .card-gate-cta { display: block; }
   }
 
   /* Inline parenthetical in comparison-table row labels for caveats
@@ -1822,6 +1826,21 @@
   .gate-overlay-inline .gate-card {
     pointer-events: auto;
   }
+  /* In-card Client Access CTA shown inside an expanded gated card on mobile. */
+  .card-gate-cta { display: none; text-align: center; padding: 6px 2px 2px; }
+  .card-gate-cta .cgc-pill {
+    display: inline-block; font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold);
+    background: rgba(191,155,48,0.12); border: 1px solid rgba(191,155,48,0.3);
+    padding: 3px 10px; border-radius: 100px; margin-bottom: 10px;
+  }
+  .card-gate-cta p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px; }
+  .card-gate-cta a {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 9px 16px; border-radius: 6px; text-decoration: none; transition: background 0.2s;
+  }
+  .card-gate-cta a:hover { background: var(--gold-light); }
   /* On stacked / tablet-portrait layouts the blurred region is tall; pin the
      Client Access card to the top of the first blurred card so it's visible
      immediately instead of vertically centered deep inside the blur. */
