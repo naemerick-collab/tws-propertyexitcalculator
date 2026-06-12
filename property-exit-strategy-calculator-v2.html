@@ -1597,10 +1597,15 @@
     background: rgba(191,155,48,0.12); border: 1px solid rgba(191,155,48,0.3);
     padding: 3px 10px; border-radius: 100px; margin-bottom: 10px;
   }
+  .card-gate-cta .cgc-head {
+    font-family: 'Cormorant Garamond', serif; font-weight: 400;
+    font-size: 18px; line-height: 1.25; color: var(--navy); margin: 0 0 8px;
+  }
+  .card-gate-cta .cgc-head em { color: var(--gold); font-style: italic; }
   .card-gate-cta p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px; }
   .card-gate-cta a {
     display: inline-block; background: var(--gold); color: var(--navy);
-    font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
     padding: 9px 16px; border-radius: 6px; text-decoration: none; transition: background 0.2s;
   }
   .card-gate-cta a:hover { background: var(--gold-light); }
@@ -2159,8 +2164,7 @@
           <div class="gate-overlay">
             <div class="gate-card">
               <span class="pill">Client Access</span>
-              <h3>Full side-by-side analysis for <em>TWS Clients</em></h3>
-              <p>The detailed comparison reveals year-by-year cashflow, deferred tax exposure, and wealth outcomes across every available exit strategy.</p>
+              <p>Schedule a consultation to unlock the full comparison.</p>
               <a href="https://tws-preview.vercel.app/tws-contact.html" class="btn-gate">Schedule Consultation</a>
             </div>
           </div>
@@ -2951,7 +2955,8 @@ function render() {
         <div class="defer-footnote${s.taxDeferred > 0 ? '' : ' is-empty'}" aria-hidden="${s.taxDeferred > 0 ? 'false' : 'true'}"><sup>&dagger;</sup> Becomes due at a taxable disposition, unless deferred again (another 1031 or LBD placement) or eliminated by a step-up in basis at death.</div>
         ${isGated ? `<div class="card-gate-cta">
           <span class="cgc-pill">Client Access</span>
-          <p>Schedule a consultation to unlock this option.</p>
+          <h4 class="cgc-head">Full analysis for <em>TWS Clients</em></h4>
+          <p>See this strategy's year-by-year cashflow, deferred tax exposure, and projected wealth outcome.</p>
           <a href="https://tws-preview.vercel.app/tws-contact.html">Schedule Consultation</a>
         </div>` : ""}
       </div>
