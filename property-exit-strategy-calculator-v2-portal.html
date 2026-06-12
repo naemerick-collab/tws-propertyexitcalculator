@@ -1361,20 +1361,31 @@
     }
     .scenarios-gated-wrap:not(.unlocked) .gate-overlay-inline { display: none !important; }
     /* Detailed Comparison on mobile: hide the blurred table but PULL the ROE
-       banner out (un-blurred) as a backdrop; the Client Access overlay stays
-       absolute, sitting over the ROE banner under the section heading. */
+       banner out (un-blurred) as a backdrop; layer the Client Access card over
+       it so the gold ROE bar peeks at the top and sides, with breathing room
+       before the methodology section. */
     .gated-wrap:not(.unlocked) .gated-content {
       filter: none; -webkit-filter: none; pointer-events: auto;
     }
     .gated-wrap:not(.unlocked) .gated-content .comp-scroll-hint,
     .gated-wrap:not(.unlocked) .gated-content .comp-table-wrap { display: none; }
+    .gated-wrap:not(.unlocked) .gate-overlay {
+      background: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+      padding: 22px 16px;
+    }
+    .gated-wrap:not(.unlocked) .gate-overlay .gate-card { padding: 18px 18px; max-width: none; }
+    .gated-wrap:not(.unlocked) { margin-bottom: 32px; }
     /* Glossary links inside a card title must not hijack the tap-to-expand
        (the LBD title is entirely a glossary link). */
     .scenario-card .scenario-title .glossary-link { pointer-events: none; }
-    /* Gated (public) cards: expanding reveals an in-card Client Access CTA
-       in place of the blurred metrics. */
-    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated.is-expanded > *:not(.scenario-title):not(.card-gate-cta) { display: none; }
-    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated.is-expanded > .card-gate-cta { display: block; }
+    /* Gated (public) cards: expanding keeps the blurred metrics as background
+       and layers a crisp Client Access card on top. */
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated.is-expanded > .scenario-title { position: relative; z-index: 4; }
+    .scenarios-gated-wrap:not(.unlocked) .scenario-card.scenario-gated.is-expanded > .card-gate-cta {
+      display: block; filter: none; -webkit-filter: none; pointer-events: auto;
+      position: absolute; left: 14px; right: 14px; top: 50%;
+      transform: translateY(-42%); z-index: 3;
+    }
   }
 
   /* Inline parenthetical in comparison-table row labels for caveats
@@ -1827,7 +1838,14 @@
     pointer-events: auto;
   }
   /* In-card Client Access CTA shown inside an expanded gated card on mobile. */
-  .card-gate-cta { display: none; text-align: center; padding: 6px 2px 2px; }
+  .card-gate-cta {
+    display: none; text-align: center;
+    background: var(--white);
+    border: 1px solid rgba(191,155,48,0.35);
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(8,23,46,0.22);
+    padding: 16px 14px;
+  }
   .card-gate-cta .cgc-pill {
     display: inline-block; font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--gold);
