@@ -1349,6 +1349,11 @@
     .scenario-card.is-expanded .metric-defer,
     .scenario-card.is-expanded .metric-cf,
     .scenario-card.is-expanded .metric-cum { min-height: 0; }
+    /* Single-column: drop the reserved empty-footnote space and tighten the
+       benefits min-height so cards without a deferral footnote (no * / †)
+       don't leave dead space at the bottom. */
+    .scenario-card.is-expanded .defer-footnote.is-empty { display: none; }
+    .scenario-card.is-expanded .scenario-benefits { min-height: 0; }
 
     /* Public mobile: collapse ALL five cards including the gated/blurred ones
        (portal already does, since it is unlocked). Keep the gated card TITLE
@@ -1372,7 +1377,7 @@
       background: none; backdrop-filter: none; -webkit-backdrop-filter: none;
       padding: 22px 16px;
     }
-    .gated-wrap:not(.unlocked) .gate-overlay .gate-card { padding: 18px 18px; max-width: none; }
+    .gated-wrap:not(.unlocked) .gate-overlay .gate-card { padding: 18px 18px; max-width: none; transform: translateY(30px); }
     .gated-wrap:not(.unlocked) { margin-bottom: 32px; }
     /* Glossary links inside a card title must not hijack the tap-to-expand
        (the LBD title is entirely a glossary link). */
@@ -2956,7 +2961,7 @@ function render() {
         ${isGated ? `<div class="card-gate-cta">
           <span class="cgc-pill">Client Access</span>
           <h4 class="cgc-head">Full analysis for <em>TWS Clients</em></h4>
-          <p>See this strategy's year-by-year cashflow, deferred tax exposure, and projected wealth outcome.</p>
+          <p>See this strategy's year-by-year projected cashflow, tax deferred, and hypothetical value.</p>
           <a href="https://tws-preview.vercel.app/tws-contact.html">Schedule Consultation</a>
         </div>` : ""}
       </div>
