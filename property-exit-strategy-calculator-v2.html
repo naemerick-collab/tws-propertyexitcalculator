@@ -119,7 +119,7 @@
   }
   @media (max-width: 900px) {
     .tws-nav { padding: 0 24px; height: 80px; position: fixed; }
-    .tws-nav .nav-logo img { height: 70px; }
+    .tws-nav .nav-logo img { height: 50px; }
     .tws-nav .nav-links { display: none; }
     .tws-nav .btn-nav-primary { display: none; }
     .tws-nav .hamburger-btn { display: flex; }
@@ -434,6 +434,23 @@
     border-color: rgba(22, 101, 52, 0.30);
     transition: background 0.18s ease, border-color 0.18s ease;
   }
+  /* Manual-override indicators on auto-derived fields: a "manual" tag + a
+     one-click "reset to auto" control, shown only once the user has typed over
+     the field's auto-calculated value (toggled by JS via .on). */
+  .override-flags { display: none; align-items: center; gap: 10px; margin-top: 5px; font-size: 11px; line-height: 1; }
+  .override-flags.on { display: inline-flex; }
+  .override-flags .manual-tag {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 7px; border-radius: 999px;
+    background: rgba(8, 23, 46, 0.07); color: var(--navy);
+    font-weight: 600; letter-spacing: 0.02em;
+  }
+  .override-flags .reset-auto {
+    border: none; background: none; cursor: pointer; padding: 0;
+    color: var(--navy); font-weight: 600; font-size: 11px; font-family: inherit;
+    text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 2px;
+  }
+  .override-flags .reset-auto:hover { color: #000; }
   .field select {
     appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%235A6478' d='M6 8L0 0h12z'/></svg>");
@@ -448,6 +465,38 @@
     font-style: italic;
     line-height: 1.4;
   }
+
+  /* Reusable info marker + hover tooltip (e.g. on the Net Rental Income label). */
+  .info-tip {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 15px; height: 15px; margin-left: 5px; vertical-align: middle;
+    border-radius: 50%; background: var(--navy); color: #fff;
+    font-size: 10px; font-style: normal; font-weight: 700; cursor: help;
+    position: relative;
+  }
+  .info-tip::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 150%; left: 50%; transform: translateX(-50%);
+    width: 250px; max-width: 70vw; padding: 9px 11px;
+    background: var(--navy); color: #fff;
+    font-size: 11px; font-weight: 400; font-style: normal; line-height: 1.45;
+    text-align: left; white-space: normal; border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+    opacity: 0; visibility: hidden; transition: opacity .15s ease; z-index: 40;
+    pointer-events: none;
+  }
+  .info-tip:hover::after { opacity: 1; visibility: visible; }
+
+  /* "Reset all" link in the inputs panel header — same understated style as the
+     per-field "reset to auto" control (gold-underlined text link with ↺). */
+  .reset-all-link {
+    border: none; background: none; cursor: pointer; padding: 0;
+    color: var(--navy); font-family: inherit; font-size: 12px; font-weight: 600;
+    text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px;
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+    align-self: flex-start;
+  }
+  .reset-all-link:hover { color: #000; }
 
   .helper-link {
     font-size: 12px;
@@ -1273,6 +1322,18 @@
     color: var(--navy);
     font-weight: 600;
   }
+  /* Underwater warning shown when total debt exceeds net sale value. */
+  .underwater-note {
+    margin: 0 0 18px;
+    padding: 12px 16px;
+    background: #FBF3E6;
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .underwater-note strong { color: var(--navy); font-weight: 600; }
 
   /* Results metadata, generation timestamp + auditability note.
      Sits under the results panel header so the user sees the freshness of
@@ -1402,6 +1463,28 @@
     color: var(--text-muted);
     margin-left: 6px;
   }
+
+  /* Small info marker + hover tooltip used in comparison-table cells (e.g. the
+     Hold cashflow step-up note when an amortizing loan pays off mid-horizon). */
+  .comp .cf-note {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 15px; height: 15px; margin-left: 5px; vertical-align: middle;
+    border-radius: 50%; background: var(--navy); color: #fff;
+    font-size: 10px; font-style: normal; font-weight: 700; cursor: help;
+    position: relative;
+  }
+  .comp .cf-note::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 145%; left: 50%; transform: translateX(-50%);
+    width: 230px; max-width: 62vw; padding: 9px 11px;
+    background: var(--navy); color: #fff;
+    font-size: 11px; font-weight: 400; font-style: normal; line-height: 1.45;
+    text-align: left; white-space: normal; border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+    opacity: 0; visibility: hidden; transition: opacity .15s ease; z-index: 30;
+    pointer-events: none;
+  }
+  .comp .cf-note:hover::after { opacity: 1; visibility: visible; }
 
   /* ---------- CTA band (inline, before footer) ---------- */
   .cta-band {
@@ -1753,6 +1836,7 @@
         <h2>Your Property &amp; Sale Information</h2>
         <p>Plug in what you know. We'll handle the rest.</p>
       </div>
+      <button type="button" id="resetAllTop" class="reset-all-link" title="Reset all fields to their defaults">&#8634; Reset all</button>
     </div>
     <div class="panel-body">
 
@@ -1815,12 +1899,12 @@
         </div>
 
         <div class="field">
-          <label>Annual Net Rental Income</label>
+          <label>Annual Net Rental Income <span class="info-tip" data-tip="Gross rent minus operating expenses (taxes, insurance, maintenance, management). Don't subtract your mortgage — debt service is counted separately. From an escrowed payment, include only taxes &amp; insurance, not principal &amp; interest.">i</span></label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" inputmode="numeric" id="noi" class="has-prefix" min="0" step="500" />
           </div>
-          <div class="field-helper">Rent minus expenses. Estimate based on 6.0% cap rate on purchase price. Edit to override.</div>
+          <div class="field-helper">Rent minus operating expenses. Estimated by growing the purchase-era NOI (6% going-in cap) at the rent-growth rate. Edit to override.</div>
         </div>
 
         <div class="field">
@@ -1967,6 +2051,63 @@
         </details>
 
         <details class="adv-group-detail">
+          <summary>Financing and Terms</summary>
+          <div class="adv-group-body">
+          <div class="grid-3">
+            <div class="field">
+              <label>Primary Loan Type <span class="hint">amortizing or interest-only</span></label>
+              <select id="loanType">
+                <option value="amortizing30" selected>Amortizing (30-yr)</option>
+                <option value="amortizing15">Amortizing (15-yr)</option>
+                <option value="amortizing5">Amortizing (5-yr)</option>
+                <option value="io">Interest-Only</option>
+              </select>
+              <div class="field-helper">Interest-only holds the balance flat: $0 principal paydown, payment = balance &times; rate.</div>
+            </div>
+            <div class="field">
+              <label>Primary Loan LTV <span class="hint">at purchase; drives loan estimate</span></label>
+              <div class="input-wrap"><input type="number" id="ltvPct" class="has-suffix" value="75" min="0" max="100" step="1" /><span class="suffix">%</span></div>
+            </div>
+            <div class="field">
+              <label>Annual Mortgage Interest <span class="hint">auto from loan model; editable</span></label>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="annualInterest" class="has-prefix" min="0" step="500" /></div>
+            </div>
+            <div class="field">
+              <label>Annual Mortgage Principal Paydown <span class="hint">auto from loan model; editable</span></label>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="principalPaydown" class="has-prefix" min="0" step="500" /></div>
+            </div>
+            <div class="field">
+              <label>Second Lien / HELOC?</label>
+              <select id="secondLienOn">
+                <option value="false" selected>No</option>
+                <option value="true">Yes</option>
+              </select>
+              <div class="field-helper">Add a HELOC or second mortgage on top of the primary loan.</div>
+            </div>
+            <div class="field second-lien-field" style="display:none;">
+              <label>2nd Lien Type</label>
+              <select id="secondType">
+                <option value="io" selected>Interest-Only (typical HELOC)</option>
+                <option value="amortizing">Amortizing</option>
+              </select>
+            </div>
+            <div class="field second-lien-field" style="display:none;">
+              <label>2nd Lien Balance</label>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="secondBalance" class="has-prefix" value="0" min="0" step="5000" /></div>
+            </div>
+            <div class="field second-lien-field" style="display:none;">
+              <label>2nd Lien Rate</label>
+              <div class="input-wrap"><input type="number" id="secondRate" class="has-suffix" value="8" min="0" max="20" step="0.05" /><span class="suffix">%</span></div>
+            </div>
+            <div class="field second-lien-field" style="display:none;">
+              <label>2nd Lien Term <span class="hint">amortizing only</span></label>
+              <div class="input-wrap"><input type="number" id="secondTerm" class="has-suffix" value="30" min="1" max="40" step="1" /><span class="suffix">yrs</span></div>
+            </div>
+          </div>
+          </div>
+        </details>
+
+        <details class="adv-group-detail">
           <summary>Property Assumptions</summary>
           <div class="adv-group-body">
           <div class="grid-3">
@@ -1979,20 +2120,21 @@
               <div class="input-wrap"><input type="number" id="noiGrowthRate" class="has-suffix" value="2.5" min="0" max="20" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
-              <label>Annual Mortgage Principal Paydown <span class="hint">auto from loan model; editable</span></label>
-              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="principalPaydown" class="has-prefix" min="0" step="500" /></div>
-            </div>
-            <div class="field">
               <label>Annual Capex Reserve <span class="hint">% of NOI (optional)</span></label>
               <div class="input-wrap"><input type="number" id="capexPct" class="has-suffix" value="0" min="0" max="50" step="0.5" /><span class="suffix">%</span></div>
             </div>
             <div class="field">
-              <label>Annual Depreciation Deduction <span class="hint">auto from price &amp; year; editable</span></label>
-              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="annualDep" class="has-prefix" min="0" step="500" /></div>
+              <label>Capital Improvements (CapEx) <span class="hint">since purchase; raises basis</span></label>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="capex" class="has-prefix" value="0" min="0" step="1000" /></div>
+              <div class="field-helper">Added to cost basis; depreciated over 27.5 yrs from the year placed in service.</div>
             </div>
             <div class="field">
-              <label>Annual Mortgage Interest <span class="hint">auto from loan model; editable</span></label>
-              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="annualInterest" class="has-prefix" min="0" step="500" /></div>
+              <label>CapEx Year Placed in Service <span class="hint">defaults to purchase year</span></label>
+              <div class="input-wrap"><input type="number" id="capexYear" min="1980" max="2100" step="1" /></div>
+            </div>
+            <div class="field">
+              <label>Annual Depreciation Deduction <span class="hint">auto from price &amp; year; editable</span></label>
+              <div class="input-wrap"><span class="prefix">$</span><input type="text" inputmode="numeric" id="annualDep" class="has-prefix" min="0" step="500" /></div>
             </div>
             <div class="field">
               <label>Apply Income Tax to Rental Cashflow?</label>
@@ -2132,6 +2274,7 @@
           <div class="finra-callout" style="margin-top:14px;">
             <strong>IMPORTANT:</strong> The projections or other information generated by the Property Exit Strategy Calculator regarding the likelihood of various investment outcomes are hypothetical in nature, do not reflect actual investment results and are not guarantees of future results. Results may vary with each use and over time as inputs, market conditions, tax law, and assumptions change.
           </div>
+          <div class="underwater-note" id="underwaterNote" hidden></div>
         </div>
       </div>
       <div class="panel-body">
@@ -2179,7 +2322,7 @@
           <summary>How we calculated these numbers</summary>
           <div class="method-body">
             <h4>Tax on Sale</h4>
-            <p><strong>Adjusted basis</strong> = Original purchase price − Accumulated depreciation.<br>
+            <p><strong>Adjusted basis</strong> = (Original purchase price + Capital improvements) − Accumulated depreciation.<br>
                <strong>Total gain</strong> = (Sale price − Selling costs) − Adjusted basis.<br>
                <strong>Depreciation recapture</strong> = min(Accumulated depreciation, Total gain) × 25% federal.<br>
                <strong>Capital gain</strong> = (Total gain − Recapture portion) × (Federal LTCG rate + NIIT if applicable + State rate).<br>
@@ -2422,14 +2565,71 @@ const fmtPct = n => n.toFixed(1) + "%";
 /* ============================================================
    CORE CALCULATIONS
    ============================================================ */
+/* Second lien / HELOC totals from the advanced Financing Options. Returns the
+   additional balance, annual debt service, year-1 interest, and year-1 principal
+   paydown to layer on top of the primary loan. All zero when disabled.
+   Interest-only: payment = balance × rate, no paydown. Amortizing: straight
+   amortization over its term (year-1 split), matching the projection's linear
+   paydown model. */
+function secondLienTotals() {
+  if (($("secondLienOn") || {}).value !== "true") {
+    return { balance: 0, ds: 0, interest: 0, paydown: 0 };
+  }
+  const balance  = numv("secondBalance");
+  const rate     = numv("secondRate") / 100;
+  const isIO     = ($("secondType") || {}).value === "io";
+  const interest = balance * rate;
+  if (isIO) return { balance, ds: interest, interest, paydown: 0 };
+  const term    = Math.max(1, numv("secondTerm"));
+  const mRate   = rate / 12;
+  const nPmts   = term * 12;
+  const monthly = mRate > 0
+    ? balance * mRate / (1 - Math.pow(1 + mRate, -nPmts))
+    : balance / nPmts;
+  const ds      = monthly * 12;
+  return { balance, ds, interest, paydown: Math.max(0, ds - interest) };
+}
+
+/* Forward-amortize a loan year by year. Returns per-year debt service and
+   interest, the ending balance after each year, the final ending balance, and
+   the year the loan is fully paid off (0 if it survives the horizon).
+   - amortizing=false → interest-only: balance held flat, interest paid each yr.
+   - On payoff, the final year pays only the remaining principal + that year's
+     interest, and debt service is $0 in every subsequent year (cashflow steps up).
+   Rate is the effective annual rate (interest ÷ balance), so manual/refi
+   overrides to the loan fields are respected. */
+function amortizeSchedule(balance, annualDS, annualRate, amortizing, years) {
+  const ds = [], interest = [], bal = [];
+  let b = balance;
+  let payoffYear = 0;
+  const mRate = annualRate / 12;   // monthly amortization → matches real payoff timing
+  const mPmt  = annualDS / 12;
+  for (let y = 1; y <= years; y++) {
+    let yrDS = 0, yrInt = 0;
+    for (let m = 0; m < 12; m++) {
+      if (b <= 0) break;
+      const i = b * mRate;
+      if (!amortizing) { yrInt += i; yrDS += mPmt; continue; } // interest-only: balance flat
+      const principal = mPmt - i;
+      if (principal <= 0) { yrInt += i; yrDS += mPmt; continue; } // payment doesn't amortize
+      if (principal >= b) {            // final (partial) month — loan pays off
+        yrDS += b + i; yrInt += i; b = 0; if (!payoffYear) payoffYear = y; break;
+      }
+      b -= principal; yrInt += i; yrDS += mPmt;
+    }
+    ds.push(yrDS); interest.push(yrInt); bal.push(Math.max(0, b));
+  }
+  return { ds, interest, balance: bal, endBalance: Math.max(0, b), payoffYear };
+}
+
 function compute() {
   // Inputs
   const marketValue   = numv("marketValue");
   const purchasePrice = numv("purchasePrice");
   const accumDep      = numv("accumDep");
-  const mortgage      = numv("mortgage");
+  const mortgageBase  = numv("mortgage");
   const noi           = numv("noi");
-  const debtService   = numv("debtService");
+  const debtServiceBase = numv("debtService");
 
   // Prior 1031 exchange: when toggle is on, basis carries over from the
   // relinquished property, adjusted carryover basis = prior original
@@ -2441,10 +2641,14 @@ function compute() {
   const priorPurchase     = prior1031On ? numv("priorPurchase")      : 0;
   const priorImprovements = prior1031On ? numv("priorImprovements")  : 0;
   const priorDepreciation = prior1031On ? numv("priorDepreciation")  : 0;
+  // Capital improvements (CapEx) on the current property. Adds to cost basis in
+  // both the standard and prior-1031 paths. Its accumulated depreciation is
+  // already folded into the accumDep field by recalcDerivedFields().
+  const capex             = numv("capex");
   // costBasisGross is the pre-depreciation cost basis used in adjusted-basis
   // and recapture math throughout. effectiveAccumDep is the cumulative
   // depreciation that's subject to §1250 recapture at sale.
-  const costBasisGross    = prior1031On ? (priorPurchase + priorImprovements) : purchasePrice;
+  const costBasisGross    = prior1031On ? (priorPurchase + priorImprovements + capex) : (purchasePrice + capex);
   const effectiveAccumDep = prior1031On ? (priorDepreciation + accumDep)      : accumDep;
 
   const horizonSel    = $("horizon").value;
@@ -2459,10 +2663,19 @@ function compute() {
 
   const apprRate      = numv("appreciationRate") / 100;
   const noiGrowth     = numv("noiGrowthRate") / 100;
-  const annualPaydown = numv("principalPaydown");
+  const annualPaydownBase = numv("principalPaydown");
   const capexPct      = numv("capexPct") / 100;
   const annualDep     = numv("annualDep");
-  const annualInterest= numv("annualInterest");
+  const annualInterestBase = numv("annualInterest");
+  // Second lien / HELOC layered on top of the primary loan (advanced). Folds
+  // into total debt, debt service, deductible interest, and principal paydown
+  // so every downstream scenario (equity, payoff, cashflow, tax) reflects the
+  // combined financing.
+  const _2nd = secondLienTotals();
+  const mortgage       = mortgageBase + _2nd.balance;
+  const debtService    = debtServiceBase + _2nd.ds;
+  const annualPaydown  = annualPaydownBase + _2nd.paydown;
+  const annualInterest = annualInterestBase + _2nd.interest;
   const applyRentalTax = $("applyRentalTax").value === "true";
   const ordRate       = numv("ordRate") / 100;
 
@@ -2508,55 +2721,54 @@ function compute() {
   const stateTax         = totalGain * stateRate;
   const totalTax         = fedRecaptureTax + fedCGTax + niitTax + stateTax;
 
-  const grossEquity      = netSale - mortgage; // cash before tax
+  const grossEquityRaw   = netSale - mortgage;     // cash before tax
+  const underwater       = grossEquityRaw < 0;     // total debt exceeds net sale value
+  const grossEquity      = Math.max(0, grossEquityRaw); // floored: no negative proceeds to redeploy
 
   // ============================================================
   // SCENARIO 1, HOLD
   // ============================================================
-  // Annual cashflow with capex reserve, optional income tax, and optional refi
+  // Forward-amortize the primary loan and the second lien SEPARATELY (rates
+  // derived from the current fields so manual/refi overrides are respected).
+  // This (a) stops debt service once a loan is fully paid off — Hold's cashflow
+  // steps up afterward — and (b) tracks the true declining balance for terminal
+  // equity, replacing the old constant-payment / linear-paydown approximation.
+  const primRate  = mortgageBase > 0 ? annualInterestBase / mortgageBase : 0;
+  const primSched = amortizeSchedule(mortgageBase, debtServiceBase, primRate, annualPaydownBase > 0, N);
+  const secRate   = _2nd.balance > 0 ? _2nd.interest / _2nd.balance : 0;
+  const secSched  = amortizeSchedule(_2nd.balance, _2nd.ds, secRate, _2nd.paydown > 0, N);
+
   let s1CumCF = 0;
-  let s1RefiCashBalance = 0;
+  let s1RefiCashBalance = 0;   // refi feature inert; retained so terminal-wealth math is unchanged
   let s1AnnualCF_Y1 = 0;
 
   for (let y = 1; y <= N; y++) {
     const grossNOI   = noi * Math.pow(1 + noiGrowth, y - 1);
     const netNOI     = grossNOI * (1 - capexPct);  // after capex reserve
-    const yearDS     = (refiEnabled && y > refiYear) ? refiNewDS : debtService;
+    const yearDS     = primSched.ds[y - 1] + secSched.ds[y - 1];
+    const yearInt    = primSched.interest[y - 1] + secSched.interest[y - 1];
     const preTaxCF   = netNOI - yearDS;
 
     let yearCF = preTaxCF;
     if (applyRentalTax) {
-      const taxableRental = Math.max(0, netNOI - annualDep - annualInterest);
-      const rentalTax = taxableRental * ordRate;
-      yearCF = preTaxCF - rentalTax;
+      // Interest is the only deductible part of debt service, and it declines
+      // each year (→ $0 once the loan is paid off).
+      const taxableRental = Math.max(0, netNOI - annualDep - yearInt);
+      yearCF = preTaxCF - taxableRental * ordRate;
     }
 
     if (y === 1) s1AnnualCF_Y1 = yearCF;
     s1CumCF += yearCF;
-
-    // Refi cash-out grows in cash account
-    if (refiEnabled && y === refiYear) {
-      s1RefiCashBalance += refiCashOut;
-    }
-    if (refiEnabled && y > refiYear) {
-      s1RefiCashBalance *= (1 + cashYield);
-    }
   }
 
   const s1TerminalValue = marketValue * Math.pow(1 + apprRate, N);
-
-  // Mortgage balance at terminal
-  let s1RemainingMortgage;
-  if (refiEnabled) {
-    // After refi, new debt = old balance at refi year + cash out, then paydown continues
-    const balanceAtRefi = Math.max(0, mortgage - annualPaydown * refiYear);
-    const newMortgage = balanceAtRefi + refiCashOut;
-    s1RemainingMortgage = Math.max(0, newMortgage - annualPaydown * (N - refiYear));
-  } else {
-    s1RemainingMortgage = Math.max(0, mortgage - annualPaydown * N);
-  }
-
+  const s1RemainingMortgage = primSched.endBalance + secSched.endBalance;
   const s1Equity = s1TerminalValue - s1RemainingMortgage;
+
+  // Loan-payoff metadata for the comparison-table tooltip (cashflow step-up).
+  const loanPayoffYear = primSched.payoffYear || secSched.payoffYear;
+  const cashflowStepUp = (primSched.payoffYear ? debtServiceBase : 0)
+                       + (secSched.payoffYear ? _2nd.ds : 0);
 
   // Optional terminal tax on hypothetical sale at horizon end
   let s1TerminalTax = 0;
@@ -2581,7 +2793,7 @@ function compute() {
   // ============================================================
   // SCENARIO 2, SELL & PAY TAX (cash / money market at cashYield, no growth beyond yield)
   // ============================================================
-  const s2NetCash = grossEquity - totalTax;
+  const s2NetCash = Math.max(0, grossEquity - totalTax);
   // Cash sits, principal stays flat, yield paid out each year (already taxed at ordinary on yield, ignored for simplicity)
   let s2CumCF = 0;
   const s2AnnualCF_Y1 = s2NetCash * cashYield;
@@ -2602,7 +2814,7 @@ function compute() {
   // (equivalent leverage carried over to the new property).
   // ============================================================
   const s3Equity           = grossEquity * (1 - dstLoad);
-  const s3ReplacementDebt  = mortgage;                       // carry equivalent leverage to the replacement DST
+  const s3ReplacementDebt  = s3Equity > 0 ? mortgage : 0;    // carry equivalent leverage to the replacement DST; none if there's no equity to exchange (e.g. underwater)
   const s3ReplacementValue = s3Equity + s3ReplacementDebt;   // total asset exposure on the replacement property
 
   const s3AnnualCF_Y1 = s3Equity * dstYield;                 // cash-on-cash, paid on equity
@@ -2720,7 +2932,7 @@ function compute() {
   // SCENARIO 5, Sell & Invest Passively (alternative portfolio)
   // ============================================================
   // Same after-tax cash as s2 but invested at higher passive total return
-  const s5NetCash = grossEquity - totalTax;
+  const s5NetCash = Math.max(0, grossEquity - totalTax);
   let s5Balance = s5NetCash;
   let s5CumCF = 0;
   const s5AnnualCF_Y1 = s5NetCash * passiveYield;
@@ -2748,9 +2960,14 @@ function compute() {
   // excludes derived cashflow (e.g. NOI minus debt service for Hold), that lives in the
   // Cashflow & Yield section. Each scenario shows its raw assumption inputs only.
   //
-  // Hold: just the asset appreciation input (no yield-style input exists for Hold; its
-  // cashflow is derived from NOI/debt service and is reported separately).
-  const s1ReturnAssumption = apprRate;
+  // Hold: derived cash yield on equity (the SAME figure shown in the "Annual
+  // Yield on Equity Deployed" row above = annual cashflow / equity deployed) +
+  // asset appreciation. This keeps Hold consistent with the income-producing
+  // strategies, which all report cash yield + appreciation here. (Like those
+  // columns, the cash yield is on equity while appreciation is the asset-level
+  // rate — a shared simplification across the row.)
+  const s1HoldCashYield    = currentEquity > 0 ? s1AnnualCF_Y1 / currentEquity : 0;
+  const s1ReturnAssumption = s1HoldCashYield + apprRate;
   // Sell & Pay Tax: cash yield only, no appreciation
   const s2ReturnAssumption = cashYield;
   // DST: cash yield + appreciation
@@ -2765,7 +2982,7 @@ function compute() {
   const s5ReturnAssumption = passiveReturn;
 
   return {
-    inputs: { N, totalGain, totalTax, grossEquity, recapturePortion, capGainPortion,
+    inputs: { N, totalGain, totalTax, grossEquity, underwater, recapturePortion, capGainPortion,
               fedRecaptureTax, fedCGTax, niitTax, stateTax,
               currentEquity, currentNetCashflow, currentROE, currentCapRate,
               // V2 chart needs these to compute year-by-year after-tax DST exit value.
@@ -2786,6 +3003,8 @@ function compute() {
         netInvested: currentEquity,
         replacementDebt: 0,
         returnAssumption: s1ReturnAssumption,
+        loanPayoffYear: loanPayoffYear,
+        cashflowStepUp: cashflowStepUp,
         benefits: "Status quo, active management",
         footnote: "",
       },
@@ -2889,6 +3108,18 @@ function render() {
   document.getElementById("resultsMeta").innerHTML =
     `Generated ${generatedOn}. Tax rates and rules current as of ${RULES_AS_OF}. ` +
     `Full methodology and formulas auditable in the “How we calculated these numbers” section below.`;
+
+  // Underwater warning: total debt exceeds net sale value, so the sell-based
+  // strategies have no proceeds to redeploy (shown as $0). Hold is left honest.
+  const uwNote = document.getElementById("underwaterNote");
+  if (uwNote) {
+    if (inputs.underwater) {
+      uwNote.hidden = false;
+      uwNote.innerHTML = `<strong>This property is underwater.</strong> Total debt exceeds the net sale value, so the sell-based strategies (Sell &amp; Pay Tax, Passive, 1031/DST, LBD) show no redeployable proceeds. A sale could still trigger tax, including depreciation recapture, even with no cash left over. The Hold figures are shown as-is and reflect the real cost of continuing to carry the property.`;
+    } else {
+      uwNote.hidden = true;
+    }
+  }
 
   // ---------- Cards ----------
   // V2: All 5 cards render in a SINGLE grid (#scenarios). Gated cards get an
@@ -3014,12 +3245,15 @@ function render() {
   html += rowFmt("Real Estate / Sales Commissions", scenarios.map(s => s.sellingCosts > 0 ? fmt$(s.sellingCosts) : "—"));
   html += rowFmt("Capital Gains Tax + Depreciation Recapture Due", scenarios.map(s => fmt$(s.taxNow)));
   html += rowFmt(`Tax Deferred <span class="row-caveat">(becomes due at a taxable disposition unless deferred again via another 1031 or LBD placement, or eliminated by a step-up at death)</span>`, scenarios.map(s => s.taxDeferred ? fmt$(s.taxDeferred) : "—"));
+  // "Net Cash / Equity Deployed" is the investor's equity/cash put to work
+  // (equity only), so the cash-on-cash yield rows below — which divide by
+  // s.netInvested — reconcile: yield × deployed = annual cashflow.
+  html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested)));
   html += rowFmt("Replacement Debt (1031 carryover)", scenarios.map(s => s.replacementDebt > 0 ? fmt$(s.replacementDebt) : "—"));
-  // "Net Cash / Equity Deployed" now reflects TOTAL capital reinvested for 1031 compliance:
-  // investor's equity slice + replacement debt carried over at the DST. For non-DST scenarios,
-  // replacementDebt is 0 so this is just the equity. Cash-on-cash yield rows below still divide
-  // by s.netInvested (equity only), so the % remains a true yield on the investor's equity.
-  html += rowFmt("Net Cash / Equity Deployed", scenarios.map(s => fmt$(s.netInvested + (s.replacementDebt || 0))));
+  // Total replacement value = equity slice + carried-over debt (DST only). Shown
+  // separately so the 1031 leverage is explicit while the deployed/yield rows
+  // above stay on an equity basis.
+  html += rowFmt(`Total Replacement Value <span class="row-caveat">(equity + carryover debt)</span>`, scenarios.map(s => s.replacementDebt > 0 ? fmt$(s.netInvested + s.replacementDebt) : "—"));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Cashflow & Yield</td></tr>`;
   html += rowFmt("Projected Monthly Cashflow", scenarios.map(s => fmt$(s.annualCF / 12)));
@@ -3028,7 +3262,14 @@ function render() {
     scenarios.map(s => s.netInvested > 0 ? ((s.annualCF / s.netInvested) * 100).toFixed(2) + "%" : "—"));
   html += rowFmt("Cash Yield + Asset Appreciation Assumption",
     scenarios.map(s => (s.returnAssumption * 100).toFixed(2) + "%"));
-  html += rowFmt(inputs.N + "-Year Cumulative Cashflow", scenarios.map(s => fmt$(s.cumCF)));
+  html += rowFmt(inputs.N + "-Year Cumulative Cashflow", scenarios.map(s => {
+    let v = fmt$(s.cumCF);
+    if (s.loanPayoffYear > 0) {
+      const tip = `Your loan is fully paid off in year ${s.loanPayoffYear}. With debt service ending, annual cashflow steps up by about ${fmt$(s.cashflowStepUp)} for the remaining years — which is why cumulative cashflow is higher than the year-1 figure × ${inputs.N}.`;
+      v += ` <span class="cf-note" data-tip="${tip}">i</span>`;
+    }
+    return v;
+  }));
 
   html += `<tr class="section-row"><td colspan="${scenarios.length + 1}">Wealth Outcome</td></tr>`;
   html += rowFmt("Hypothetical Value at Year " + inputs.N, scenarios.map(s => fmt$(s.terminal)));
@@ -3154,7 +3395,7 @@ window.addEventListener("resize", () => {
    WIRING
    ============================================================ */
 document.getElementById("calcBtn").addEventListener("click", render);
-document.getElementById("resetBtn").addEventListener("click", () => {
+function resetAllFields() {
   // 1. Reset every input (number AND text, the money fields are now text
   //    so they get missed by an input[type='number'] selector).
   document.querySelectorAll("input").forEach(el => {
@@ -3176,8 +3417,9 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   });
 
   // 4. Clear "user has manually overridden this" flags so auto-fill resumes
-  //    for every derived field.
+  //    for every derived field, and hide their manual tags / reset controls.
   manualOverrides.clear();
+  DERIVED_FIELD_IDS.forEach(id => setOverrideUI(id, false));
 
   // 5. Drop any pale-green parent-driven highlights left over from a focused
   //    parent input.
@@ -3188,10 +3430,14 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   //    visibility + state-rate sync).
   document.getElementById("horizon").dispatchEvent(new Event("change"));
   document.getElementById("state").dispatchEvent(new Event("change"));
+  const _sl = document.getElementById("secondLienOn");
+  if (_sl) _sl.dispatchEvent(new Event("change"));   // re-hide 2nd-lien fields
 
   // 7. Hide the results panel.
   document.getElementById("results").classList.remove("visible");
-});
+}
+document.getElementById("resetBtn").addEventListener("click", resetAllFields);
+(function () { const t = document.getElementById("resetAllTop"); if (t) t.addEventListener("click", resetAllFields); })();
 
 // Optional: auto-calc on Enter
 document.querySelectorAll("input, select").forEach(el => {
@@ -3323,9 +3569,26 @@ window.addEventListener("DOMContentLoaded", () => {
   const priceEl = document.getElementById("purchasePrice");
   const yearEl  = document.getElementById("yearPurchased");
   const rateEl  = document.getElementById("mortgageRate");
-  [mvEl, priceEl, yearEl, rateEl].forEach(el => {
+  const capexEl     = document.getElementById("capex");
+  const capexYearEl = document.getElementById("capexYear");
+  const ltvEl       = document.getElementById("ltvPct");
+  const noiGrowthEl = document.getElementById("noiGrowthRate");
+  [mvEl, priceEl, yearEl, rateEl, capexEl, capexYearEl, ltvEl, noiGrowthEl].forEach(el => {
     if (el) el.addEventListener("input", recalcDerivedFields);
   });
+
+  // Primary loan type (amortizing / interest-only) re-derives the loan fields.
+  const loanTypeEl = document.getElementById("loanType");
+  if (loanTypeEl) loanTypeEl.addEventListener("change", recalcDerivedFields);
+
+  // Second lien / HELOC: reveal its detail fields only when enabled.
+  const secondLienSel = document.getElementById("secondLienOn");
+  const toggleSecondLien = () => {
+    const on = secondLienSel && secondLienSel.value === "true";
+    document.querySelectorAll(".second-lien-field").forEach(el => { el.style.display = on ? "" : "none"; });
+  };
+  if (secondLienSel) secondLienSel.addEventListener("change", toggleSecondLien);
+  toggleSecondLien();
 
   /* Pale-green-highlight affected child fields while the parent has focus.
      Skips children the user has manually overridden, those won't recompute. */
@@ -3351,7 +3614,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // only flags true user edits (keystrokes + custom spinner button clicks).
   DERIVED_FIELD_IDS.forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener("input", () => manualOverrides.add(id));
+    if (el) el.addEventListener("input", () => { manualOverrides.add(id); setOverrideUI(id, true); });
   });
 
   // Treasury auto-fetch DISABLED, the 3-mo T-bill rate doesn't reflect the
@@ -3433,8 +3696,13 @@ const DERIVED_FIELD_IDS = ["accumDep","annualDep","mortgage","debtService","annu
    recalcDerivedFields() below. */
 const FORMULA_DEPENDENCIES = {
   purchasePrice: ["accumDep","annualDep","noi","mortgage","debtService","annualInterest","principalPaydown"],
-  yearPurchased: ["accumDep","mortgage","annualInterest","principalPaydown"],
-  mortgageRate:  ["mortgage","debtService","annualInterest","principalPaydown"]
+  yearPurchased: ["accumDep","noi","mortgage","annualInterest","principalPaydown"],
+  mortgageRate:  ["mortgage","debtService","annualInterest","principalPaydown"],
+  noiGrowthRate: ["noi"],
+  capex:         ["accumDep","annualDep"],
+  capexYear:     ["accumDep"],
+  loanType:      ["mortgage","debtService","annualInterest","principalPaydown"],
+  ltvPct:        ["mortgage","debtService","annualInterest","principalPaydown"]
 };
 
 /* Cap rate used to auto-estimate NOI from Original Purchase Price.
@@ -3456,6 +3724,35 @@ function setIfNotOverridden(id, value) {
   el.value = el.type === "text" ? fmtIntStr(rounded) : rounded;
 }
 
+/* ── Manual-override indicators ──
+   Each auto-derived field shows a "manual" tag + a "↺ auto" reset control once
+   the user types over its calculated value. Reset clears the override flag and
+   restores the formula value (results refresh on the next Calculate). */
+function ensureOverrideUI(id) {
+  const input = document.getElementById(id);
+  if (!input) return null;
+  const field = input.closest(".field");
+  if (!field) return null;
+  let flags = field.querySelector(".override-flags");
+  if (!flags) {
+    flags = document.createElement("div");
+    flags.className = "override-flags";
+    flags.innerHTML = '<span class="manual-tag">&#9998; manual</span>'
+      + '<button type="button" class="reset-auto">&#8634; reset to auto</button>';
+    flags.querySelector(".reset-auto").addEventListener("click", () => {
+      manualOverrides.delete(id);
+      recalcDerivedFields();
+      setOverrideUI(id, false);
+    });
+    field.appendChild(flags);
+  }
+  return flags;
+}
+function setOverrideUI(id, on) {
+  const flags = ensureOverrideUI(id);
+  if (flags) flags.classList.toggle("on", on);
+}
+
 /* Re-derive depreciation + loan-related fields from purchase price, year
    purchased, and current mortgage rate. Manually-overridden fields are
    left alone.
@@ -3472,42 +3769,89 @@ function recalcDerivedFields() {
   /* ── Depreciation ── */
   const buildingShare = 0.80;
   const usefulLife    = 27.5;
-  const annualDep     = purchasePrice * buildingShare / usefulLife;
+  const bldgAnnualDep = purchasePrice * buildingShare / usefulLife;
   const accumDepCap   = purchasePrice * buildingShare;
-  const accumDep      = Math.min(annualDep * yearsHeld, accumDepCap);
+  const bldgAccumDep  = Math.min(bldgAnnualDep * yearsHeld, accumDepCap);
+
+  /* CapEx (capital improvements): fully depreciable (no land share) over 27.5
+     yr from the year placed in service. Adds to both the ongoing annual
+     deduction and accumulated depreciation; the latter flows into §1250
+     recapture at sale. Year defaults to the purchase year when left blank. */
+  const capex          = parseMoney(document.getElementById("capex").value || "0");
+  const capexYear      = parseInt(document.getElementById("capexYear").value, 10) || yearPurchased;
+  const capexYrsHeld   = Math.max(0, currentYear - capexYear);
+  const capexAnnualDep = capex / usefulLife;
+  const capexAccumDep  = Math.min(capexAnnualDep * capexYrsHeld, capex);
+
+  const annualDep     = bldgAnnualDep + capexAnnualDep;
+  const accumDep      = bldgAccumDep  + capexAccumDep;
 
   setIfNotOverridden("accumDep",  accumDep);
   setIfNotOverridden("annualDep", annualDep);
 
-  /* ── NOI: estimated as purchase price × going-in cap rate ── */
-  setIfNotOverridden("noi", purchasePrice * DEFAULT_GOING_IN_CAP_RATE);
+  /* ── NOI: estimate current NOI by growing the purchase-era NOI (going-in cap
+     × purchase price) at the rent-growth rate over the years held. This tracks
+     rents (slow growth) rather than re-pricing income off the appreciated value,
+     so an appreciated property shows a realistic compressed current cap rate
+     (= NOI ÷ market value) and Hold isn't artificially inflated. ── */
+  const noiGrowthEst = (parseFloat(document.getElementById("noiGrowthRate").value) || 0) / 100;
+  const goingInNOI   = purchasePrice * DEFAULT_GOING_IN_CAP_RATE;
+  setIfNotOverridden("noi", goingInNOI * Math.pow(1 + noiGrowthEst, yearsHeld));
 
-  /* ── Loan: balance, debt service, interest, principal paydown ── */
-  const ltv          = 0.75;
-  const termYrs      = 30;
+  /* ── Loan: balance, debt service, interest, principal paydown ──
+     Amortizing: 75% LTV × 30-yr fixed at the user's rate.
+     Interest-only: balance never amortizes; payment is pure interest, $0
+     principal paydown. Loan type comes from the advanced Financing Options. */
+  const ltvPctVal    = parseFloat((document.getElementById("ltvPct") || {}).value);
+  const ltv          = (isNaN(ltvPctVal) ? 75 : ltvPctVal) / 100;   // Original Loan LTV (default 75%)
   const originalLoan = purchasePrice * ltv;
-  if (originalLoan > 0 && mortgageRate > 0) {
-    const monthlyRate = mortgageRate / 12;
-    const n           = termYrs * 12;
-    const monthlyPmt  = originalLoan * monthlyRate / (1 - Math.pow(1 + monthlyRate, -n));
-    const yearsCapped = Math.min(yearsHeld, termYrs);
+  const loanType     = (document.getElementById("loanType") || {}).value || "amortizing30";
+  if (originalLoan <= 0) {
+    // No loan (e.g. 0% LTV / free-and-clear): zero the loan fields so a prior
+    // value doesn't linger when the user removes leverage.
+    setIfNotOverridden("mortgage",         0);
+    setIfNotOverridden("debtService",      0);
+    setIfNotOverridden("annualInterest",   0);
+    setIfNotOverridden("principalPaydown", 0);
+  } else if (mortgageRate > 0) {
+    if (loanType === "io") {
+      const interest = originalLoan * mortgageRate;
+      setIfNotOverridden("mortgage",         originalLoan);
+      setIfNotOverridden("debtService",      interest);
+      setIfNotOverridden("annualInterest",   interest);
+      setIfNotOverridden("principalPaydown", 0);
+    } else {
+      // Amortizing term taken from the option value (30 / 15 / 5 yr).
+      const termYrs     = parseInt(loanType.replace(/\D/g, ""), 10) || 30;
+      const monthlyRate = mortgageRate / 12;
+      const n           = termYrs * 12;
+      const monthlyPmt  = originalLoan * monthlyRate / (1 - Math.pow(1 + monthlyRate, -n));
+      const yearsCapped = Math.min(yearsHeld, termYrs);
 
-    const balanceAt = k => {
-      if (k <= 0) return originalLoan;
-      if (k >= n) return 0;
-      const g = Math.pow(1 + monthlyRate, k);
-      return originalLoan * g - monthlyPmt * (g - 1) / monthlyRate;
-    };
-    const balStart = balanceAt(yearsCapped * 12);
-    const balEnd   = balanceAt((yearsCapped + 1) * 12);
-    const annualDS = monthlyPmt * 12;
-    const paydown  = Math.max(0, balStart - balEnd);
-    const interest = Math.max(0, annualDS - paydown);
+      const balanceAt = k => {
+        if (k <= 0) return originalLoan;
+        if (k >= n) return 0;
+        const g = Math.pow(1 + monthlyRate, k);
+        return originalLoan * g - monthlyPmt * (g - 1) / monthlyRate;
+      };
+      const balStart = balanceAt(yearsCapped * 12);
+      const balEnd   = balanceAt((yearsCapped + 1) * 12);
+      const annualDS = balStart > 0 ? monthlyPmt * 12 : 0;  // loan paid off → no debt service
+      const paydown  = Math.max(0, balStart - balEnd);
+      const interest = Math.max(0, annualDS - paydown);
 
-    setIfNotOverridden("mortgage",         balStart);
-    setIfNotOverridden("debtService",      annualDS);
-    setIfNotOverridden("annualInterest",   interest);
-    setIfNotOverridden("principalPaydown", paydown);
+      setIfNotOverridden("mortgage",         balStart);
+      setIfNotOverridden("debtService",      annualDS);
+      setIfNotOverridden("annualInterest",   interest);
+      setIfNotOverridden("principalPaydown", paydown);
+    }
+  } else {
+    // Loan exists but rate is 0% (or blank): show the balance with no interest
+    // rather than skipping (which would leave stale values).
+    setIfNotOverridden("mortgage",         originalLoan);
+    setIfNotOverridden("debtService",      0);
+    setIfNotOverridden("annualInterest",   0);
+    setIfNotOverridden("principalPaydown", 0);
   }
 }
 </script>
