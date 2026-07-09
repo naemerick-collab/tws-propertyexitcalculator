@@ -1834,7 +1834,7 @@
     <div class="panel-header">
       <div>
         <h2>Your Property &amp; Sale Information</h2>
-        <p>Plug in what you know. We'll handle the rest.</p>
+        <p>Plug in what you know. The calculator estimates the rest, edit any field.</p>
       </div>
       <button type="button" id="resetAllTop" class="reset-all-link" title="Reset all fields to their defaults">&#8634; Reset all</button>
     </div>
@@ -2185,11 +2185,11 @@
           <div class="adv-group-body">
           <div class="grid-3">
             <div class="field">
-              <label>Target DST Cash-on-Cash Distribution</label>
+              <label>Assumed DST Cash-on-Cash Distribution <span class="hint">illustrative assumption, not an offering rate</span></label>
               <div class="input-wrap"><input type="number" id="dstYield" class="has-suffix" value="4.5" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
-              <label>DST Asset Appreciation</label>
+              <label>Assumed DST Asset Appreciation <span class="hint">illustrative assumption, not an offering rate</span></label>
               <div class="input-wrap"><input type="number" id="dstAppreciation" class="has-suffix" value="2.5" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
@@ -2205,15 +2205,15 @@
           <div class="adv-group-body">
           <div class="grid-3">
             <div class="field">
-              <label>Deduction Multiplier <span class="hint">$1 invested → $X passive loss</span></label>
+              <label>Assumed Deduction Multiplier <span class="hint">$1 invested → $X passive loss</span></label>
               <div class="input-wrap"><input type="number" id="lbdMultiplier" class="has-suffix" value="2.0" min="1" max="5" step="0.1" /><span class="suffix">×</span></div>
             </div>
             <div class="field">
-              <label>Target LBD Fund Cash Distribution</label>
+              <label>Assumed LBD Fund Cash Distribution <span class="hint">illustrative assumption, not an offering rate</span></label>
               <div class="input-wrap"><input type="number" id="bdYield" class="has-suffix" value="5" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
-              <label>LBD Fund Appreciation</label>
+              <label>Assumed LBD Fund Appreciation <span class="hint">illustrative assumption, not an offering rate</span></label>
               <div class="input-wrap"><input type="number" id="bdAppreciation" class="has-suffix" value="2" min="0" max="15" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
           </div>
@@ -2233,11 +2233,11 @@
           <div class="adv-group-body">
           <div class="grid-3">
             <div class="field">
-              <label>Target Passive Portfolio Total Return</label>
+              <label>Assumed Passive Portfolio Total Return <span class="hint">illustrative assumption</span></label>
               <div class="input-wrap"><input type="number" id="passiveReturn" class="has-suffix" value="11" min="0" max="25" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
             <div class="field">
-              <label>Targeted Cash Yield <span class="hint">dividends/interest</span></label>
+              <label>Assumed Cash Yield <span class="hint">dividends/interest</span></label>
               <div class="input-wrap"><input type="number" id="passiveYield" class="has-suffix" value="4.5" min="0" max="20" step="0.1" /><span class="suffix">%/yr</span></div>
             </div>
           </div>
@@ -2338,7 +2338,7 @@
             <p>Net cash to investor = (Sale price − Selling costs − Mortgage payoff − Total tax). Cash reinvested at the cash yield. Wealth at exit = After-tax cash compounded at the cash yield over the horizon.</p>
 
             <h4>Sell &amp; Invest Passively</h4>
-            <p>Same after-tax cash as the Sell &amp; Pay Tax path, but invested at the higher target passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
+            <p>Same after-tax cash as the Sell &amp; Pay Tax path, but invested at the higher assumed passive portfolio total return. Shown to compare an "exit real estate entirely" path.</p>
 
             <h4>1031 Exchange to DST</h4>
             <p>Tax fully deferred (assuming compliant exchange). Equity reinvested = (Sale price − Selling costs − Mortgage payoff) × (1 − DST load). Annual cashflow = Equity × DST cash-on-cash. Wealth at exit = Equity grown at DST appreciation. <em>Tax deferred is not tax eliminated, basis carries over.</em> When "After-tax wealth at exit" is enabled, exit tax is calculated on the gain over the carried-over basis from the original property. "Step-up in basis" zeroes that tax (a key estate-planning advantage of swap-til-you-drop).</p>
@@ -2369,10 +2369,10 @@
           </div>
 
           <h4>Important Disclosures</h4>
-          <p>This calculator is provided by Tangible Wealth Solutions for educational and informational purposes only. It is not an offer to buy or sell securities and does not constitute investment, tax, or legal advice. Outputs are hypothetical estimates based on inputs you provide and simplified assumptions; actual results will differ, and results may vary with each use and over time. All investing involves risk, including loss of principal. Past performance is not indicative of future results. Speak to a qualified financial, tax, and legal professional before making any investment decision.</p>
+          <p>This calculator is provided by Tangible Wealth Solutions for educational and informational purposes only. It is not an offer to buy or sell securities and does not constitute investment, tax, or legal advice. Outputs are hypothetical estimates based on inputs you provide and simplified assumptions; actual results will differ, and results may vary with each use and over time. All investing involves risk, including loss of principal. Markets fluctuate and cannot be predicted, and no investment strategy is guaranteed to achieve its objectives. Past performance is not indicative of future results. Speak to a qualified financial, tax, and legal professional before making any investment decision.</p>
 
           <h4>Scope of Analysis &amp; Strategy Selection</h4>
-          <p>The universe of strategies considered by this calculator is limited to the five archetypes shown: (1) Hold the property, (2) Sell &amp; pay tax, (3) Sell &amp; reinvest in a passive portfolio, (4) 1031 Exchange into a Delaware Statutory Trust, and (5) Sell &amp; pair with a Leveraged Bonus Depreciation fund. The tool does not select securities; it models generic strategy archetypes using inputs and assumptions you provide. Tangible Wealth Solutions and its representatives may earn compensation when clients invest in DST or Leveraged Bonus Depreciation offerings distributed through Emerson Equity LLC; the inclusion of these scenarios reflects the strategies TWS is positioned to help implement and should not be interpreted as a recommendation that they are superior for your situation. Other strategies not modeled here, including but not limited to Qualified Opportunity Zone funds, oil &amp; gas working interests, NNN direct ownership, conservation easements, charitable remainder trusts, installment sales under IRC §453, and direct reinvestment in other real estate, may have characteristics similar or superior to the strategies analyzed and should be evaluated with a qualified advisor.</p>
+          <p>The universe of strategies considered by this calculator is limited to the five archetypes shown: (1) Hold the property, (2) Sell &amp; pay tax, (3) Sell &amp; reinvest in a passive portfolio, (4) 1031 Exchange into a Delaware Statutory Trust, and (5) Sell &amp; pair with a Leveraged Bonus Depreciation fund. These five archetypes were selected to illustrate the primary objectives a property owner weighs at the point of sale — continued rental income, tax deferral or elimination, and long-term growth — and are not an exhaustive or ranked list of the options available to you. The tool does not select securities; it models generic strategy archetypes using inputs and assumptions you provide. Tangible Wealth Solutions and its representatives may earn compensation when clients invest in DST or Leveraged Bonus Depreciation offerings distributed through Emerson Equity LLC; the inclusion of these scenarios reflects the strategies TWS is positioned to help implement and should not be interpreted as a recommendation that they are superior for your situation. Other strategies not modeled here, including but not limited to Qualified Opportunity Zone funds, oil &amp; gas working interests, NNN direct ownership, conservation easements, charitable remainder trusts, installment sales under IRC §453, and direct reinvestment in other real estate, may have characteristics similar or superior to the strategies analyzed and should be evaluated with a qualified advisor.</p>
 
           <h4>1031 / DST Risk Disclosure</h4>
           <p>There is no guarantee that any strategy will be successful or achieve investment objectives. DSTs and 1031 exchanges involve illiquid securities offered through private placements, potential loss of property value, foreclosure risk on financed properties, suspension of cash flow distributions, and adverse tax rulings that may cancel deferral. Costs associated with the transaction may impact returns and may outweigh the tax benefits.</p>
