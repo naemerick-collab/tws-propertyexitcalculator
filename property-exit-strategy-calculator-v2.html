@@ -2476,6 +2476,10 @@
         <span style="color:rgba(255,255,255,0.25);">Website Design by Denver Web Success</span>
       </span>
     </div>
+    <!-- Version stamp (FINRA Rule 2214 / SEC 17a-4 self-identification) -->
+    <div style="text-align:center;width:100%;padding-top:6px;">
+      <span style="font-size:11px;color:rgba(255,255,255,0.28);letter-spacing:0.02em;">PEC v2.0 &middot; reviewed 2026-07-09</span>
+    </div>
   </div>
 </footer>
 
@@ -3394,7 +3398,39 @@ window.addEventListener("resize", () => {
 /* ============================================================
    WIRING
    ============================================================ */
-document.getElementById("calcBtn").addEventListener("click", render);
+/* ============================================================
+   USAGE ANALYTICS  (FINRA Rule 2214 usage reporting)
+   Provider-agnostic, cookieless-first shim. Fires two custom
+   events: results_settled (a calculation rendered, debounced
+   ~1.5s) and cta_click (a Schedule/Contact link). Works with
+   Plausible or Fathom (cookieless, no consent banner) or GA4;
+   silent no-op when no provider is loaded. To switch providers
+   or add event properties, edit window.twsTrack below.
+   ============================================================ */
+(function () {
+  window.twsTrack = function (event, props) {
+    try {
+      if (typeof window.plausible === "function") {
+        window.plausible(event, props ? { props: props } : undefined);
+      } else if (window.fathom && typeof window.fathom.trackEvent === "function") {
+        window.fathom.trackEvent(event);
+      } else if (typeof window.gtag === "function") {
+        window.gtag("event", event, props || {});
+      }
+    } catch (e) { /* analytics must never break the calculator */ }
+  };
+  var _settleTimer = null;
+  window.twsTrackResultsSettled = function () {
+    clearTimeout(_settleTimer);
+    _settleTimer = setTimeout(function () { window.twsTrack("results_settled"); }, 1500);
+  };
+  document.addEventListener("click", function (e) {
+    var a = (e.target && e.target.closest) ? e.target.closest('a[href*="tws-contact.html"]') : null;
+    if (a) window.twsTrack("cta_click");
+  });
+})();
+
+document.getElementById("calcBtn").addEventListener("click", function () { render(); window.twsTrackResultsSettled(); });
 function resetAllFields() {
   // 1. Reset every input (number AND text, the money fields are now text
   //    so they get missed by an input[type='number'] selector).
@@ -3442,7 +3478,7 @@ document.getElementById("resetBtn").addEventListener("click", resetAllFields);
 // Optional: auto-calc on Enter
 document.querySelectorAll("input, select").forEach(el => {
   el.addEventListener("keydown", e => {
-    if (e.key === "Enter") { e.preventDefault(); render(); }
+    if (e.key === "Enter") { e.preventDefault(); render(); window.twsTrackResultsSettled(); }
   });
 });
 
